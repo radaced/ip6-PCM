@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Eigenverbrauchsmanager</string>
+    <string name="title_activity_main">Eigenverbrauchsmanager</string>
+
+    <string name="data_frag_text">Verbrauch</string>
+    <string name="plan_frag_text">Ladeplan</string>
+    <string name="tesla_frag_text">Tesla</string>
+</resources>
