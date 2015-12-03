@@ -22,10 +22,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -36,34 +38,19 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
+import ch.fhnw.ip5.powerconsumptionmanager.adapter.DeviceListAdapter;
 
 public class ConsumptionFragment extends Fragment implements OnChartValueSelectedListener {
-
-    private static final String KEY_TITLE = "title";
-    private static final String KEY_INDICATOR_COLOR = "indicator_color";
-    private static final String KEY_DIVIDER_COLOR = "divider_color";
-
     private LineChart mLineChart;
 
     // Test Values
-    String[] devices = new String[]{
-            "Waschmaschine",
-            "Backofen",
-            "Boiler"
-    };
+    ArrayList<String> devices = new ArrayList<String>();
 
-    public static ConsumptionFragment newInstance(CharSequence title, int indicatorColor,
-            int dividerColor) {
-        Bundle bundle = new Bundle();
-        bundle.putCharSequence(KEY_TITLE, title);
-        bundle.putInt(KEY_INDICATOR_COLOR, indicatorColor);
-        bundle.putInt(KEY_DIVIDER_COLOR, dividerColor);
-
+    public static ConsumptionFragment newInstance() {
         ConsumptionFragment fragment = new ConsumptionFragment();
-        fragment.setArguments(bundle);
-
         return fragment;
     }
 
@@ -75,6 +62,11 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //TestData
+        devices.add("Backofen");
+        devices.add("Waschmaschine");
+        devices.add("Toaster");
 
         int[] mColors = new int[] {
                 getResources().getColor(R.color.Red),
@@ -116,8 +108,7 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
 
         ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
 
-        for (int z = 0; z < devices.length; z++) {
-
+        for (int z = 0; z < devices.size(); z++) {
             ArrayList<Entry> values = new ArrayList<Entry>();
 
             for (int i = 0; i < 15; i++) {
@@ -125,7 +116,7 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
                 values.add(new Entry((float) val, i));
             }
 
-            LineDataSet d = new LineDataSet(values, devices[z]);
+            LineDataSet d = new LineDataSet(values, devices.get(z));
             d.setLineWidth(2.5f);
             d.setCircleSize(3f);
 
@@ -149,9 +140,9 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
         final ListView listView = (ListView) view.findViewById(R.id.deviceList);
 
         ArrayAdapter<String> deviceAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_device, R.id.textDevice, devices);
-        listView.setAdapter(deviceAdapter);
+        //listView.setAdapter(deviceAdapter);
+        listView.setAdapter(new DeviceListAdapter(getActivity(), R.layout.list_item_device, devices));
 
-        /*
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -161,7 +152,6 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
                 Toast.makeText(getActivity(), "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG).show();
             }
         });
-        */
     }
 
     @Override

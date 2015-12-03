@@ -11,19 +11,18 @@ import java.util.List;
  * Created by Patrik on 02.12.2015.
  */
 public class ConsumptionDataModel {
-    private String name;
-    private List<ComponentDataModel> data = new ArrayList<>();
+    private String componentName;
+    private List<ComponentDataModel> componentData = new ArrayList<>();
 
     public ConsumptionDataModel(JSONArray fullDataArray){
         try{
-
             for(int i = 0; i < fullDataArray.length(); i++){
                 JSONObject object = fullDataArray.getJSONObject(i);
-                name = object.getString("Name");
+                componentName = object.getString("Name");
 
                 JSONArray componentDataJSON = object.getJSONArray("Data");
                 for(int j = 0; j < componentDataJSON.length(); j++){
-                    data.add(new ComponentDataModel(componentDataJSON.getJSONObject(i)));
+                    componentData.add(new ComponentDataModel(componentDataJSON.getJSONArray(i)));
                 }
             }
         } catch (JSONException e){
@@ -31,19 +30,19 @@ public class ConsumptionDataModel {
         }
     }
 
-    public String getName() {
-        return name;
+    public String getComponentName() {
+        return componentName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setComponentName(String name) {
+        this.componentName = name;
     }
 
-    public List<ComponentDataModel> getData() {
-        return data;
+    public List<ComponentDataModel> getComponentData() {
+        return componentData;
     }
 
-    public void setData(List<ComponentDataModel> data) {
-        this.data = data;
+    public void setComponentData(List<ComponentDataModel> componentData) {
+        this.componentData = componentData;
     }
 }

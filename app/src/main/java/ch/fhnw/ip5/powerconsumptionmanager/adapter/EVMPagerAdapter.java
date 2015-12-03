@@ -5,12 +5,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.List;
 
-import ch.fhnw.ip5.powerconsumptionmanager.model.PagerItem;
+import ch.fhnw.ip5.powerconsumptionmanager.model.PagerItemModel;
 
 public class EVMPagerAdapter extends FragmentPagerAdapter {
-    List<PagerItem> mTabs;
+    List<PagerItemModel> mTabs;
 
-    public EVMPagerAdapter(FragmentManager fm, List<PagerItem> tabs) {
+    public EVMPagerAdapter(FragmentManager fm, List<PagerItemModel> tabs) {
         super(fm);
         mTabs = tabs;
     }

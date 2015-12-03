@@ -16,6 +16,8 @@
     <Switch
         android:id="@+id/switchDevice"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:onClick="showComponentData" />
+    <!--android:focusable="false"-->
 
 </LinearLayout>
