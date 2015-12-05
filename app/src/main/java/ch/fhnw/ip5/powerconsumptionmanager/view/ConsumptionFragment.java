@@ -107,7 +107,6 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
         }
 
         ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-
         for (int z = 0; z < devices.size(); z++) {
             ArrayList<Entry> values = new ArrayList<Entry>();
 
@@ -126,32 +125,13 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
             dataSets.add(d);
         }
 
-        /* make the first DataSet dashed
-        dataSets.get(0).enableDashedLine(10, 10, 0);
-        dataSets.get(0).setColors(ColorTemplate.VORDIPLOM_COLORS);
-        dataSets.get(0).setCircleColors(ColorTemplate.VORDIPLOM_COLORS);
-        */
-
         LineData data = new LineData(xVals, dataSets);
         mLineChart.setData(data);
         //mLineChart.invalidate();
         mLineChart.animateY(3000);
 
         final ListView listView = (ListView) view.findViewById(R.id.deviceList);
-
-        ArrayAdapter<String> deviceAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_device, R.id.textDevice, devices);
-        //listView.setAdapter(deviceAdapter);
         listView.setAdapter(new DeviceListAdapter(getActivity(), R.layout.list_item_device, devices));
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int itemPosition = position;
-                String itemValue = (String) listView.getItemAtPosition(position);
-                Toast.makeText(getActivity(), "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     @Override

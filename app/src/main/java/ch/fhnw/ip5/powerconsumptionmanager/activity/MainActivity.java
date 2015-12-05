@@ -17,7 +17,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.network.ConsumptionDataLoaderCallback
 import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip5.powerconsumptionmanager.util.SlidingTabLayout;
 
-public class MainActivity extends AppCompatActivity implements ConsumptionDataLoaderCallback {
+public class MainActivity extends AppCompatActivity {
     private SlidingTabLayout mSlidingTabLayout;
     private View mView;
     private ViewPager mViewPager;
@@ -50,20 +50,6 @@ public class MainActivity extends AppCompatActivity implements ConsumptionDataLo
                 return mTabs.get(position).getDividerColor();
             }
         });
-
-        //Network test
-        ConsumptionDataLoader loader = new ConsumptionDataLoader((PowerConsumptionManagerAppContext) getApplicationContext(), this, getString(R.string.webservice_getData));
-        loader.LoadUsageData();
-    }
-
-    @Override
-    public void UsageDataLoaderDidFinish() {
-
-    }
-
-    @Override
-    public void UsageDataLoaderDidFail() {
-
     }
 
     private void createViewPagerTabs() {

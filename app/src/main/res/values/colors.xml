@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Scheme -->
     <color name="colorPrimary">#92E55D</color>
     <color name="colorPrimaryDark">#234f1d</color>
     <color name="colorAccent">#FF9127</color>
-
 
     <!-- Color Scheme -->
     <color name="colorScheme1">#92CD00</color>

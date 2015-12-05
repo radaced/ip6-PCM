@@ -1,8 +1,18 @@
 <resources>
+    <!-- App -->
     <string name="app_name">Eigenverbrauchsmanager</string>
     <string name="title_activity_main">Eigenverbrauchsmanager</string>
 
+    <!-- Fragment consumption data -->
     <string name="data_frag_text">Verbrauch</string>
+
+    <!-- Fragment charge plan -->
     <string name="plan_frag_text">Ladeplan</string>
+
+    <!-- Fragment tesla -->
     <string name="tesla_frag_text">Tesla</string>
+
+    <!-- Splash-Screen -->
+    <string name="title_activity_splash">Eigenverbrauchsmanager</string>
+    <string name="info_splash_text">Eigenverbrauchsmanager lädt...</string>
 </resources>
