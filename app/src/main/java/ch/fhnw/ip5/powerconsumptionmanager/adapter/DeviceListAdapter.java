@@ -10,8 +10,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
@@ -21,14 +26,18 @@ import ch.fhnw.ip5.powerconsumptionmanager.R;
  */
 public class DeviceListAdapter extends ArrayAdapter<String> {
     private int mLayout;
-    private List<String> mObjects;
+    private List<String> mDevices;
+    private HashMap<Integer, LineDataSet> mConsumptionDataSet = new HashMap<>();
     private LineChart mConsumptionChart;
 
     public DeviceListAdapter(Context context, int resource, List<String> objects, LineChart chart) {
         super(context, resource, objects);
         mLayout = resource;
-        mObjects = objects;
+        mDevices = objects;
         mConsumptionChart = chart;
+        for(int i = 0; i < chart.getLineData().getDataSetCount(); i++) {
+            mConsumptionDataSet.put(i, chart.getLineData().getDataSetByIndex(i));
+        }
     }
 
     @Override
@@ -40,19 +49,45 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
             convertView = inflater.inflate(mLayout, parent, false);
             final ViewHolder vh = new ViewHolder();
             vh.textDevice = (TextView) convertView.findViewById(R.id.textDevice);
-            vh.textDevice.setText(mObjects.get(position));
+            vh.textDevice.setText(mDevices.get(position));
             vh.switchDevice = (Switch) convertView.findViewById(R.id.switchDevice);
             vh.switchDevice.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LineData data = mConsumptionChart.getLineData();
-
                     if(!vh.switchDevice.isChecked()) {
-                        data.removeDataSet(position);
-                        mConsumptionChart.invalidate();
+                        mConsumptionDataSet.remove(position);
+                        mConsumptionChart.getLineData().removeDataSet(position);
                     }
+                    else {
+                        ArrayList<String> xVals = new ArrayList<String>();
+                        for (int i = 0; i < 15; i++) {
+                            xVals.add((i) + "");
+                        }
 
-                    Toast.makeText(getContext(), "Switch switched " + position + " " + vh.switchDevice.isChecked(), Toast.LENGTH_SHORT).show();
+                        ArrayList<Entry> values = new ArrayList<Entry>();
+                        for (int i = 0; i < 15; i++) {
+                            double val = (Math.random() * 100) + 3;
+                            values.add(new Entry((float) val, i));
+                        }
+
+                        LineDataSet d = new LineDataSet(values, mDevices.get(position));
+                        d.setLineWidth(2.5f);
+                        d.setCircleSize(3f);
+
+                        d.setColor(R.color.Red);
+                        d.setCircleColor(R.color.Red);
+
+                        mConsumptionDataSet.put(position, d);
+
+                        ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+                        for(int i = 0; i < mConsumptionDataSet.size(); i++) {
+                            dataSets.add(mConsumptionDataSet.get(i));
+                        }
+
+                        LineData data = new LineData(xVals, dataSets);
+                        mConsumptionChart.setData(data);
+                    }
+                    mConsumptionChart.invalidate();
                 }
             });
             convertView.setTag(vh);
