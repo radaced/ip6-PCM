@@ -4,42 +4,41 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Calendar;
-
 /**
  * Created by Patrik on 02.12.2015.
  */
 public class ComponentDataModel {
-    private double timestamp;
-    private double powerkW;
+    private String mTimestamp;
+    private double mPowerkW;
     private static final double SECONDS_DIFFERENCE = 2082844800;
 
-    public ComponentDataModel(JSONArray componentDataArray) {
+    public ComponentDataModel(JSONObject componentDataArray) {
         try{
-            JSONObject object = componentDataArray.getJSONObject(0);
-            timestamp = object.getDouble("Zeit");
-            timestamp -= SECONDS_DIFFERENCE; // Convert to Unix Timestamp
+            for(int i = 0; i < componentDataArray.length(); i++) {
+                double timestamp = componentDataArray.getDouble("Zeit");
+                timestamp -= SECONDS_DIFFERENCE; // Convert to Unix Timestamp
+                mTimestamp = String.format("%.0f", timestamp);
+                mPowerkW = componentDataArray.getDouble("Leistung");
+            }
 
-            object = componentDataArray.getJSONObject(1);
-            powerkW = object.getDouble("Leistung");
         } catch (JSONException e){
 
         }
     }
 
-    public double getTimestamp() {
-        return timestamp;
+    public String getTimestamp() {
+        return mTimestamp;
     }
 
-    public void setTimestamp(double timestamp) {
-        this.timestamp = timestamp;
+    public void setTimestamp(String timestamp) {
+        this.mTimestamp = timestamp;
     }
 
     public double getPowerkW() {
-        return powerkW;
+        return mPowerkW;
     }
 
-    public void setPowerkW(double powerkW) {
-        this.powerkW = powerkW;
+    public void setPowerkW(double mPowerkW) {
+        this.mPowerkW = mPowerkW;
     }
 }

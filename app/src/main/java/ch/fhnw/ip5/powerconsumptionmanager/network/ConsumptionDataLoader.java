@@ -7,6 +7,7 @@ import com.squareup.okhttp.Response;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -48,9 +49,16 @@ public class ConsumptionDataLoader {
                 }
                 try {
                     JSONArray dataJson = new JSONArray(response.body().string());
-                    ConsumptionDataModel usageData = new ConsumptionDataModel(dataJson);
-                    context.setUsageData(usageData);
-                    //FileStorageHandler.saveObject(appContext, TrachtenAppContext.FILENAME_MAIN_CONFIG, mainConfig);
+
+                    for(int i = 0; i < dataJson.length(); i++) {
+                        // TEST
+                        if(i > 2) {
+                            continue;
+                        }
+                        ConsumptionDataModel usageData = new ConsumptionDataModel((JSONObject) dataJson.get(i));
+                        context.getConsumptionData().add(usageData);
+                    }
+
                     callback.UsageDataLoaderDidFinish();
                 } catch (JSONException e) {
                     e.printStackTrace();

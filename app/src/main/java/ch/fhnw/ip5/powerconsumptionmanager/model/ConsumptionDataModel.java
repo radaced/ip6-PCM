@@ -11,38 +11,35 @@ import java.util.List;
  * Created by Patrik on 02.12.2015.
  */
 public class ConsumptionDataModel {
-    private String componentName;
-    private List<ComponentDataModel> componentData = new ArrayList<>();
+    private String mComponentName;
+    private ArrayList<ComponentDataModel> mComponentData = new ArrayList<ComponentDataModel>();
 
-    public ConsumptionDataModel(JSONArray fullDataArray){
+    public ConsumptionDataModel(JSONObject fullData){
         try{
-            for(int i = 0; i < fullDataArray.length(); i++){
-                JSONObject object = fullDataArray.getJSONObject(i);
-                componentName = object.getString("Name");
-
-                JSONArray componentDataJSON = object.getJSONArray("Data");
-                for(int j = 0; j < componentDataJSON.length(); j++){
-                    componentData.add(new ComponentDataModel(componentDataJSON.getJSONArray(i)));
-                }
+            mComponentName = fullData.getString("Name");
+            JSONArray componentDataJSON = fullData.getJSONArray("Data");
+            for(int j = 0; j < componentDataJSON.length(); j++){
+                mComponentData.add(new ComponentDataModel(componentDataJSON.getJSONObject(j)));
             }
+
         } catch (JSONException e){
 
         }
     }
 
     public String getComponentName() {
-        return componentName;
+        return mComponentName;
     }
 
     public void setComponentName(String name) {
-        this.componentName = name;
+        this.mComponentName = name;
     }
 
     public List<ComponentDataModel> getComponentData() {
-        return componentData;
+        return mComponentData;
     }
 
-    public void setComponentData(List<ComponentDataModel> componentData) {
-        this.componentData = componentData;
+    public void setComponentData(ArrayList<ComponentDataModel> mComponentData) {
+        this.mComponentData = mComponentData;
     }
 }

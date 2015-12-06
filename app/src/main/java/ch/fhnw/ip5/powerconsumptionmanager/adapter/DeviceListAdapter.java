@@ -7,10 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -27,7 +25,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.R;
 public class DeviceListAdapter extends ArrayAdapter<String> {
     private int mLayout;
     private List<String> mDevices;
-    private HashMap<Integer, LineDataSet> mConsumptionDataSet = new HashMap<>();
+    private HashMap<Integer, LineDataSet> mConsumptionDataSet = new HashMap<Integer, LineDataSet>();
     private LineChart mConsumptionChart;
 
     public DeviceListAdapter(Context context, int resource, List<String> objects, LineChart chart) {
@@ -73,9 +71,6 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
                         LineDataSet d = new LineDataSet(values, mDevices.get(position));
                         d.setLineWidth(2.5f);
                         d.setCircleSize(3f);
-
-                        d.setColor(R.color.Red);
-                        d.setCircleColor(R.color.Red);
 
                         mConsumptionDataSet.put(position, d);
 
