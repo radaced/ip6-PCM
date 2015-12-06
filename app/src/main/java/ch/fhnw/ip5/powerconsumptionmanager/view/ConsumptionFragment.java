@@ -22,12 +22,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -38,13 +33,12 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.adapter.DeviceListAdapter;
 
 public class ConsumptionFragment extends Fragment implements OnChartValueSelectedListener {
-    private LineChart mLineChart;
+    private LineChart mConsumptionChart;
 
     // Test Values
     ArrayList<String> devices = new ArrayList<String>();
@@ -74,31 +68,31 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
                 getResources().getColor(R.color.Blue)
         };
 
-        mLineChart = (LineChart) view.findViewById(R.id.lineChart);
-        mLineChart.setOnChartValueSelectedListener(this);
+        mConsumptionChart = (LineChart) view.findViewById(R.id.lineChart);
+        mConsumptionChart.setOnChartValueSelectedListener(this);
 
-        mLineChart.setBackgroundColor(Color.LTGRAY);
-        mLineChart.setDrawGridBackground(false);
-        mLineChart.setDrawBorders(false);
-        mLineChart.setDescription(null);
-        mLineChart.setDoubleTapToZoomEnabled(true);
+        mConsumptionChart.setBackgroundColor(Color.LTGRAY);
+        mConsumptionChart.setDrawGridBackground(false);
+        mConsumptionChart.setDrawBorders(false);
+        mConsumptionChart.setDescription(null);
+        mConsumptionChart.setDoubleTapToZoomEnabled(true);
 
-        mLineChart.getAxisLeft().setDrawAxisLine(true);
-        mLineChart.getAxisLeft().setDrawGridLines(false);
-        mLineChart.getXAxis().setDrawAxisLine(false);
-        mLineChart.getXAxis().setDrawGridLines(false);
+        mConsumptionChart.getAxisLeft().setDrawAxisLine(true);
+        mConsumptionChart.getAxisLeft().setDrawGridLines(false);
+        mConsumptionChart.getXAxis().setDrawAxisLine(false);
+        mConsumptionChart.getXAxis().setDrawGridLines(false);
 
         // enable touch gestures
-        mLineChart.setTouchEnabled(true);
+        mConsumptionChart.setTouchEnabled(true);
 
         // enable scaling and dragging
-        mLineChart.setDragEnabled(true);
-        mLineChart.setScaleEnabled(true);
+        mConsumptionChart.setDragEnabled(true);
+        mConsumptionChart.setScaleEnabled(true);
 
         // if disabled, scaling can be done on x- and y-axis separately
-        mLineChart.setPinchZoom(true);
+        mConsumptionChart.setPinchZoom(true);
 
-        Legend l = mLineChart.getLegend();
+        Legend l = mConsumptionChart.getLegend();
         l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
 
         ArrayList<String> xVals = new ArrayList<String>();
@@ -126,12 +120,12 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
         }
 
         LineData data = new LineData(xVals, dataSets);
-        mLineChart.setData(data);
-        //mLineChart.invalidate();
-        mLineChart.animateY(3000);
+        mConsumptionChart.setData(data);
+        //mConsumptionChart.invalidate();
+        mConsumptionChart.animateY(3000);
 
         final ListView listView = (ListView) view.findViewById(R.id.deviceList);
-        listView.setAdapter(new DeviceListAdapter(getActivity(), R.layout.list_item_device, devices));
+        listView.setAdapter(new DeviceListAdapter(getActivity(), R.layout.list_item_device, devices, mConsumptionChart));
     }
 
     @Override

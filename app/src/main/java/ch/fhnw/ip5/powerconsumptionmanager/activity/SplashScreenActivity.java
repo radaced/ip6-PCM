@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.network.ConsumptionDataLoader;
@@ -12,7 +11,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.network.ConsumptionDataLoaderCallback
 import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 public class SplashScreenActivity extends AppCompatActivity implements ConsumptionDataLoaderCallback {
-    private final int SPLASH_DISPLAY_LENGTH = 10000;
+    private final int SPLASH_DISPLAY_LENGTH = 1000;
 
     @Override
     public void onCreate(Bundle icicle) {

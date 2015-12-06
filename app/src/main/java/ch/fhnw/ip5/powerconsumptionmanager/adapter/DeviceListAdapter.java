@@ -9,6 +9,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.LineData;
+
 import java.util.List;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
@@ -19,11 +22,13 @@ import ch.fhnw.ip5.powerconsumptionmanager.R;
 public class DeviceListAdapter extends ArrayAdapter<String> {
     private int mLayout;
     private List<String> mObjects;
+    private LineChart mConsumptionChart;
 
-    public DeviceListAdapter(Context context, int resource, List<String> objects) {
+    public DeviceListAdapter(Context context, int resource, List<String> objects, LineChart chart) {
         super(context, resource, objects);
         mLayout = resource;
         mObjects = objects;
+        mConsumptionChart = chart;
     }
 
     @Override
@@ -33,14 +38,21 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(mLayout, parent, false);
-            ViewHolder vh = new ViewHolder();
+            final ViewHolder vh = new ViewHolder();
             vh.textDevice = (TextView) convertView.findViewById(R.id.textDevice);
             vh.textDevice.setText(mObjects.get(position));
             vh.switchDevice = (Switch) convertView.findViewById(R.id.switchDevice);
             vh.switchDevice.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getContext(), "Switch switched" + position, Toast.LENGTH_SHORT).show();
+                    LineData data = mConsumptionChart.getLineData();
+
+                    if(!vh.switchDevice.isChecked()) {
+                        data.removeDataSet(position);
+                        mConsumptionChart.invalidate();
+                    }
+
+                    Toast.makeText(getContext(), "Switch switched " + position + " " + vh.switchDevice.isChecked(), Toast.LENGTH_SHORT).show();
                 }
             });
             convertView.setTag(vh);
