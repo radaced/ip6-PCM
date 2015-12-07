@@ -6,11 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
-import ch.fhnw.ip5.powerconsumptionmanager.network.ConsumptionDataLoader;
-import ch.fhnw.ip5.powerconsumptionmanager.network.ConsumptionDataLoaderCallback;
+import ch.fhnw.ip5.powerconsumptionmanager.network.DataLoader;
+import ch.fhnw.ip5.powerconsumptionmanager.network.DataLoaderCallback;
 import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
-public class SplashScreenActivity extends AppCompatActivity implements ConsumptionDataLoaderCallback {
+public class SplashScreenActivity extends AppCompatActivity implements DataLoaderCallback {
     private final int SPLASH_DISPLAY_LENGTH = 1000;
 
     @Override
@@ -19,15 +19,13 @@ public class SplashScreenActivity extends AppCompatActivity implements Consumpti
         setContentView(R.layout.activity_splash_screen);
 
         //Network test
-        final ConsumptionDataLoader loader = new ConsumptionDataLoader(
-                (PowerConsumptionManagerAppContext) getApplicationContext(),
-                this,
-                getString(R.string.webservice_getData));
+        final DataLoader loader = new DataLoader((PowerConsumptionManagerAppContext) getApplicationContext(), this);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                loader.LoadUsageData();
+                loader.loadComponents(getString(R.string.webservice_getComponents));
+                loader.loadConsumptionData(getString(R.string.webservice_getData));
             }
         }, SPLASH_DISPLAY_LENGTH);
     }

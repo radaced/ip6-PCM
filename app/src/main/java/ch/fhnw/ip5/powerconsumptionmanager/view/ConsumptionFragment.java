@@ -42,9 +42,6 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 public class ConsumptionFragment extends Fragment implements OnChartValueSelectedListener {
     private LineChart mConsumptionChart;
 
-    // Test Values
-    ArrayList<String> devices = new ArrayList<String>();
-
     public static ConsumptionFragment newInstance() {
         ConsumptionFragment fragment = new ConsumptionFragment();
         return fragment;
@@ -60,13 +57,6 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
         super.onViewCreated(view, savedInstanceState);
         PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
 
-        //TestData
-        devices.add("Backofen");
-        devices.add("Waschmaschine");
-        devices.add("Toaster");
-
-
-
         mConsumptionChart = (LineChart) view.findViewById(R.id.lineChart);
 
         ChartHelper chartHelper = new ChartHelper(mConsumptionChart, this);
@@ -78,10 +68,11 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
             chartHelper.generateDataSet(context.getConsumptionData().get(z), z);
         }
 
-        chartHelper.displayData();
+        chartHelper.setChartData();
+        chartHelper.displayAnimated();
 
         final ListView listView = (ListView) view.findViewById(R.id.deviceList);
-        listView.setAdapter(new DeviceListAdapter(getActivity(), R.layout.list_item_device, devices, mConsumptionChart));
+        listView.setAdapter(new DeviceListAdapter(getActivity(), R.layout.list_item_device, context.getComponents(), chartHelper));
     }
 
     @Override

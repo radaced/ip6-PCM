@@ -10,8 +10,8 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import ch.fhnw.ip5.powerconsumptionmanager.model.ComponentDataModel;
 import ch.fhnw.ip5.powerconsumptionmanager.model.ConsumptionDataModel;
 import ch.fhnw.ip5.powerconsumptionmanager.view.ConsumptionFragment;
 
@@ -21,8 +21,8 @@ import ch.fhnw.ip5.powerconsumptionmanager.view.ConsumptionFragment;
 public class ChartHelper {
     private LineChart mChart;
     private ConsumptionFragment mContext;
-    private ArrayList<String> mXValues = new ArrayList<String>();;
-    private ArrayList<LineDataSet> mLineDataSets = new ArrayList<LineDataSet>();
+    private ArrayList<String> mXValues = new ArrayList<String>();
+    private HashMap<Integer, LineDataSet> mConsumptionDataSet = new HashMap<Integer, LineDataSet>();
 
     public ChartHelper(LineChart chart, ConsumptionFragment context) {
         mChart = chart;
@@ -55,7 +55,6 @@ public class ChartHelper {
     }
 
     public void generateXValues(ConsumptionDataModel data) {
-
         for (int i = 0; i < data.getComponentData().size(); i++) {
             // Only 1 day
             if(i > 287) {
@@ -63,12 +62,6 @@ public class ChartHelper {
             }
             mXValues.add(data.getComponentData().get(i).getTimestamp());
         }
-
-        /*
-        for (int i = 0; i < data.getComponentData().size(); i++) {
-            mXValues.add((i) + "");
-        }
-        */
     }
 
     public void generateDataSet(ConsumptionDataModel data, int iteration) {
@@ -82,26 +75,46 @@ public class ChartHelper {
             values.add(new Entry((float) data.getComponentData().get(i).getPowerkW(), i));
         }
 
-        LineDataSet d = new LineDataSet(values, data.getComponentName());
-        d.setLineWidth(1.5f);
-        d.setCircleSize(2f);
+        LineDataSet lds = new LineDataSet(values, data.getComponentName());
+        lds.setLineWidth(1.5f);
+        lds.setCircleSize(2f);
 
-        d.setColor(ColorTemplate.PASTEL_COLORS[iteration]);
-        d.setCircleColor(ColorTemplate.PASTEL_COLORS[iteration]);
-        mLineDataSets.add(d);
+        lds.setColor(ColorTemplate.PASTEL_COLORS[iteration]);
+        lds.setCircleColor(ColorTemplate.PASTEL_COLORS[iteration]);
+        mConsumptionDataSet.put(iteration, lds);
     }
 
-    public void displayData() {
-        LineData data = new LineData(this.getXValues(), this.getLineDataSets());
+    public void setChartData() {
+        ArrayList<LineDataSet> list = new ArrayList<LineDataSet>();
+        int iterator = 0;
+        for(int i = 0; iterator < mConsumptionDataSet.size(); i++) {
+            if(mConsumptionDataSet.get(i) != null) {
+                list.add(mConsumptionDataSet.get(i));
+                iterator++;
+            }
+        }
+
+        LineData data = new LineData(this.getXValues(), list);
         mChart.setData(data);
+    }
+
+    public void displayAnimated() {
         mChart.animateY(2000);
+    }
+
+    public void displayNoneAnimated() {
+        mChart.invalidate();
     }
 
     public ArrayList<String> getXValues() {
         return mXValues;
     }
 
-    public ArrayList<LineDataSet> getLineDataSets() {
-        return mLineDataSets;
+    public HashMap<Integer, LineDataSet> getConsumptionDataSet() {
+        return mConsumptionDataSet;
+    }
+
+    public LineChart getChart() {
+        return mChart;
     }
 }

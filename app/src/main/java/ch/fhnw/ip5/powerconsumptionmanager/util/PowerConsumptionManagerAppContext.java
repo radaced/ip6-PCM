@@ -2,8 +2,6 @@ package ch.fhnw.ip5.powerconsumptionmanager.util;
 
 import android.app.Application;
 
-import com.github.mikephil.charting.charts.LineChart;
-
 import java.util.ArrayList;
 
 import ch.fhnw.ip5.powerconsumptionmanager.model.ConsumptionDataModel;
@@ -13,6 +11,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.model.ConsumptionDataModel;
  */
 public class PowerConsumptionManagerAppContext extends Application{
     private ArrayList<ConsumptionDataModel> mConsumptionData = new ArrayList<ConsumptionDataModel>();
+    private ArrayList<String> mComponents = new ArrayList<String>();
 
     public ArrayList<ConsumptionDataModel> getConsumptionData() {
         return mConsumptionData;
@@ -22,4 +21,11 @@ public class PowerConsumptionManagerAppContext extends Application{
         this.mConsumptionData = componentData;
     }
 
+    public ArrayList<String> getComponents() {
+        return mComponents;
+    }
+
+    public void setComponents(ArrayList<String> mComponents) {
+        this.mComponents = mComponents;
+    }
 }

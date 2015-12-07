@@ -12,9 +12,6 @@ import java.util.List;
 import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.adapter.EVMPagerAdapter;
 import ch.fhnw.ip5.powerconsumptionmanager.model.PagerItemModel;
-import ch.fhnw.ip5.powerconsumptionmanager.network.ConsumptionDataLoader;
-import ch.fhnw.ip5.powerconsumptionmanager.network.ConsumptionDataLoaderCallback;
-import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip5.powerconsumptionmanager.util.SlidingTabLayout;
 
 public class MainActivity extends AppCompatActivity {
