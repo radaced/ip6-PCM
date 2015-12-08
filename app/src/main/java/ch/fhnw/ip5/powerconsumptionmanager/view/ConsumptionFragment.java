@@ -55,7 +55,7 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
 
         ChartHelper chartHelper = new ChartHelper(mConsumptionChart, this);
         chartHelper.setup();
-        chartHelper.setLegend();
+        chartHelper.setLegend(false);
         chartHelper.generateXValues(context.getConsumptionData().get(0));
 
         for (int z = 0; z < context.getConsumptionData().size(); z++) {

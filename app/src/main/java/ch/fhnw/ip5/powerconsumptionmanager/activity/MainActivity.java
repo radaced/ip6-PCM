@@ -52,18 +52,18 @@ public class MainActivity extends AppCompatActivity {
     private void createViewPagerTabs() {
         mTabs.add(new PagerItemModel(
                 getString(R.string.data_frag_text),
-                ContextCompat.getColor(this, R.color.colorPrimary),
-                ContextCompat.getColor(this, R.color.colorPrimary)
+                ContextCompat.getColor(this, R.color.colorSlideTabIndicator),
+                ContextCompat.getColor(this, R.color.colorSlideTabDivider)
         ));
         mTabs.add(new PagerItemModel(
                 getString(R.string.plan_frag_text),
-                ContextCompat.getColor(this, R.color.colorPrimary),
-                ContextCompat.getColor(this, R.color.colorPrimary)
+                ContextCompat.getColor(this, R.color.colorSlideTabIndicator),
+                ContextCompat.getColor(this, R.color.colorSlideTabDivider)
         ));
         mTabs.add(new PagerItemModel(
                 getString(R.string.tesla_frag_text),
-                ContextCompat.getColor(this, R.color.colorPrimary),
-                ContextCompat.getColor(this, R.color.colorPrimary)
+                ContextCompat.getColor(this, R.color.colorSlideTabIndicator),
+                ContextCompat.getColor(this, R.color.colorSlideTabDivider)
         ));
     }
 }

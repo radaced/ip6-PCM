@@ -8,10 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
@@ -41,9 +40,15 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(mLayout, parent, false);
+
             final ViewHolder vh = new ViewHolder();
+
             vh.textDevice = (TextView) convertView.findViewById(R.id.textDevice);
             vh.textDevice.setText(mDevices.get(position));
+
+            vh.graphColor = (View) convertView.findViewById(R.id.graphColor);
+            vh.graphColor.setBackgroundColor(mConsumptionChart.getGraphColor(position));
+
             vh.switchDevice = (Switch) convertView.findViewById(R.id.switchDevice);
             vh.switchDevice.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -84,6 +89,7 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
 
     static class ViewHolder {
         TextView textDevice;
+        View graphColor;
         Switch switchDevice;
     }
 }

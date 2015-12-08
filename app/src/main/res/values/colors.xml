@@ -1,18 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Scheme -->
-    <color name="colorPrimary">#92E55D</color>
-    <color name="colorPrimaryDark">#234f1d</color>
-    <color name="colorAccent">#FF9127</color>
+    <color name="colorPrimary">#607d8b</color>
+    <color name="colorPrimaryDark">#263238</color>
+    <color name="colorAccent">#ff9100</color>
+    <color name="colorBackground">#607d8b</color>
+    <color name="colorChartBackground">#eceff1</color>
+    <color name="colorListView">#b0bec5</color>
+    <color name="colorTextPrimary">#ffffff</color>
+    <color name="colorTextPrimaryInverse">#000000</color>
+    <color name="colorSlideTabIndicator">#263238</color>
+    <color name="colorSlideTabDivider">#263238</color>
 
-    <!-- Color Scheme -->
-    <color name="colorScheme1">#92CD00</color>
-    <color name="colorScheme2">#FFCF79</color>
-    <color name="colorScheme3">#E5E4D7</color>
-    <color name="colorScheme4">#2C6700</color>
+    <!--
+    <color name="colorPrimary">#689f38</color>
+    <color name="colorPrimaryDark">#33691e</color>
+    <color name="colorAccent">#ff9100</color>
+    <color name="colorBackground">#689f38</color>
+    <color name="colorChartBackground">#f1f8e9</color>
+    <color name="colorListView">#c5e1a5</color>
+    <color name="colorTextPrimary">#ffffff</color>
+    <color name="colorTextPrimaryInverse">#000000</color>
+    <color name="colorSlideTabIndicator">#c5e1a5</color>
+    <color name="colorSlideTabDivider">#c5e1a5</color>
+    -->
 
-    <color name="Red">#FF0000</color>
-    <color name="Green">#00FF00</color>
-    <color name="Blue">#0000FF</color>
+    <!-- Graph Colors -->
+    <array name="colorsGraph">
+        <item>#008040</item>
+        <item>#F35D5D</item>
+        <item>#0041DC</item>
+        <item>#3399FF</item>
+        <item>#FF00FF</item>
+        <item>#000000</item>
+        <item>#64FF00</item>
+        <item>#FA9C47</item>
+    </array>
 
 </resources>
