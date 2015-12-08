@@ -24,7 +24,6 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 public class DeviceListAdapter extends ArrayAdapter<String> {
     private int mLayout;
     private List<String> mDevices;
-    private HashMap<Integer, LineDataSet> mConsumptionDataSet = new HashMap<Integer, LineDataSet>();
     private ChartHelper mConsumptionChart;
     private ArrayList<Integer> removedDataSetIndexes = new ArrayList<>();
 
@@ -33,7 +32,6 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
         mLayout = resource;
         mDevices = objects;
         mConsumptionChart = chart;
-        mConsumptionDataSet = chart.getConsumptionDataSet();
     }
 
     @Override
@@ -52,35 +50,16 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
                 public void onClick(View v) {
                     int shiftPos = getShiftPosition(position);
                     if(!vh.switchDevice.isChecked()) {
-                        mConsumptionDataSet.remove(position-shiftPos);
                         mConsumptionChart.getChart().getLineData().removeDataSet(position-shiftPos);
                         mConsumptionChart.displayNoneAnimated();
-
                         removedDataSetIndexes.add(position);
                     }
                     else {
                         PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
-                        boolean skip = false;
-                        /*
-                        for(int i = 0; i < appContext.getConsumptionData().size(); i++) {
-                            for(int j = 0; j < removedDataSetIndexes.size(); j++) {
-                                if(removedDataSetIndexes.get(j) == i) {
-                                    skip = true;
-                                    break;
-                                }
-                            }
-                            if(skip) {
-                                skip = false;
-                                continue;
-                            }
-                            mConsumptionChart.generateDataSet(appContext.getConsumptionData().get(i), i);
-                        }
-                        */
-
-                        mConsumptionChart.generateDataSet(appContext.getConsumptionData().get(position-shiftPos), position-shiftPos);
-                        mConsumptionChart.setChartData();
-                        mConsumptionChart.displayNoneAnimated();
                         removedDataSetIndexes.remove(Integer.valueOf(position));
+                        mConsumptionChart.generateDataSet(appContext.getConsumptionData().get(position - shiftPos), position - shiftPos);
+                        mConsumptionChart.updateChartData(removedDataSetIndexes);
+                        mConsumptionChart.displayNoneAnimated();
                     }
                 }
             });

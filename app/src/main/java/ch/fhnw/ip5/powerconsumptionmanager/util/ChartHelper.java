@@ -84,14 +84,31 @@ public class ChartHelper {
         mConsumptionDataSet.put(iteration, lds);
     }
 
-    public void setChartData() {
+    public void initChartData() {
         ArrayList<LineDataSet> list = new ArrayList<LineDataSet>();
-        int iterator = 0;
-        for(int i = 0; iterator < mConsumptionDataSet.size(); i++) {
-            if(mConsumptionDataSet.get(i) != null) {
-                list.add(mConsumptionDataSet.get(i));
-                iterator++;
+        for(int i = 0; i < mConsumptionDataSet.size(); i++) {
+            list.add(mConsumptionDataSet.get(i));
+        }
+
+        LineData data = new LineData(this.getXValues(), list);
+        mChart.setData(data);
+    }
+
+    public void updateChartData(ArrayList<Integer> ignoreList) {
+        ArrayList<LineDataSet> list = new ArrayList<LineDataSet>();
+        boolean skip = false;
+        for(int i = 0; i < mConsumptionDataSet.size(); i++) {
+            for(int j = 0; j < ignoreList.size(); j++) {
+                if(i == ignoreList.get(j)) {
+                    skip = true;
+                    break;
+                }
             }
+            if(skip) {
+                skip = false;
+                continue;
+            }
+            list.add(mConsumptionDataSet.get(i));
         }
 
         LineData data = new LineData(this.getXValues(), list);

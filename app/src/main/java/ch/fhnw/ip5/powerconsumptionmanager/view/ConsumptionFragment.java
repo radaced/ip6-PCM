@@ -16,7 +16,6 @@
 
 package ch.fhnw.ip5.powerconsumptionmanager.view;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -25,14 +24,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-
-import java.util.ArrayList;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.adapter.DeviceListAdapter;
@@ -68,7 +62,7 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
             chartHelper.generateDataSet(context.getConsumptionData().get(z), z);
         }
 
-        chartHelper.setChartData();
+        chartHelper.initChartData();
         chartHelper.displayAnimated();
 
         final ListView listView = (ListView) view.findViewById(R.id.deviceList);
