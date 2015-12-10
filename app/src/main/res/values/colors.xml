@@ -6,6 +6,7 @@
     <color name="colorAccent">#ff9100</color>
     <color name="colorBackground">#607d8b</color>
     <color name="colorChartBackground">#eceff1</color>
+    <color name="colorTextViewBackground">#eceff1</color>
     <color name="colorListView">#b0bec5</color>
     <color name="colorTextPrimary">#ffffff</color>
     <color name="colorTextPrimaryInverse">#000000</color>

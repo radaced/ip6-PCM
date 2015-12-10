@@ -21,7 +21,7 @@
     <ListView android:id="@+id/deviceList"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/uicomponent_vertical_margin"
+        android:layout_marginTop="@dimen/space_vertical_margin"
         android:layout_weight="1"/>
 
 </LinearLayout>

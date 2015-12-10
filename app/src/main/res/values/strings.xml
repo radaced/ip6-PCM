@@ -15,7 +15,8 @@
     <!-- Splash-Screen -->
     <string name="title_activity_splash">Eigenverbrauchsmanager</string>
     <string name="info_splash_text">Eigenverbrauchsmanager lädt...</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="init_text_ip">IP:</string>
+    <string name="init_dot">.</string>
+    <string name="continue_button">Fortfahren  </string>
+    <string name="init_text_ip_error">Zahl zwischen 0 und 255</string>
 </resources>
