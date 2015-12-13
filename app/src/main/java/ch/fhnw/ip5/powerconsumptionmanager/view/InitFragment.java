@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
+import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 public class InitFragment extends Fragment {
     private static final String CONNECTION_SETTINGS = "connection_settings";
@@ -55,14 +56,12 @@ public class InitFragment extends Fragment {
                 if(correct) {
                     SharedPreferences settings = getActivity().getSharedPreferences(CONNECTION_SETTINGS, getContext().MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putString(
-                            "IP",
-                            ip1.getText().toString()+"."
-                            +ip2.getText().toString()+"."
-                            +ip3.getText().toString()+"."
-                            +ip4.getText().toString()
-                    );
+                    String ip = ip1.getText().toString()+"."+ip2.getText().toString()+"."+ip3.getText().toString()+"."+ip4.getText().toString();
+                    editor.putString("IP", ip);
                     editor.commit();
+
+                    PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
+                    context.setIPAdress(ip);
 
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     SplashFragment fragment = new SplashFragment();

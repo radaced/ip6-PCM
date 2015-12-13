@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="webservice_getData">http://10.0.2.2:8002/EM/Emobil/getData</string>
-    <string name="webservice_getComponents">http://10.0.2.2:8002/EM/Emobil/getComponents</string>
+    <string name="webservice_getData">8002/EM/Emobil/getData</string>
+    <string name="webservice_getComponents">8002/EM/Emobil/getComponents</string>
 </resources>
