@@ -1,9 +1,13 @@
 package ch.fhnw.ip5.powerconsumptionmanager.activity;
 
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -29,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
         /************* Setup main menu *************/
         createViewPagerTabs();
 
+        Toolbar tb = (Toolbar) findViewById(R.id.main_toolbar);
+        tb.setTitle("Eigenverbrauchsmanager");
+        setSupportActionBar(tb);
+
         mViewPager = (ViewPager) mView.findViewById(R.id.viewpager);
         mViewPager.setAdapter(new EVMPagerAdapter(getSupportFragmentManager(), mTabs));
 
@@ -47,6 +55,25 @@ public class MainActivity extends AppCompatActivity {
                 return mTabs.get(position).getDividerColor();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent mainIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                MainActivity.this.startActivity(mainIntent);
+                MainActivity.this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void createViewPagerTabs() {

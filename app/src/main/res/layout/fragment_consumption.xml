@@ -8,8 +8,8 @@
     android:gravity="center">
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/space_vertical_margin"
         android:background="@color/colorChartBackground"/>
 
     <com.github.mikephil.charting.charts.LineChart

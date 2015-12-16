@@ -14,7 +14,6 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 
 
 public class SplashFragment extends Fragment {
-    private final int SPLASH_DISPLAY_LENGTH = 1000;
 
     public static SplashFragment newInstance() {
         SplashFragment fragment = new SplashFragment();
@@ -31,15 +30,8 @@ public class SplashFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         final PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
-
         final DataLoader loader = new DataLoader(context, (DataLoaderCallback) getActivity());
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loader.loadComponents("http://" + context.getIPAdress() + ":" + getString(R.string.webservice_getComponents));
-                loader.loadConsumptionData("http://" + context.getIPAdress() + ":" + getString(R.string.webservice_getData));
-            }
-        }, SPLASH_DISPLAY_LENGTH);
+        loader.loadConsumptionData("http://" + context.getIPAdress() + ":" + getString(R.string.webservice_getData));
     }
 }

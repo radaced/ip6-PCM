@@ -6,6 +6,12 @@
     android:orientation="vertical"
     tools:context="ch.fhnw.ip5.powerconsumptionmanager.activity.MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"/>
+
     <ch.fhnw.ip5.powerconsumptionmanager.util.SlidingTabLayout
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"

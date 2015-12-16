@@ -17,6 +17,21 @@
     <string name="info_splash_text">Eigenverbrauchsmanager lädt...</string>
     <string name="init_text_ip">IP:</string>
     <string name="init_dot">.</string>
-    <string name="continue_button">Fortfahren  </string>
+    <string name="continue_button">Fortfahren</string>
     <string name="init_text_ip_error">Zahl zwischen 0 und 255</string>
+    <string name="init_description">Geben Sie die IP des Geräts ein, wo die Serverkomponente drauf läuft.</string>
+
+    <!-- File -->
+    <string name="application_settings">pcm_settings</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Settings-Screen -->
+    <string name="category_network">Netzwerk Konfiguration</string>
+    <string name="text_pref_ip_title">IP Adresse</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

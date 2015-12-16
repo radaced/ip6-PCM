@@ -2,6 +2,7 @@ package ch.fhnw.ip5.powerconsumptionmanager.view;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -14,7 +15,6 @@ import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 public class InitFragment extends Fragment {
-    private static final String CONNECTION_SETTINGS = "connection_settings";
 
     public static InitFragment newInstance() {
         InitFragment fragment = new InitFragment();
@@ -23,7 +23,12 @@ public class InitFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_init, container, false);
+        return inflater.inflate(R.layout.fragment_init, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         Button continueButton = (Button) view.findViewById(R.id.buttonContinue);
         continueButton.setOnClickListener(new View.OnClickListener() {
@@ -53,10 +58,11 @@ public class InitFragment extends Fragment {
                     correct = false;
                 }
 
-                if(correct) {
-                    SharedPreferences settings = getActivity().getSharedPreferences(CONNECTION_SETTINGS, getContext().MODE_PRIVATE);
+                if (correct) {
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    //SharedPreferences settings = getActivity().getSharedPreferences(getString(R.string.application_settings), getContext().MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
-                    String ip = ip1.getText().toString()+"."+ip2.getText().toString()+"."+ip3.getText().toString()+"."+ip4.getText().toString();
+                    String ip = ip1.getText().toString() + "." + ip2.getText().toString() + "." + ip3.getText().toString() + "." + ip4.getText().toString();
                     editor.putString("IP", ip);
                     editor.commit();
 
@@ -70,13 +76,6 @@ public class InitFragment extends Fragment {
                 }
             }
         });
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     private boolean isValidIPNumber(EditText ip) {

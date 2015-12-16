@@ -11,16 +11,9 @@ import ch.fhnw.ip5.powerconsumptionmanager.model.ConsumptionDataModel;
  */
 public class PowerConsumptionManagerAppContext extends Application{
     private String mIPAdress;
+    private boolean isOnline;
     private ArrayList<ConsumptionDataModel> mConsumptionData = new ArrayList<ConsumptionDataModel>();
     private ArrayList<String> mComponents = new ArrayList<String>();
-
-    public ArrayList<ConsumptionDataModel> getConsumptionData() {
-        return mConsumptionData;
-    }
-
-    public ArrayList<String> getComponents() {
-        return mComponents;
-    }
 
     public String getIPAdress() {
         return mIPAdress;
@@ -28,5 +21,21 @@ public class PowerConsumptionManagerAppContext extends Application{
 
     public void setIPAdress(String mIPAdress) {
         this.mIPAdress = mIPAdress;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setIsOnline(boolean isOnline) {
+        this.isOnline = isOnline;
+    }
+
+    public ArrayList<ConsumptionDataModel> getConsumptionData() {
+        return mConsumptionData;
+    }
+
+    public ArrayList<String> getComponents() {
+        return mComponents;
     }
 }

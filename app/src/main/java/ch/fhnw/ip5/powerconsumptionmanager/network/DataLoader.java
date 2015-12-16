@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.model.ConsumptionDataModel;
 import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
@@ -35,13 +36,13 @@ public class DataLoader {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
-                mCallback.UsageDataLoaderDidFail();
+                mCallback.DataLoaderDidFail();
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mCallback.UsageDataLoaderDidFail();
+                    mCallback.DataLoaderDidFail();
                     return;
                 }
                 try {
@@ -56,38 +57,40 @@ public class DataLoader {
                         mContext.getConsumptionData().add(usageData);
                     }
 
-                    mCallback.UsageDataLoaderDidFinish();
+                    loadComponents("http://" + mContext.getIPAdress() + ":" + mContext.getString(R.string.webservice_getComponents));
+                    mCallback.DataLoaderDidFinish();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    mCallback.UsageDataLoaderDidFail();
+                    mCallback.DataLoaderDidFail();
                 }
             }
         });
     }
 
     public void loadComponents(String url) {
-
         Request request = new Request.Builder()
                 .url(url)
                 .build();
 
         OkHttpClient client = new OkHttpClient();
+
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
-                mCallback.UsageDataLoaderDidFail();
+                mCallback.DataLoaderDidFail();
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    mCallback.UsageDataLoaderDidFail();
+                    mCallback.DataLoaderDidFail();
                     return;
                 }
                 try {
                     JSONArray dataJson = new JSONArray(response.body().string());
 
                     for(int i = 0; i < dataJson.length(); i++) {
+                        // TEST
                         if(i > 3) {
                             continue;
                         }
@@ -95,10 +98,10 @@ public class DataLoader {
                         mContext.getComponents().add(component);
                     }
 
-                    //mCallback.UsageDataLoaderDidFinish();
+                    //mCallback.DataLoaderDidFinish();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    mCallback.UsageDataLoaderDidFail();
+                    mCallback.DataLoaderDidFail();
                 }
             }
         });
