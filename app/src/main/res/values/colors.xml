@@ -13,20 +13,6 @@
     <color name="colorSlideTabIndicator">#263238</color>
     <color name="colorSlideTabDivider">#263238</color>
 
-
-    <!--
-    <color name="colorPrimary">#689f38</color>
-    <color name="colorPrimaryDark">#33691e</color>
-    <color name="colorAccent">#ff9100</color>
-    <color name="colorBackground">#689f38</color>
-    <color name="colorChartBackground">#f1f8e9</color>
-    <color name="colorListView">#c5e1a5</color>
-    <color name="colorTextPrimary">#ffffff</color>
-    <color name="colorTextPrimaryInverse">#000000</color>
-    <color name="colorSlideTabIndicator">#c5e1a5</color>
-    <color name="colorSlideTabDivider">#c5e1a5</color>
-    -->
-
     <!-- Graph Colors -->
     <array name="colorsGraph">
         <item>#008040</item>

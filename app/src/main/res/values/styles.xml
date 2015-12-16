@@ -8,10 +8,53 @@
         <item name="android:windowBackground">@color/colorBackground</item>
         <item name="android:textColorPrimary">@color/colorTextPrimary</item>
         <item name="android:textColorPrimaryInverse">@color/colorTextPrimaryInverse</item>
+        <item name="android:alertDialogTheme">@style/MyAlertDialogTheme</item>
+        <item name="android:alertDialogStyle">@style/MyAlertDialogStyle</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="MyBorderlessButton">
+        <item name="android:background">@color/colorListView</item>
+        <item name="android:textColor">@color/colorTextPrimaryInverse</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="MyButtonBar">
+        <item name="android:dividerPadding">3dp</item>
+        <item name="android:showDividers">end</item>
+        <item name="android:background">@color/colorListView</item>
+    </style>
+
+    <style name="MyAlertDialogTitle">
+        <item name="android:maxLines">1</item>
+        <item name="android:scrollHorizontally">false</item>
+        <item name="android:dividerHeight">10dp</item>
+    </style>
+
+    <style name="MyAlertTextAppearance">
+        <item name="android:textSize">10dp</item>
+        <item name="android:textColor">@color/colorTextPrimaryInverse</item>
+    </style>
+
+    <style name="MyAlertDialogTheme" parent="">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowTitleStyle">@style/MyAlertDialogTitle</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:textAppearanceMedium">@style/MyAlertTextAppearance</item>
+        <item name="android:buttonBarStyle">@style/MyButtonBar</item>
+        <item name="android:buttonBarButtonStyle">@style/MyBorderlessButton</item>
+    </style>
+
+    <style name="MyAlertDialogStyle">
+        <item name="android:topDark">@color/colorPrimary</item>
+        <item name="android:centerDark">@color/colorChartBackground</item>
+        <item name="android:bottomDark">@color/colorListView</item>
+        <item name="android:bottomMedium">@color/colorPrimary</item>
+    </style>
 
 </resources>

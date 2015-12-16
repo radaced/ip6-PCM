@@ -1,14 +1,9 @@
 package ch.fhnw.ip5.powerconsumptionmanager.activity;
 
-import android.annotation.TargetApi;
-import android.app.TaskStackBuilder;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -31,13 +26,10 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent mainIntent = new Intent(SettingsActivity.this, MainActivity.class);
-                SettingsActivity.this.startActivity(mainIntent);
                 SettingsActivity.this.finish();
             default:
                 return super.onOptionsItemSelected(item);

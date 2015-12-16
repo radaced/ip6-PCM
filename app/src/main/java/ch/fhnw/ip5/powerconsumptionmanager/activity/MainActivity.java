@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         createViewPagerTabs();
 
         Toolbar tb = (Toolbar) findViewById(R.id.main_toolbar);
-        tb.setTitle("Eigenverbrauchsmanager");
+        tb.setTitle(getString(R.string.title_activity_main));
         setSupportActionBar(tb);
 
         mViewPager = (ViewPager) mView.findViewById(R.id.viewpager);
@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 Intent mainIntent = new Intent(MainActivity.this, SettingsActivity.class);
                 MainActivity.this.startActivity(mainIntent);
-                MainActivity.this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

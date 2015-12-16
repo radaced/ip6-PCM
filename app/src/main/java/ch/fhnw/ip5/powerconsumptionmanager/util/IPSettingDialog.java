@@ -1,11 +1,17 @@
 package ch.fhnw.ip5.powerconsumptionmanager.util;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.os.Build;
+import android.os.Bundle;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.StringTokenizer;
 
@@ -24,12 +30,6 @@ public class IPSettingDialog extends DialogPreference {
 
     public IPSettingDialog(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        setDialogLayoutResource(R.layout.preference_ipsetting);
-        setPositiveButtonText(android.R.string.ok);
-        setNegativeButtonText(android.R.string.cancel);
-
-        setDialogIcon(null);
     }
 
     @Override
@@ -60,6 +60,26 @@ public class IPSettingDialog extends DialogPreference {
             String ip = mIP1.getText().toString() + "." + mIP2.getText().toString() + "." + mIP3.getText().toString() + "." + mIP4.getText().toString();
             editor.putString("IP", ip);
             editor.commit();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    protected void showDialog(Bundle state) {
+        super.showDialog(state);
+        final Resources res = getContext().getResources();
+        final Window window = getDialog().getWindow();
+
+        final int titleId = res.getIdentifier("alertTitle", "id", "android");
+        final View title = window.findViewById(titleId);
+        if (title != null) {
+            ((TextView) title).setTextColor(res.getColor(R.color.colorTextPrimary));
+        }
+
+        final int titleDividerId = res.getIdentifier("titleDivider", "id", "android");
+        final View titleDivider = window.findViewById(titleDividerId);
+        if (titleDivider != null) {
+            titleDivider.setBackgroundColor(res.getColor(android.R.color.transparent));
         }
     }
 }

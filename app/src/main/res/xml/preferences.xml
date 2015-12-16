@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/category_network">
+    <PreferenceCategory
+        android:title="@string/category_network">
 
         <ch.fhnw.ip5.powerconsumptionmanager.util.IPSettingDialog
             android:dialogTitle="@string/text_pref_ip_title"
+            android:dialogLayout="@layout/dialog_ip_settings"
+            android:positiveButtonText="@android:string/ok"
+            android:negativeButtonText="@android:string/cancel"
             android:key="IP"
             android:title="@string/text_pref_ip_title"/>
 
