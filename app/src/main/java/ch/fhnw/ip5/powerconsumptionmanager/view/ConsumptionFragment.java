@@ -18,6 +18,8 @@ package ch.fhnw.ip5.powerconsumptionmanager.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,8 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+
+import java.util.ArrayList;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.adapter.DeviceListAdapter;
@@ -56,25 +60,36 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
         PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
 
         mConsumptionChart = (LineChart) view.findViewById(R.id.lineChart);
-
-        // Set up the whole chart with data sets and so on with the helper class
         ChartHelper chartHelper = new ChartHelper(mConsumptionChart, this);
-        chartHelper.setup();
-        chartHelper.setLegend(false);
-        chartHelper.generateXValues(context.getConsumptionData().get(0));
+        ListView listView = (ListView) view.findViewById(R.id.deviceList);
 
-        // Generate the data sets to display
-        for (int z = 0; z < context.getConsumptionData().size(); z++) {
-            chartHelper.generateDataSet(context.getConsumptionData().get(z), z);
+        // Check if web requests for consumption data were successful
+        if(!context.isOnline()) {
+            // Set up an empty chart with an error message
+            chartHelper.setupOnError();
+
+            ArrayList<String> errorMsg = new ArrayList<String>();
+            errorMsg.add(getString(R.string.list_device_error));
+            listView.setAdapter(new DeviceListAdapter(getActivity(), R.layout.list_no_device, errorMsg, null));
+        } else {
+            // Set up the whole chart with data sets and so on with the helper class
+            chartHelper.setup();
+            chartHelper.setLegend(false);
+            chartHelper.generateXValues(context.getConsumptionData().get(0));
+
+            // Generate the data sets to display
+            for (int z = 0; z < context.getConsumptionData().size(); z++) {
+                chartHelper.generateDataSet(context.getConsumptionData().get(z), z);
+            }
+
+            // Display the chart
+            chartHelper.initChartData();
+            chartHelper.displayAnimated();
+
+            // Set up the device list
+            listView.setAdapter(new DeviceListAdapter(getActivity(), R.layout.list_item_device, context.getComponents(), chartHelper));
         }
 
-        // Display the chart
-        chartHelper.initChartData();
-        chartHelper.displayAnimated();
-
-        // Set up the device list
-        ListView listView = (ListView) view.findViewById(R.id.deviceList);
-        listView.setAdapter(new DeviceListAdapter(getActivity(), R.layout.list_item_device, context.getComponents(), chartHelper));
     }
 
     @Override

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.util.StringTokenizer;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
+import ch.fhnw.ip5.powerconsumptionmanager.activity.SettingsActivity;
 
 /**
  * Custom preference dialog to change the ip that is stored in the preference file
@@ -68,6 +69,9 @@ public class IPSettingDialog extends DialogPreference {
             // Update application context
             PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
             context.setIPAdress(mSettings.getString("IP", "192.168.0.1"));
+
+            // Settings have changed
+            SettingsActivity.UPDATED = true;
         }
     }
 

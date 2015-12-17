@@ -5,6 +5,10 @@
 
     <!-- Fragment consumption data -->
     <string name="data_frag_text">Verbrauch</string>
+    <string name="chart_connection_error_title">Verbindungsproblem.</string>
+    <string name="chart_connection_error_description">Überprüfen Sie angegebene IP-Adresse.</string>
+    <string name="chart_no_data">Keine Daten.</string>
+    <string name="list_device_error">Keine Geräte gefunden.</string>
 
     <!-- Fragment charge plan -->
     <string name="plan_frag_text">Ladeplan</string>
@@ -14,23 +18,17 @@
 
     <!-- Splash-Screen -->
     <string name="title_activity_splash">Eigenverbrauchsmanager</string>
-    <string name="info_splash_text">Eigenverbrauchsmanager lädt...</string>
-    <string name="init_text_ip">IP:</string>
-    <string name="init_dot">.</string>
-    <string name="continue_button">Fortfahren</string>
-    <string name="init_text_ip_error">Zahl zwischen 0 und 255</string>
-    <string name="init_description">Geben Sie die IP des Geräts ein, wo die Serverkomponente drauf läuft.</string>
-
-    <!-- File -->
-    <string name="application_settings">pcm_settings</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="text_splash_info">Eigenverbrauchsmanager lädt...</string>
+    <string name="text_splash_settings_changed">Eigenverbrauchsmanager lädt mit neuen Einstellungen...</string>
+    <string name="text_init_ip">IP:</string>
+    <string name="text_init_dot">.</string>
+    <string name="button_continue">Fortfahren</string>
+    <string name="text_init_ip_error">Zahl zwischen 0 und 255</string>
+    <string name="text_init_description">Geben Sie die IP des Geräts ein, wo die Serverkomponente drauf läuft.</string>
 
     <!-- Settings-Screen -->
+    <string name="title_activity_settings">Settings</string>
     <string name="category_network">Netzwerk Konfiguration</string>
     <string name="text_pref_ip_title">IP Adresse</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
 </resources>

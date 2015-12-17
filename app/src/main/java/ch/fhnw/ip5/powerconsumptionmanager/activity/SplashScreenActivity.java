@@ -30,6 +30,10 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
         if(settings.contains("IP")) {
             // Load IP address from preference file into application context for easier access
             mContext.setIPAdress(settings.getString("IP", "192.168.0.1"));
+            // Clear device list and data list because new data is loaded
+            mContext.getComponents().clear();
+            mContext.getConsumptionData().clear();
+
             SplashFragment fragment = SplashFragment.newInstance();
             transaction.replace(R.id.splash_fragment, fragment);
         } else {

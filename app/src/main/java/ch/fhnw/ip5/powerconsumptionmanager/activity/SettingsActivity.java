@@ -1,5 +1,6 @@
 package ch.fhnw.ip5.powerconsumptionmanager.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -12,12 +13,16 @@ import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.util.IPSettingDialog;
 
 public class SettingsActivity extends AppCompatActivity {
+    // Flag if settings have changed
+    public static boolean UPDATED;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        UPDATED = false;
 
+        // Load preferences in separate fragment
         getFragmentManager().beginTransaction().replace(R.id.ip_setting_fragment, new SettingsFragment()).commit();
 
         // Settings toolbar
@@ -32,7 +37,14 @@ public class SettingsActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Close settings activity when finished with editing settings
             case android.R.id.home:
-                SettingsActivity.this.finish();
+                if(SettingsActivity.UPDATED) {
+                    Intent mainIntent = new Intent(SettingsActivity.this, SplashScreenActivity.class);
+                    mainIntent.putExtra("settings_changed", getString(R.string.text_splash_settings_changed));
+                    SettingsActivity.this.startActivity(mainIntent);
+                    SettingsActivity.this.finish();
+                } else {
+                    SettingsActivity.this.finish();
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }

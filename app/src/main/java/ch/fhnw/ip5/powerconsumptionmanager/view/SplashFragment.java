@@ -6,6 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.network.DataLoader;
@@ -29,8 +32,15 @@ public class SplashFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
-        final DataLoader loader = new DataLoader(context, (DataLoaderCallback) getActivity());
+        // When settings have changed edit info text that power consumption manager loads with new settings
+        Bundle extras = getActivity().getIntent().getExtras();
+        if(extras != null) {
+            TextView loadingMsg = (TextView) view.findViewById(R.id.textLoadingMessage);
+            loadingMsg.setText(extras.getString("settings_changed", getString(R.string.text_splash_info)));
+        }
+
+        PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
+        DataLoader loader = new DataLoader(context, (DataLoaderCallback) getActivity());
 
         // Web request to load the consumption data
         loader.loadConsumptionData("http://" + context.getIPAdress() + ":" + getString(R.string.webservice_getData));

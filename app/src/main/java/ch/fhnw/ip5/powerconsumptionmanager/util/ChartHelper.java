@@ -1,8 +1,10 @@
 package ch.fhnw.ip5.powerconsumptionmanager.util;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -27,13 +29,16 @@ public class ChartHelper {
     private ArrayList<String> mXValues = new ArrayList<String>();
     // Holds all data sets from the chart
     private HashMap<Integer, LineDataSet> mConsumptionDataSet = new HashMap<Integer, LineDataSet>();
+    // Members to modify colors
     private int[] mGraphColors;
+    private Paint mChartDrawer;
 
 
     public ChartHelper(LineChart chart, ConsumptionFragment context) {
         mConsumptionChart = chart;
         mContext = context;
         mGraphColors = context.getResources().getIntArray(R.array.colorsGraph);
+        mChartDrawer = chart.getPaint(Chart.PAINT_INFO);
     }
 
     // Inital settings for the chart
@@ -43,6 +48,8 @@ public class ChartHelper {
         mConsumptionChart.setDrawGridBackground(false);
         mConsumptionChart.setDrawBorders(false);
         mConsumptionChart.setDescription(null);
+        mConsumptionChart.setNoDataText(mContext.getActivity().getString(R.string.chart_no_data));
+        mChartDrawer.setColor(ContextCompat.getColor(mContext.getActivity(), R.color.colorTextPrimaryInverse));
 
         // Define which axis to display
         mConsumptionChart.getAxisLeft().setDrawAxisLine(true);
@@ -63,14 +70,20 @@ public class ChartHelper {
         mConsumptionChart.setOnChartValueSelectedListener(mContext);
     }
 
+    // Set error messages for empty chart
+    public void setupOnError() {
+        mConsumptionChart.setNoDataText(mContext.getActivity().getString(R.string.chart_connection_error_title));
+        mConsumptionChart.setNoDataTextDescription(mContext.getActivity().getString(R.string.chart_connection_error_description));
+        mConsumptionChart.setBackgroundColor(ContextCompat.getColor(mContext.getActivity(), R.color.colorChartBackground));
+        mChartDrawer.setColor(ContextCompat.getColor(mContext.getActivity(), R.color.colorTextPrimaryInverse));
+    }
+
     // Shows or hides the legend
     public void setLegend(boolean enable) {
         Legend l = mConsumptionChart.getLegend();
-
         if(enable) {
             l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
         }
-
         l.setEnabled(enable);
     }
 

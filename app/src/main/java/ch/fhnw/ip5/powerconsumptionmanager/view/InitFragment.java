@@ -45,19 +45,19 @@ public class InitFragment extends Fragment {
 
                 // Error detection in case IP is invalid
                 if (!isValidIPNumber(ip1)) {
-                    ip1.setError(getString(R.string.init_text_ip_error));
+                    ip1.setError(getString(R.string.text_init_ip_error));
                     correct = false;
                 }
                 if (!isValidIPNumber(ip2)) {
-                    ip2.setError(getString(R.string.init_text_ip_error));
+                    ip2.setError(getString(R.string.text_init_ip_error));
                     correct = false;
                 }
                 if (!isValidIPNumber(ip3)) {
-                    ip3.setError(getString(R.string.init_text_ip_error));
+                    ip3.setError(getString(R.string.text_init_ip_error));
                     correct = false;
                 }
                 if (!isValidIPNumber(ip4)) {
-                    ip4.setError(getString(R.string.init_text_ip_error));
+                    ip4.setError(getString(R.string.text_init_ip_error));
                     correct = false;
                 }
 
