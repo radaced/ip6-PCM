@@ -14,6 +14,9 @@ import android.widget.EditText;
 import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
+/**
+ * Fragment shows when the application is started for the first time (initial setting of IP)
+ */
 public class InitFragment extends Fragment {
 
     public static InitFragment newInstance() {
@@ -35,12 +38,12 @@ public class InitFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 boolean correct = true;
-
                 EditText ip1 = (EditText) getActivity().findViewById(R.id.editIP1);
                 EditText ip2 = (EditText) getActivity().findViewById(R.id.editIP2);
                 EditText ip3 = (EditText) getActivity().findViewById(R.id.editIP3);
                 EditText ip4 = (EditText) getActivity().findViewById(R.id.editIP4);
 
+                // Error detection in case IP is invalid
                 if (!isValidIPNumber(ip1)) {
                     ip1.setError(getString(R.string.init_text_ip_error));
                     correct = false;
@@ -59,16 +62,18 @@ public class InitFragment extends Fragment {
                 }
 
                 if (correct) {
+                    // When input was correct load preference file and set the key-value pair for IP
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    //SharedPreferences settings = getActivity().getSharedPreferences(getString(R.string.application_settings), getContext().MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
                     String ip = ip1.getText().toString() + "." + ip2.getText().toString() + "." + ip3.getText().toString() + "." + ip4.getText().toString();
                     editor.putString("IP", ip);
                     editor.commit();
 
+                    // Set the IP in the application context for easier access
                     PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
                     context.setIPAdress(ip);
 
+                    // Change to loading fragment
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     SplashFragment fragment = new SplashFragment();
                     transaction.replace(R.id.splash_fragment, fragment);
@@ -78,11 +83,14 @@ public class InitFragment extends Fragment {
         });
     }
 
+    // Error detection for IP
     private boolean isValidIPNumber(EditText ip) {
+        // IP field can't be empty
         if(ip.getText().length() <= 0) {
             return false;
         }
 
+        // Entered number needs to be between 0 and 255
         int ipNumber = Integer.parseInt(ip.getText().toString());
         if(ipNumber < 0 || ipNumber > 255) {
             return false;

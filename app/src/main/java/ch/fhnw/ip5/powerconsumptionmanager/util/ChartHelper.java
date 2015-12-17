@@ -18,12 +18,14 @@ import ch.fhnw.ip5.powerconsumptionmanager.model.ConsumptionDataModel;
 import ch.fhnw.ip5.powerconsumptionmanager.view.ConsumptionFragment;
 
 /**
- * Created by Patrik on 06.12.2015.
+ * Helperclass to handle and modify the chart
  */
 public class ChartHelper {
     private LineChart mConsumptionChart;
     private ConsumptionFragment mContext;
+    // Holds x values (timestamps)
     private ArrayList<String> mXValues = new ArrayList<String>();
+    // Holds all data sets from the chart
     private HashMap<Integer, LineDataSet> mConsumptionDataSet = new HashMap<Integer, LineDataSet>();
     private int[] mGraphColors;
 
@@ -34,13 +36,15 @@ public class ChartHelper {
         mGraphColors = context.getResources().getIntArray(R.array.colorsGraph);
     }
 
+    // Inital settings for the chart
     public void setup() {
+        // Set looks
         mConsumptionChart.setBackgroundColor(ContextCompat.getColor(mContext.getActivity(), R.color.colorChartBackground));
         mConsumptionChart.setDrawGridBackground(false);
         mConsumptionChart.setDrawBorders(false);
         mConsumptionChart.setDescription(null);
-        mConsumptionChart.setDoubleTapToZoomEnabled(true);
 
+        // Define which axis to display
         mConsumptionChart.getAxisLeft().setDrawAxisLine(true);
         mConsumptionChart.getAxisLeft().setDrawGridLines(true);
         mConsumptionChart.getAxisLeft().setGridColor(Color.BLACK);
@@ -50,6 +54,8 @@ public class ChartHelper {
         mConsumptionChart.getXAxis().setDrawGridLines(false);
         mConsumptionChart.getXAxis().setValueFormatter(new XAxisDateFormatter());
 
+        // Set functionality
+        mConsumptionChart.setDoubleTapToZoomEnabled(true);
         mConsumptionChart.setTouchEnabled(true);
         mConsumptionChart.setDragEnabled(true);
         mConsumptionChart.setScaleEnabled(true);
@@ -57,12 +63,18 @@ public class ChartHelper {
         mConsumptionChart.setOnChartValueSelectedListener(mContext);
     }
 
+    // Shows or hides the legend
     public void setLegend(boolean enable) {
         Legend l = mConsumptionChart.getLegend();
-        l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+
+        if(enable) {
+            l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+        }
+
         l.setEnabled(enable);
     }
 
+    // Generates the x values of the chart (amount of x and y values need to be equal)
     public void generateXValues(ConsumptionDataModel data) {
         for (int i = 0; i < data.getComponentData().size(); i++) {
             // Only 1 day
@@ -73,6 +85,7 @@ public class ChartHelper {
         }
     }
 
+    // Generates a single data set and adds it to the hash map that holds all data sets
     public void generateDataSet(ConsumptionDataModel data, int iteration) {
         ArrayList<Entry> values = new ArrayList<Entry>();
 
@@ -88,11 +101,13 @@ public class ChartHelper {
         lds.setLineWidth(1.5f);
         lds.setCircleSize(2f);
 
+        // Set the graph colors as they appear in the server component
         lds.setColor(getGraphColor(iteration));
         lds.setCircleColor(getGraphColor(iteration));
         mConsumptionDataSet.put(iteration, lds);
     }
 
+    // Show all data sets
     public void initChartData() {
         ArrayList<LineDataSet> list = new ArrayList<LineDataSet>();
         for(int i = 0; i < mConsumptionDataSet.size(); i++) {
@@ -103,6 +118,10 @@ public class ChartHelper {
         mConsumptionChart.setData(data);
     }
 
+    /*
+     * Show only data sets where the toggle button for each device is active. Pass a parameter (list
+     * that holds the indices to ignore)
+     */
     public void updateChartData(ArrayList<Integer> ignoreList) {
         ArrayList<LineDataSet> list = new ArrayList<LineDataSet>();
         boolean skip = false;
@@ -124,10 +143,12 @@ public class ChartHelper {
         mConsumptionChart.setData(data);
     }
 
+    // Display chart data animated (chart data fades in from bottom to top)
     public void displayAnimated() {
         mConsumptionChart.animateY(2000);
     }
 
+    // Display without animation
     public void displayNoneAnimated() {
         mConsumptionChart.invalidate();
     }

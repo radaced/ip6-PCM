@@ -33,10 +33,12 @@ public class MainActivity extends AppCompatActivity {
         /************* Setup main menu *************/
         createViewPagerTabs();
 
+        // Main toolbar
         Toolbar tb = (Toolbar) findViewById(R.id.main_toolbar);
         tb.setTitle(getString(R.string.title_activity_main));
         setSupportActionBar(tb);
 
+        // Sliding layout
         mViewPager = (ViewPager) mView.findViewById(R.id.viewpager);
         mViewPager.setAdapter(new EVMPagerAdapter(getSupportFragmentManager(), mTabs));
 
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setViewPager(mViewPager);
 
+        // Colorized indicator that shows which tab is currently displayed
         mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // Open settings activity when icon is pressed in actionbar
             case R.id.action_settings:
                 Intent mainIntent = new Intent(MainActivity.this, SettingsActivity.class);
                 MainActivity.this.startActivity(mainIntent);
@@ -75,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Generate tabs as pager models to later display in sliding tab layout
     private void createViewPagerTabs() {
         mTabs.add(new PagerItemModel(
                 getString(R.string.data_frag_text),

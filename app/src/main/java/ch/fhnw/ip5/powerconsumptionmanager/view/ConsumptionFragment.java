@@ -34,6 +34,9 @@ import ch.fhnw.ip5.powerconsumptionmanager.adapter.DeviceListAdapter;
 import ch.fhnw.ip5.powerconsumptionmanager.util.ChartHelper;
 import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
+/**
+ * Fragment is entry point of main application, shows usage data in a chart and connected devices
+ */
 public class ConsumptionFragment extends Fragment implements OnChartValueSelectedListener {
     private LineChart mConsumptionChart;
 
@@ -54,19 +57,23 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
 
         mConsumptionChart = (LineChart) view.findViewById(R.id.lineChart);
 
+        // Set up the whole chart with data sets and so on with the helper class
         ChartHelper chartHelper = new ChartHelper(mConsumptionChart, this);
         chartHelper.setup();
         chartHelper.setLegend(false);
         chartHelper.generateXValues(context.getConsumptionData().get(0));
 
+        // Generate the data sets to display
         for (int z = 0; z < context.getConsumptionData().size(); z++) {
             chartHelper.generateDataSet(context.getConsumptionData().get(z), z);
         }
 
+        // Display the chart
         chartHelper.initChartData();
         chartHelper.displayAnimated();
 
-        final ListView listView = (ListView) view.findViewById(R.id.deviceList);
+        // Set up the device list
+        ListView listView = (ListView) view.findViewById(R.id.deviceList);
         listView.setAdapter(new DeviceListAdapter(getActivity(), R.layout.list_item_device, context.getComponents(), chartHelper));
     }
 

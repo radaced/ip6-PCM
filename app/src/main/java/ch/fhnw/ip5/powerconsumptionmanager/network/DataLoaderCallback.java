@@ -1,7 +1,7 @@
 package ch.fhnw.ip5.powerconsumptionmanager.network;
 
 /**
- * Created by Patrik on 02.12.2015.
+ * Callback function for asynchronous web requests
  */
 public interface DataLoaderCallback {
     void DataLoaderDidFinish();

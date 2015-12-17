@@ -21,12 +21,14 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+        // Load application context and preferences
         mContext = (PowerConsumptionManagerAppContext) getApplicationContext();
-
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
+        // On initial startup show mask to enter ip, otherwise directly load data to display
         if(settings.contains("IP")) {
+            // Load IP address from preference file into application context for easier access
             mContext.setIPAdress(settings.getString("IP", "192.168.0.1"));
             SplashFragment fragment = SplashFragment.newInstance();
             transaction.replace(R.id.splash_fragment, fragment);
@@ -38,6 +40,7 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
         transaction.commit();
     }
 
+    /************* Loader Callbacks *************/
     @Override
     public void DataLoaderDidFinish() {
         mContext.setIsOnline(true);

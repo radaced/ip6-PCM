@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import ch.fhnw.ip5.powerconsumptionmanager.model.ConsumptionDataModel;
 
 /**
- * Created by Patrik on 02.12.2015.
+ * Application context (storage of global app data and data received from web requests)
  */
 public class PowerConsumptionManagerAppContext extends Application{
     private String mIPAdress;

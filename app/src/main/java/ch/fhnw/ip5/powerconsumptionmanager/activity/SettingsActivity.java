@@ -20,6 +20,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         getFragmentManager().beginTransaction().replace(R.id.ip_setting_fragment, new SettingsFragment()).commit();
 
+        // Settings toolbar
         Toolbar tb = (Toolbar) findViewById(R.id.settings_toolbar);
         tb.setTitle("Settings");
         setSupportActionBar(tb);
@@ -29,6 +30,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // Close settings activity when finished with editing settings
             case android.R.id.home:
                 SettingsActivity.this.finish();
             default:
@@ -45,6 +47,8 @@ public class SettingsActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
             mSettings = getPreferenceScreen().getSharedPreferences();
+
+            // Set present ip as summary of preference entry
             IPSettingDialog ipDialog = (IPSettingDialog) findPreference("IP");
             ipDialog.setSummary(mSettings.getString("IP", "192.168.0.1"));
         }
@@ -63,6 +67,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            // Update summary of ip preference entry when ip changed
             Preference pref = findPreference(key);
             String newSummary = mSettings.getString("IP", "");
             pref.setSummary(newSummary);

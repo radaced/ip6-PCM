@@ -16,7 +16,8 @@ import ch.fhnw.ip5.powerconsumptionmanager.model.ConsumptionDataModel;
 import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
- * Created by Patrik on 02.12.2015.
+ * Loads the different data from the power consumption manager server component over asynchronous
+ * web requests
  */
 public class DataLoader {
     private PowerConsumptionManagerAppContext mContext;
@@ -27,12 +28,14 @@ public class DataLoader {
         this.mCallback = callback;
     }
 
+    // getData call to get consumption data (24h) of all connected devices
     public void loadConsumptionData(String url) {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
 
         OkHttpClient client = new OkHttpClient();
+        // Define call and callback
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
@@ -45,9 +48,12 @@ public class DataLoader {
                     mCallback.DataLoaderDidFail();
                     return;
                 }
+
+                // When response was successful ...
                 try {
                     JSONArray dataJson = new JSONArray(response.body().string());
 
+                    // ... fill model containers with each device and add the data to application context
                     for(int i = 0; i < dataJson.length(); i++) {
                         // TEST
                         if(i > 3) {
@@ -57,6 +63,7 @@ public class DataLoader {
                         mContext.getConsumptionData().add(usageData);
                     }
 
+                    // Directly call the loader for getComponents
                     loadComponents("http://" + mContext.getIPAdress() + ":" + mContext.getString(R.string.webservice_getComponents));
                     mCallback.DataLoaderDidFinish();
                 } catch (JSONException e) {
@@ -67,13 +74,14 @@ public class DataLoader {
         });
     }
 
+    // getComponents call to get names of all connected devices
     public void loadComponents(String url) {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
 
         OkHttpClient client = new OkHttpClient();
-
+        // Define call and callback
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
@@ -86,9 +94,12 @@ public class DataLoader {
                     mCallback.DataLoaderDidFail();
                     return;
                 }
+
+                // When response was successful ...
                 try {
                     JSONArray dataJson = new JSONArray(response.body().string());
 
+                    // ... get all component names from the response and store them in application context
                     for(int i = 0; i < dataJson.length(); i++) {
                         // TEST
                         if(i > 3) {

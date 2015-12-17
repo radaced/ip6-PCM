@@ -8,12 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Patrik on 02.12.2015.
+ * Holds all value pairs (timestamp, power) for the graph of a single device from a getData-Request
  */
 public class ConsumptionDataModel {
     private String mComponentName;
     private ArrayList<ComponentDataModel> mComponentData = new ArrayList<ComponentDataModel>();
 
+    // Read device name and store all value pairs in a list
     public ConsumptionDataModel(JSONObject fullData){
         try{
             mComponentName = fullData.getString("Name");

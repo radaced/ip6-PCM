@@ -1,8 +1,14 @@
 package ch.fhnw.ip5.powerconsumptionmanager.model;
 
 
+import android.support.v4.app.Fragment;
+
 import ch.fhnw.ip5.powerconsumptionmanager.view.ConsumptionFragment;
 
+/**
+ * Stores the tab data like title, indicator color (border under the selected tab) and divider
+ * color (border between tabs)
+ */
 public class PagerItemModel {
     private final CharSequence mTitle;
     private final int mIndicatorColor;
@@ -14,7 +20,8 @@ public class PagerItemModel {
         mDividerColor = dividerColor;
     }
 
-    public android.support.v4.app.Fragment createFragment() {
+    // Delegate the creation of the new fragment when page changed to the right fragment class
+    public Fragment createFragment() {
         return ConsumptionFragment.newInstance();
     }
 
