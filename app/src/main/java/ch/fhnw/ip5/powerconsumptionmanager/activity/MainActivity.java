@@ -83,17 +83,17 @@ public class MainActivity extends AppCompatActivity {
     // Generate tabs as pager models to later display in sliding tab layout
     private void createViewPagerTabs() {
         mTabs.add(new PagerItemModel(
-                getString(R.string.data_frag_text),
+                getString(R.string.title_frag_consumption),
                 ContextCompat.getColor(this, R.color.colorSlideTabIndicator),
                 ContextCompat.getColor(this, R.color.colorSlideTabDivider)
         ));
         mTabs.add(new PagerItemModel(
-                getString(R.string.plan_frag_text),
+                getString(R.string.title_frag_plan),
                 ContextCompat.getColor(this, R.color.colorSlideTabIndicator),
                 ContextCompat.getColor(this, R.color.colorSlideTabDivider)
         ));
         mTabs.add(new PagerItemModel(
-                getString(R.string.tesla_frag_text),
+                getString(R.string.title_frag_tesla),
                 ContextCompat.getColor(this, R.color.colorSlideTabIndicator),
                 ContextCompat.getColor(this, R.color.colorSlideTabDivider)
         ));

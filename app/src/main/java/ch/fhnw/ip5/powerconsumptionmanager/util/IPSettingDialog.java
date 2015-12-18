@@ -1,10 +1,8 @@
 package ch.fhnw.ip5.powerconsumptionmanager.util;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.DialogPreference;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.StringTokenizer;
 
@@ -60,18 +59,23 @@ public class IPSettingDialog extends DialogPreference {
 
         // When user pressed ok ...
         if(positiveResult) {
-            // ... edit preference file and update the ip address
-            SharedPreferences.Editor editor = mSettings.edit();
-            String ip = mIP1.getText().toString() + "." + mIP2.getText().toString() + "." + mIP3.getText().toString() + "." + mIP4.getText().toString();
-            editor.putString("IP", ip);
-            editor.commit();
+            if(isValidIPNumber(mIP1) && isValidIPNumber(mIP2) && isValidIPNumber(mIP3) && isValidIPNumber(mIP4)) {
+                // ... edit preference file and update the ip address
+                SharedPreferences.Editor editor = mSettings.edit();
+                String ip = mIP1.getText().toString() + "." + mIP2.getText().toString() + "." + mIP3.getText().toString() + "." + mIP4.getText().toString();
+                editor.putString("IP", ip);
+                editor.commit();
 
-            // Update application context
-            PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
-            context.setIPAdress(mSettings.getString("IP", "192.168.0.1"));
+                // Update application context
+                PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
+                context.setIPAdress(mSettings.getString("IP", "192.168.0.1"));
 
-            // Settings have changed
-            SettingsActivity.UPDATED = true;
+                // Settings have changed
+                SettingsActivity.UPDATED = true;
+                Toast.makeText(getContext(), "IP updated", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Invalid IP", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -94,5 +98,21 @@ public class IPSettingDialog extends DialogPreference {
         if (titleDivider != null) {
             titleDivider.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorTextPrimary));
         }
+    }
+
+    // Error detection for IP
+    private boolean isValidIPNumber(EditText ip) {
+        // IP field can't be empty
+        if(ip.getText().length() <= 0) {
+            return false;
+        }
+
+        // Entered number needs to be between 0 and 255
+        int ipNumber = Integer.parseInt(ip.getText().toString());
+        if(ipNumber < 0 || ipNumber > 255) {
+            return false;
+        }
+
+        return true;
     }
 }

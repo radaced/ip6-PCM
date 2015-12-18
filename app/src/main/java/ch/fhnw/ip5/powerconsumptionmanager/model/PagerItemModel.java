@@ -4,6 +4,8 @@ package ch.fhnw.ip5.powerconsumptionmanager.model;
 import android.support.v4.app.Fragment;
 
 import ch.fhnw.ip5.powerconsumptionmanager.view.ConsumptionFragment;
+import ch.fhnw.ip5.powerconsumptionmanager.view.PlanFragment;
+import ch.fhnw.ip5.powerconsumptionmanager.view.TeslaFragment;
 
 /**
  * Stores the tab data like title, indicator color (border under the selected tab) and divider
@@ -21,8 +23,17 @@ public class PagerItemModel {
     }
 
     // Delegate the creation of the new fragment when page changed to the right fragment class
-    public Fragment createFragment() {
-        return ConsumptionFragment.newInstance();
+    public Fragment createFragment(int i) {
+        switch (i) {
+            case 0:
+                return ConsumptionFragment.newInstance();
+            case 1:
+                return PlanFragment.newInstance();
+            case 2:
+                return TeslaFragment.newInstance();
+            default:
+                return null;
+        }
     }
 
     public CharSequence getTitle() {

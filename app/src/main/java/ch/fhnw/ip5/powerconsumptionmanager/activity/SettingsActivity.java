@@ -43,6 +43,8 @@ public class SettingsActivity extends AppCompatActivity {
                     SettingsActivity.this.startActivity(mainIntent);
                     SettingsActivity.this.finish();
                 } else {
+                    Intent mainIntent = new Intent(SettingsActivity.this, MainActivity.class);
+                    SettingsActivity.this.startActivity(mainIntent);
                     SettingsActivity.this.finish();
                 }
             default:

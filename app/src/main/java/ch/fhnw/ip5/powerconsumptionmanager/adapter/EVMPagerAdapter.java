@@ -21,7 +21,7 @@ public class EVMPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        return mTabs.get(i).createFragment();
+        return mTabs.get(i).createFragment(i);
     }
 
     @Override

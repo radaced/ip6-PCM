@@ -4,17 +4,17 @@
     <string name="title_activity_main">Eigenverbrauchsmanager</string>
 
     <!-- Fragment consumption data -->
-    <string name="data_frag_text">Verbrauch</string>
+    <string name="title_frag_consumption">Verbrauch</string>
     <string name="chart_connection_error_title">Verbindungsproblem.</string>
     <string name="chart_connection_error_description">Überprüfen Sie angegebene IP-Adresse.</string>
     <string name="chart_no_data">Keine Daten.</string>
     <string name="list_device_error">Keine Geräte gefunden.</string>
 
     <!-- Fragment charge plan -->
-    <string name="plan_frag_text">Ladeplan</string>
+    <string name="title_frag_plan">Ladeplan</string>
 
     <!-- Fragment tesla -->
-    <string name="tesla_frag_text">Tesla</string>
+    <string name="title_frag_tesla">Tesla</string>
 
     <!-- Splash-Screen -->
     <string name="title_activity_splash">Eigenverbrauchsmanager</string>

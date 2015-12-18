@@ -39,7 +39,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.ChartHelper;
 import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
- * Fragment is entry point of main application, shows usage data in a chart and connected devices
+ * This Fragment shows usage data in a chart and connected devices
  */
 public class ConsumptionFragment extends Fragment implements OnChartValueSelectedListener {
     private LineChart mConsumptionChart;
