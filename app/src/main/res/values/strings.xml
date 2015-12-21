@@ -1,34 +1,36 @@
 <resources>
     <!-- App -->
-    <string name="app_name">Eigenverbrauchsmanager</string>
-    <string name="title_activity_main">Eigenverbrauchsmanager</string>
+    <string name="app_name">PowerConsumptionManager</string>
+    <string name="title_activity_main">Power Consumption Manager</string>
 
     <!-- Fragment consumption data -->
-    <string name="title_frag_consumption">Verbrauch</string>
-    <string name="chart_connection_error_title">Verbindungsproblem.</string>
-    <string name="chart_connection_error_description">Überprüfen Sie angegebene IP-Adresse.</string>
-    <string name="chart_no_data">Keine Daten.</string>
-    <string name="list_device_error">Keine Geräte gefunden.</string>
+    <string name="title_frag_consumption">Consumption</string>
+    <string name="chart_connection_error_title">Connection error.</string>
+    <string name="chart_connection_error_description">Check your entered IP address.</string>
+    <string name="chart_no_data">No data available.</string>
+    <string name="list_device_error">No devices found.</string>
 
     <!-- Fragment charge plan -->
-    <string name="title_frag_plan">Ladeplan</string>
+    <string name="title_frag_plan">Charge plan</string>
 
     <!-- Fragment tesla -->
     <string name="title_frag_tesla">Tesla</string>
 
     <!-- Splash-Screen -->
-    <string name="title_activity_splash">Eigenverbrauchsmanager</string>
-    <string name="text_splash_info">Eigenverbrauchsmanager lädt...</string>
-    <string name="text_splash_settings_changed">Eigenverbrauchsmanager lädt mit neuen Einstellungen...</string>
+    <string name="title_activity_splash">Power Consumption Manager</string>
+    <string name="text_splash_info">Power Consumption Manager loading…</string>
+    <string name="text_splash_settings_changed">Power Consumption Manager loading with new settings…</string>
     <string name="text_init_ip">IP:</string>
     <string name="text_init_dot">.</string>
-    <string name="button_continue">Fortfahren</string>
-    <string name="text_init_ip_error">Zahl zwischen 0 und 255</string>
-    <string name="text_init_description">Geben Sie die IP des Geräts ein, wo die Serverkomponente drauf läuft.</string>
+    <string name="button_continue">Continue</string>
+    <string name="text_init_ip_error">Number between 0 and 255</string>
+    <string name="text_init_description">Enter the IP address of a device, where the server component is running on.</string>
 
     <!-- Settings-Screen -->
     <string name="title_activity_settings">Settings</string>
-    <string name="category_network">Netzwerk Konfiguration</string>
-    <string name="text_pref_ip_title">IP Adresse</string>
+    <string name="category_network">Network configuration</string>
+    <string name="text_pref_ip_title">IP address</string>
     <string name="action_settings">Settings</string>
+    <string name="toast_ip_updated">IP updated</string>
+    <string name="toast_ip_invalid">IP invalid</string>
 </resources>

@@ -8,53 +8,88 @@
         <item name="android:windowBackground">@color/colorBackground</item>
         <item name="android:textColorPrimary">@color/colorTextPrimary</item>
         <item name="android:textColorPrimaryInverse">@color/colorTextPrimaryInverse</item>
-        <item name="android:alertDialogTheme">@style/MyAlertDialogTheme</item>
-        <item name="android:alertDialogStyle">@style/MyAlertDialogStyle</item>
+        <item name="android:alertDialogTheme">@style/CustomDialogTheme</item>
+        <item name="android:alertDialogStyle">@style/CustomDialogStyle</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="MyBorderlessButton">
+
+    <!-- Custom dialog theme -->
+    <style name="CustomDialogTheme" parent="">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowTitleStyle">@style/CustomDialogTitle</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:textAppearanceMedium">@style/CustomDialogTextAppearance</item>
+        <item name="android:buttonBarStyle">@style/CustomDialogButtonBar</item>
+        <item name="android:buttonBarButtonStyle">@style/CustomDialogBorderlessButton</item>
+    </style>
+
+    <style name="CustomDialogBorderlessButton">
         <item name="android:background">@color/colorListView</item>
         <item name="android:textColor">@color/colorTextPrimaryInverse</item>
         <item name="android:padding">10dp</item>
     </style>
 
-    <style name="MyButtonBar">
+    <style name="CustomDialogButtonBar">
         <item name="android:dividerPadding">3dp</item>
         <item name="android:showDividers">end</item>
         <item name="android:background">@color/colorListView</item>
     </style>
 
-    <style name="MyAlertDialogTitle">
+    <style name="CustomDialogTitle">
         <item name="android:maxLines">1</item>
         <item name="android:scrollHorizontally">false</item>
         <item name="android:dividerHeight">10dp</item>
     </style>
 
-    <style name="MyAlertTextAppearance">
+    <style name="CustomDialogTextAppearance">
         <item name="android:textSize">10dp</item>
         <item name="android:textColor">@color/colorTextPrimaryInverse</item>
     </style>
 
-    <style name="MyAlertDialogTheme" parent="">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowTitleStyle">@style/MyAlertDialogTitle</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
-        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:textAppearanceMedium">@style/MyAlertTextAppearance</item>
-        <item name="android:buttonBarStyle">@style/MyButtonBar</item>
-        <item name="android:buttonBarButtonStyle">@style/MyBorderlessButton</item>
-    </style>
-
-    <style name="MyAlertDialogStyle">
+    <style name="CustomDialogStyle">
         <item name="android:topDark">@color/colorPrimary</item>
         <item name="android:centerDark">@color/colorChartBackground</item>
         <item name="android:bottomDark">@color/colorListView</item>
         <item name="android:bottomMedium">@color/colorPrimary</item>
     </style>
 
+
+    <!-- Caldroid theme -->
+    <!-- Dark theme. -->
+    <style name="CustomCaldroidTheme" parent="CaldroidDefault">
+        <item name="styleCaldroidViewLayout">@style/CustomCaldroidViewLayout</item>
+        <item name="styleCaldroidMonthName">@style/CustomCaldroidMonthName</item>
+        <item name="styleCaldroidNormalCell">@style/CustomCaldroidNormalCell</item>
+        <item name="styleCaldroidSquareCell">@style/CustomCaldroidSquareCell</item>
+        <item name="styleCaldroidGridView">@style/CustomCaldroidGridView</item>
+    </style>
+
+    <style name="CustomCaldroidViewLayout">
+        <item name="android:background">@color/colorCaldroidBackground</item>
+    </style>
+
+    <style name="CustomCaldroidMonthName" parent="CaldroidDefaultMonthName">
+        <item name="android:textColor">@color/colorTextPrimaryInverse</item>
+    </style>
+
+    <style name="CustomCaldroidGridView" parent="CaldroidDefaultGridView">
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="CustomCaldroidCell" parent="CaldroidDefaultCell">
+        <item name="android:textColor">@color/colorTextPrimaryInverse</item>
+        <item name="android:background">@drawable/caldroid_cell</item>
+    </style>
+
+    <style name="CustomCaldroidNormalCell" parent="CustomCaldroidCell">
+        <item name="android:padding">3dp</item>
+    </style>
+
+    <style name="CustomCaldroidSquareCell" parent="CustomCaldroidCell" />
 </resources>

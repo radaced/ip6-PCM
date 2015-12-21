@@ -72,9 +72,9 @@ public class IPSettingDialog extends DialogPreference {
 
                 // Settings have changed
                 SettingsActivity.UPDATED = true;
-                Toast.makeText(getContext(), "IP updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getContext().getString(R.string.toast_ip_updated), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Invalid IP", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getContext().getString(R.string.toast_ip_invalid), Toast.LENGTH_SHORT).show();
             }
         }
     }

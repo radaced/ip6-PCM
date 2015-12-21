@@ -8,12 +8,18 @@
     <View
         android:layout_width="wrap_content"
         android:layout_height="@dimen/space_vertical_margin"
-        android:background="@color/colorBackground"/>
+        android:background="@color/colorCaldroidBackground"/>
+
+    <LinearLayout
+        android:id="@+id/caldroid_fragment"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:gravity="center"
         android:text="@string/title_frag_plan"/>
 
