@@ -11,6 +11,7 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Instances;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,10 +67,7 @@ public class PlanFragment extends Fragment {
         args.putInt(CaldroidFragment.THEME_RESOURCE, R.style.CustomCaldroidTheme);
         caldroidFragment.setArguments(args);
 
-//        caldroidFragment.setEnableSwipe(true);
-//        caldroidFragment.setShowNavigationArrows(true);
-
-        android.support.v4.app.FragmentTransaction t = getFragmentManager().beginTransaction();
+        FragmentTransaction t = getFragmentManager().beginTransaction();
         t.replace(R.id.caldroid_fragment, caldroidFragment);
         t.commit();
 
