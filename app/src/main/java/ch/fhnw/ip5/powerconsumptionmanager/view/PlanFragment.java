@@ -24,25 +24,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
+import ch.fhnw.ip5.powerconsumptionmanager.util.PlanHelper;
 
 /**
  * This Fragment shows the charge plan created by the user.
  */
 public class PlanFragment extends Fragment {
-
-    // Projection array holding values to read from the instances table
-    public static final String[] INSTANCE_FIELDS = new String[] {
-        Instances.TITLE,
-        Instances.DESCRIPTION,
-        Instances.BEGIN,
-        Instances.END
-    };
-
-    // Projection array indices
-    private static final int INSTANCE_TITLE = 0;
-    private static final int INSTANCE_DESCRIPTION = 1;
-    private static final int INSTANCE_BEGIN = 2;
-    private static final int INSTANCE_END = 3;
 
     public static PlanFragment newInstance() {
         PlanFragment fragment = new PlanFragment();
@@ -59,50 +46,18 @@ public class PlanFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         CaldroidFragment caldroidFragment = new CaldroidFragment();
-        Bundle args = new Bundle();
-        Calendar cal = Calendar.getInstance();
-        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
-        args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
-        args.putInt(CaldroidFragment.THEME_RESOURCE, R.style.CustomCaldroidTheme);
-        caldroidFragment.setArguments(args);
+        PlanHelper planHelper = new PlanHelper(caldroidFragment, this);
+        planHelper.setup();
 
-        FragmentTransaction t = getFragmentManager().beginTransaction();
-        t.replace(R.id.caldroid_fragment, caldroidFragment);
-        t.commit();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.caldroid_fragment, caldroidFragment);
+        transaction.commit();
 
-        // Get date ranges (1 month)
-        long startOfMonth = getStartOfMonth(cal);
-        long endOfMonth = getEndOfMonth(cal);
+        // Get date range ends (reading instances for 1 month)
+        long startOfMonth = planHelper.generateLowerRangeEnd();
+        long endOfMonth = planHelper.generateUpperRangeEnd();
 
-        ContentResolver cr = getActivity().getContentResolver();
-        // Condition what entries in the instance table to read
-        String selection = "((" + Instances.BEGIN + " >= ?) AND (" + Instances.END + " <= ?))";
-        // Arguments for the condition (replacing ?)
-        String[] selectionArgs = new String[]{String.valueOf(startOfMonth), String.valueOf(endOfMonth)};
-
-        // Build the uri
-        Uri.Builder builder = Instances.CONTENT_URI.buildUpon();
-        ContentUris.appendId(builder, startOfMonth);
-        ContentUris.appendId(builder, endOfMonth);
-
-        // Submit query
-        Cursor cursor = cr.query(builder.build(), INSTANCE_FIELDS, selection, selectionArgs, null);
-
-        // Iterate through results
-        while (cursor.moveToNext()) {
-            // Get the field values
-            String title = cursor.getString(INSTANCE_TITLE);
-        }
-    }
-
-    private long getStartOfMonth(Calendar cal) {
-        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1, 0, 0, 0);
-        return cal.getTimeInMillis();
-    }
-
-    private long getEndOfMonth(Calendar cal) {
-        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
-        return cal.getTimeInMillis();
+        // Read calender instances
+        planHelper.readPlannedTrips(startOfMonth, endOfMonth);
     }
 }
