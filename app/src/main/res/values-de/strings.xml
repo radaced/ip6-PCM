@@ -12,6 +12,7 @@
 
     <!-- Fragment charge plan -->
     <string name="title_frag_plan">Ladeplan</string>
+    <string name="instance_title">Tesla Fahrt</string>
 
     <!-- Fragment tesla -->
     <string name="title_frag_tesla">Tesla</string>

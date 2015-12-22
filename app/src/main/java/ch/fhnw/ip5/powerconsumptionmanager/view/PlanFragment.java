@@ -49,15 +49,17 @@ public class PlanFragment extends Fragment {
         PlanHelper planHelper = new PlanHelper(caldroidFragment, this);
         planHelper.setup();
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.caldroid_fragment, caldroidFragment);
-        transaction.commit();
-
         // Get date range ends (reading instances for 1 month)
         long startOfMonth = planHelper.generateLowerRangeEnd();
         long endOfMonth = planHelper.generateUpperRangeEnd();
 
         // Read calender instances
         planHelper.readPlannedTrips(startOfMonth, endOfMonth);
+        planHelper.markDays();
+        planHelper.generateListener();
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.caldroid_fragment, planHelper.getCaldroid());
+        transaction.commit();
     }
 }
