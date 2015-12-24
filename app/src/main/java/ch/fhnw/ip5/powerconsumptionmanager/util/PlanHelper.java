@@ -13,6 +13,7 @@ import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,11 +46,13 @@ public class PlanHelper {
     private PlanFragment mContext;
     private Calendar mCalendar;
     private HashMap<Integer, PlanEntryModel> mInstances;
+    private ArrayList<Double> mProcessedViews;
 
     public PlanHelper(CaldroidFragment caldroid, PlanFragment context) {
         mCaldroid = caldroid;
         mContext = context;
         mInstances = new HashMap<Integer, PlanEntryModel>();
+        mProcessedViews = new ArrayList<Double>();
     }
 
     public void setup() {
@@ -65,15 +68,16 @@ public class PlanHelper {
         mCaldroid.setArguments(args);
     }
 
-    public long generateLowerRangeEnd() {
+    public long generateLowerRangeEnd(int year, int month) {
         mCalendar = Calendar.getInstance();
-        mCalendar.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), 1, 0, 0, 0);
+        mCalendar.set(year, month, 1, 0, 0, 0);
         return mCalendar.getTimeInMillis();
     }
 
-    public long generateUpperRangeEnd() {
+    public long generateUpperRangeEnd(int year, int month) {
         mCalendar = Calendar.getInstance();
-        mCalendar.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
+        mCalendar.set(year, month, 1, 23, 59, 59);
+        mCalendar.set(year, month, mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
         return mCalendar.getTimeInMillis();
     }
 
@@ -120,6 +124,7 @@ public class PlanHelper {
             mCalendar.setTimeInMillis(pem.getBegin());
             mCaldroid.setSelectedDate(mCalendar.getTime());
         }
+        mCaldroid.refreshView();
     }
 
     public void generateListener() {
@@ -135,25 +140,17 @@ public class PlanHelper {
 
             @Override
             public void onChangeMonth(int month, int year) {
-                String text = "month: " + month + " year: " + year;
-                Toast.makeText(mContext.getActivity().getApplicationContext(), text,
-                        Toast.LENGTH_SHORT).show();
+                double viewCode = year / month;
+                if(!mProcessedViews.contains(viewCode)) {
+                    long startMonth = generateLowerRangeEnd(year, month);
+                    long endMonth = generateUpperRangeEnd(year, month);
+                    readPlannedTrips(startMonth, endMonth);
+                    markDays();
+                    mProcessedViews.add(viewCode);
+                    Toast.makeText(mContext.getActivity().getApplicationContext(), month + " " + year,
+                            Toast.LENGTH_SHORT).show();
+                }
             }
-
-            @Override
-            public void onLongClickDate(Date date, View view) {
-                Toast.makeText(mContext.getActivity().getApplicationContext(),
-                        "Long click " + formatter.format(date),
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCaldroidViewCreated() {
-                Toast.makeText(mContext.getActivity().getApplicationContext(),
-                        "Caldroid view is created",
-                        Toast.LENGTH_SHORT).show();
-            }
-
         };
 
         mCaldroid.setCaldroidListener(listener);

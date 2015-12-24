@@ -136,6 +136,7 @@ public class ChartHelper {
      * that holds the indices to ignore)
      */
     public void updateChartData(ArrayList<Integer> ignoreList) {
+        /* TODO: Refactor with contains! */
         ArrayList<LineDataSet> list = new ArrayList<LineDataSet>();
         boolean skip = false;
         for(int i = 0; i < mConsumptionDataSet.size(); i++) {

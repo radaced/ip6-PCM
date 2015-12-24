@@ -50,8 +50,11 @@ public class PlanFragment extends Fragment {
         planHelper.setup();
 
         // Get date range ends (reading instances for 1 month)
-        long startOfMonth = planHelper.generateLowerRangeEnd();
-        long endOfMonth = planHelper.generateUpperRangeEnd();
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        long startOfMonth = planHelper.generateLowerRangeEnd(year, month);
+        long endOfMonth = planHelper.generateUpperRangeEnd(year, month);
 
         // Read calender instances
         planHelper.readPlannedTrips(startOfMonth, endOfMonth);
