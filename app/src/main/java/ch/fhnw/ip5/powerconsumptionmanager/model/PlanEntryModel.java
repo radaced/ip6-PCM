@@ -1,15 +1,17 @@
 package ch.fhnw.ip5.powerconsumptionmanager.model;
 
+import java.util.Date;
+
 /**
  * Created by Patrik on 22.12.2015.
  */
 public class PlanEntryModel {
     private String mTitle;
     private String mDescription;
-    private long mBegin;
-    private long mEnd;
+    private Date mBegin;
+    private Date mEnd;
 
-    public PlanEntryModel( String mTitle, String mDescription, long mBegin, long mEnd) {
+    public PlanEntryModel( String mTitle, String mDescription, Date mBegin, Date mEnd) {
         this.mTitle = mTitle;
         this.mDescription = mDescription;
         this.mBegin = mBegin;
@@ -24,11 +26,11 @@ public class PlanEntryModel {
         return mDescription;
     }
 
-    public long getBegin() {
+    public Date getBegin() {
         return mBegin;
     }
 
-    public long getEnd() {
+    public Date getEnd() {
         return mEnd;
     }
 }

@@ -11,7 +11,7 @@
                 android:width="2dp"
                 android:color="#FFC6292D" />
 
-            <solid android:color="#FFDDDDDD" />
+            <solid android:color="#FFFFFF" />
         </shape>
     </item>
 

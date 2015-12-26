@@ -4,11 +4,12 @@
     <color name="colorPrimary">#607d8b</color>
     <color name="colorPrimaryDark">#263238</color>
     <color name="colorPrimaryLight">#ffffff</color>
-    <color name="colorAccent">#ff9100</color>
+    <color name="colorAccentPrimary">#ff9100</color>
+    <color name="colorAccentSecondary">#FFCD89</color>
     <color name="colorBackground">#607d8b</color>
     <color name="colorChartBackground">#eceff1</color>
     <color name="colorCaldroidBackground">#eceff1</color>
-    <color name="colorCaldroidDateDisabled">#b0bec5</color>
+    <color name="colorCaldroidDateDisabled">#294c5d</color>
     <color name="colorTextViewBackground">#eceff1</color>
     <color name="colorListView">#b0bec5</color>
     <color name="colorTextPrimary">#ffffff</color>
@@ -16,7 +17,7 @@
     <color name="colorSlideTabIndicator">#263238</color>
     <color name="colorSlideTabDivider">#263238</color>
 
-    <!-- Graph Colors -->
+    <!-- Graph Colors 294C5D-->
     <array name="colorsGraph">
         <item>#008040</item>
         <item>#F35D5D</item>

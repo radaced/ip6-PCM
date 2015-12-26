@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.roomorama.caldroid.CaldroidFragment;
@@ -46,13 +47,12 @@ public class PlanHelper {
     private PlanFragment mContext;
     private Calendar mCalendar;
     private HashMap<Integer, PlanEntryModel> mInstances;
-    private ArrayList<Double> mProcessedViews;
+    private Date mSelectedDate = new Date();
 
     public PlanHelper(CaldroidFragment caldroid, PlanFragment context) {
         mCaldroid = caldroid;
         mContext = context;
         mInstances = new HashMap<Integer, PlanEntryModel>();
-        mProcessedViews = new ArrayList<Double>();
     }
 
     public void setup() {
@@ -111,7 +111,7 @@ public class PlanHelper {
             long end = cursor.getLong(INSTANCE_END);
 
             if(!mInstances.containsKey(startDay)) {
-                mInstances.put(startDay, new PlanEntryModel(title, description, begin, end));
+                mInstances.put(startDay, new PlanEntryModel(title, description, new Date(begin), new Date(end)));
             }
         }
     }
@@ -121,35 +121,45 @@ public class PlanHelper {
         while(iterator.hasNext()) {
             Map.Entry pair = (Map.Entry) iterator.next();
             PlanEntryModel pem = (PlanEntryModel) pair.getValue();
-            mCalendar.setTimeInMillis(pem.getBegin());
+            mCalendar.setTime(pem.getBegin());
             mCaldroid.setSelectedDate(mCalendar.getTime());
         }
         mCaldroid.refreshView();
     }
 
     public void generateListener() {
-        final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        final SimpleDateFormat title_format = new SimpleDateFormat("dd. MMMM yyyy");
+        final SimpleDateFormat timerange_format = new SimpleDateFormat("HH:mm");
 
         CaldroidListener listener = new CaldroidListener() {
 
             @Override
             public void onSelectDate(Date date, View view) {
-                Toast.makeText(mContext.getActivity().getApplicationContext(), formatter.format(date),
-                        Toast.LENGTH_SHORT).show();
+                mCalendar.setTime(date);
+                int pressedDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+                if(mInstances.containsKey(pressedDay) && !mSelectedDate.equals(date)) {
+                    mCaldroid.setBackgroundResourceForDate(R.drawable.caldroid_selected_day, date);
+                    mCaldroid.clearBackgroundResourceForDate(mSelectedDate);
+                    mSelectedDate = date;
+                    mCaldroid.refreshView();
+
+                    PlanEntryModel pem = mInstances.get(pressedDay);
+                    View v = mContext.getView();
+                    TextView title = (TextView) v.findViewById(R.id.caldroid_info_title);
+                    TextView description = (TextView) v.findViewById(R.id.caldroid_info_description);
+                    TextView timerange = (TextView) v.findViewById(R.id.caldroid_info_timerange);
+                    title.setText(title_format.format(pem.getBegin()));
+                    description.setText(pem.getDescription());
+                    timerange.setText(timerange_format.format(pem.getBegin()) + " - " + timerange_format.format(pem.getEnd()));
+                }
             }
 
             @Override
             public void onChangeMonth(int month, int year) {
-                double viewCode = year / month;
-                if(!mProcessedViews.contains(viewCode)) {
-                    long startMonth = generateLowerRangeEnd(year, month);
-                    long endMonth = generateUpperRangeEnd(year, month);
-                    readPlannedTrips(startMonth, endMonth);
-                    markDays();
-                    mProcessedViews.add(viewCode);
-                    Toast.makeText(mContext.getActivity().getApplicationContext(), month + " " + year,
-                            Toast.LENGTH_SHORT).show();
-                }
+                long startMonth = generateLowerRangeEnd(year, month);
+                long endMonth = generateUpperRangeEnd(year, month);
+                readPlannedTrips(startMonth, endMonth);
+                markDays();
             }
         };
 
