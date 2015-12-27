@@ -5,6 +5,7 @@ import android.app.Application;
 import java.util.ArrayList;
 
 import ch.fhnw.ip5.powerconsumptionmanager.model.ConsumptionDataModel;
+import ch.fhnw.ip5.powerconsumptionmanager.model.RouteInformationModel;
 
 /**
  * Application context (storage of global app data and data received from web requests)
@@ -14,6 +15,7 @@ public class PowerConsumptionManagerAppContext extends Application{
     private boolean isOnline;
     private ArrayList<ConsumptionDataModel> mConsumptionData = new ArrayList<ConsumptionDataModel>();
     private ArrayList<String> mComponents = new ArrayList<String>();
+    private RouteInformationModel mRouteInformation;
 
     public String getIPAdress() {
         return mIPAdress;
@@ -37,5 +39,13 @@ public class PowerConsumptionManagerAppContext extends Application{
 
     public ArrayList<String> getComponents() {
         return mComponents;
+    }
+
+    public RouteInformationModel getRouteInformation() {
+        return mRouteInformation;
+    }
+
+    public void setRouteInformation(RouteInformationModel mRouteInformation) {
+        this.mRouteInformation = mRouteInformation;
     }
 }

@@ -10,14 +10,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.model.ConsumptionDataModel;
+import ch.fhnw.ip5.powerconsumptionmanager.model.RouteInformationModel;
 import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
- * Loads the different data from the power consumption manager server component over asynchronous
- * web requests
+ * Loads the different data from the power consumption manager server component or other APIs
+ * over asynchronous web requests
  */
 public class DataLoader {
     private PowerConsumptionManagerAppContext mContext;
@@ -97,19 +100,68 @@ public class DataLoader {
 
                 // When response was successful ...
                 try {
-                    JSONArray dataJson = new JSONArray(response.body().string());
+                    JSONArray componentsJson = new JSONArray(response.body().string());
 
                     // ... get all component names from the response and store them in application context
-                    for(int i = 0; i < dataJson.length(); i++) {
+                    for(int i = 0; i < componentsJson.length(); i++) {
                         // TEST
                         if(i > 3) {
                             continue;
                         }
-                        String component = dataJson.getString(i);
+                        String component = componentsJson.getString(i);
                         mContext.getComponents().add(component);
                     }
 
                     //mCallback.DataLoaderDidFinish();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    mCallback.DataLoaderDidFail();
+                }
+            }
+        });
+    }
+
+    // Get distance and duration to reach it between origin and destination
+    public void loadDistanceBetweenAddresses(String url) {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        // Define call and callback
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                mCallback.DataLoaderDidFail();
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    mCallback.DataLoaderDidFail();
+                    return;
+                }
+
+                /* TODO What happens when no route available? */
+                // When response was successful ...
+                try {
+                    JSONObject routeJson = new JSONObject(response.body().string());
+                    // ... navigate through JSON-tree
+                    JSONArray routesArray = routeJson.getJSONArray("routes");
+                    JSONObject route = routesArray.getJSONObject(0);
+                    JSONArray legs = route.getJSONArray("legs");
+                    JSONObject leg = legs.getJSONObject(0);
+
+                    // Extract data
+                    JSONObject distance = leg.getJSONObject("distance");
+                    String distanceText = distance.getString("text");
+                    JSONObject duration = leg.getJSONObject("duration");
+                    String durationText = duration.getString("text");
+
+                    // Store in application context
+                    mContext.setRouteInformation(new RouteInformationModel(durationText, distanceText));
+
+                    mCallback.DataLoaderDidFinish();
                 } catch (JSONException e) {
                     e.printStackTrace();
                     mCallback.DataLoaderDidFail();

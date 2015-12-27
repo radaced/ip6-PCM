@@ -13,11 +13,15 @@
     <!-- Fragment charge plan -->
     <string name="title_frag_plan">Ladeplan</string>
     <string name="instance_title">Tesla Fahrt</string>
+    <string name="text_route_information_no_data">Keine oder fehlerhafter Start- und Zielort.</string>
+    <string name="text_route_information_error">Beim Laden der Distanz und Dauer für die Fahrt ist ein Fehler aufgetreten.</string>
+    <string name="format_caldroid_info_title">dd. MMMM yyyy</string>
+    <string name="format_caldroid_info_timerange">HH:mm</string>
 
     <!-- Fragment tesla -->
     <string name="title_frag_tesla">Tesla</string>
 
-    <!-- Splash-Screen -->
+    <!-- Activity Splash-Screen -->
     <string name="title_activity_splash">Eigenverbrauchsmanager</string>
     <string name="text_splash_info">Eigenverbrauchsmanager lädt…</string>
     <string name="text_splash_settings_changed">Eigenverbrauchsmanager lädt mit neuen Einstellungen…</string>
@@ -27,7 +31,7 @@
     <string name="text_init_ip_error">Zahl zwischen 0 und 255</string>
     <string name="text_init_description">Geben Sie die IP des Geräts ein, wo die Serverkomponente drauf läuft.</string>
 
-    <!-- Settings-Screen -->
+    <!-- Activity Settings-Screen -->
     <string name="title_activity_settings">Einstellungen</string>
     <string name="category_network">Netzwerk Konfiguration</string>
     <string name="text_pref_ip_title">IP Adresse</string>

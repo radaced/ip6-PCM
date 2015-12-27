@@ -35,4 +35,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
+    <TextView
+        android:id="@+id/text_route_information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+
 </LinearLayout>

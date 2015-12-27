@@ -20,7 +20,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.model.ConsumptionDataModel;
 import ch.fhnw.ip5.powerconsumptionmanager.view.ConsumptionFragment;
 
 /**
- * Helperclass to handle and modify the chart
+ * Helper class to handle and modify the chart
  */
 public class ChartHelper {
     private LineChart mConsumptionChart;

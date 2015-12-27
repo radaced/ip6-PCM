@@ -24,10 +24,13 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
+import ch.fhnw.ip5.powerconsumptionmanager.network.DataLoaderCallback;
 import ch.fhnw.ip5.powerconsumptionmanager.util.PlanHelper;
+import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
- * This Fragment shows the charge plan created by the user.
+ * This Fragment shows the charge plan created by the user, but managed over the standard
+ * google calendar.
  */
 public class PlanFragment extends Fragment {
 
@@ -45,6 +48,7 @@ public class PlanFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Set up the calendar fragment with the helper class
         CaldroidFragment caldroidFragment = new CaldroidFragment();
         PlanHelper planHelper = new PlanHelper(caldroidFragment, this);
         planHelper.setup();
@@ -61,6 +65,7 @@ public class PlanFragment extends Fragment {
         planHelper.markDays();
         planHelper.generateListener();
 
+        // Load fragment into container
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.caldroid_fragment, planHelper.getCaldroid());
         transaction.commit();
