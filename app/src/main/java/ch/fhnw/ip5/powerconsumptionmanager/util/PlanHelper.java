@@ -9,6 +9,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -181,10 +182,11 @@ public class PlanHelper implements DataLoaderCallback {
                     PlanEntryModel pem = mInstances.get(pressedDay);
                     View v = mContext.getView();
                     TextView title = (TextView) v.findViewById(R.id.caldroid_info_title);
-                    TextView description = (TextView) v.findViewById(R.id.caldroid_info_description);
-                    TextView timeRange = (TextView) v.findViewById(R.id.caldroid_info_timerange);
                     title.setText(titleFormat.format(pem.getBegin()));
+                    TextView description = (TextView) v.findViewById(R.id.caldroid_info_description);
                     description.setText(pem.getDescription());
+                    description.setMovementMethod(new ScrollingMovementMethod());
+                    TextView timeRange = (TextView) v.findViewById(R.id.caldroid_info_timerange);
                     timeRange.setText(timeRangeFormat.format(pem.getBegin()) + " - " + timeRangeFormat.format(pem.getEnd()));
 
                     // Load distance and duration to reach destination between two given locations from the instance
@@ -192,8 +194,11 @@ public class PlanHelper implements DataLoaderCallback {
                     if(locations != null && !"".equals(locations[0]) && !"".equals(locations[1])) {
                         calculateDistance(locations[0].trim(), locations[1].trim());
                     } else {
-                        TextView routeInformation = (TextView) v.findViewById(R.id.text_route_information);
-                        routeInformation.setText(mContext.getString(R.string.text_route_information_no_data));
+                        /* TODO ERROR */
+                        TextView routeDistance = (TextView) view.findViewById(R.id.text_route_information_distance);
+                        TextView routeDuration = (TextView) view.findViewById(R.id.text_route_information_duration);
+                        routeDistance.setText(mContext.getString(R.string.text_route_information_no_data));
+                        routeDuration.setText("");
                     }
                 }
             }
@@ -223,9 +228,18 @@ public class PlanHelper implements DataLoaderCallback {
             @Override
             public void run() {
                 View view = mContext.getView();
-                TextView routeInformation = (TextView) view.findViewById(R.id.text_route_information);
+                TextView routeDistance = (TextView) view.findViewById(R.id.text_route_information_distance);
+                TextView routeDuration = (TextView) view.findViewById(R.id.text_route_information_duration);
                 RouteInformationModel rim = mAppContext.getRouteInformation();
-                routeInformation.setText("Distance: " + rim.getDistanceText() + ", Duration: " + rim.getDurationText());
+
+                // Check if a route existed
+                if(rim.getDistanceText().equals("")) {
+                    routeDistance.setText(mContext.getString(R.string.text_route_information_no_route));
+                    routeDuration.setText("");
+                } else {
+                    routeDistance.setText(mContext.getString(R.string.text_route_information_distance) + " " + rim.getDistanceText());
+                    routeDuration.setText(mContext.getString(R.string.text_route_information_duration) + " " + rim.getDurationText());
+                }
             }
         });
     }
@@ -237,8 +251,10 @@ public class PlanHelper implements DataLoaderCallback {
             @Override
             public void run() {
                 View view = mContext.getView();
-                TextView routeInformation = (TextView) view.findViewById(R.id.text_route_information);
-                routeInformation.setText(mContext.getString(R.string.text_route_information_error));
+                TextView routeDistance = (TextView) view.findViewById(R.id.text_route_information_distance);
+                TextView routeDuration = (TextView) view.findViewById(R.id.text_route_information_duration);
+                routeDistance.setText(mContext.getString(R.string.text_route_information_error));
+                routeDuration.setText("");
             }
         });
     }
@@ -253,7 +269,7 @@ public class PlanHelper implements DataLoaderCallback {
             mContext.getString(R.string.googleMaps_Api1) +
             "origin=" + origin +
             "&destination=" + destination +
-            "&mode=driving&sensor=false"
+            mContext.getString(R.string.googleMaps_Api2)
         );
     }
 }

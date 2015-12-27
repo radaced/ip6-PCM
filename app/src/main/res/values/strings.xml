@@ -13,8 +13,11 @@
     <!-- Fragment charge plan -->
     <string name="title_frag_plan">Charge plan</string>
     <string name="instance_title">Tesla Trip</string>
+    <string name="text_route_information_distance">Distance:</string>
+    <string name="text_route_information_duration">Duration:</string>
     <string name="text_route_information_no_data">No or incorrect origin/destination.</string>
-    <string name="text_route_information_error">Error occurred while loading the trips distance and duration.</string>
+    <string name="text_route_information_error">Error occurred while loading route information.</string>
+    <string name="text_route_information_no_route">No route information available.</string>
     <string name="format_caldroid_info_title">MMMM dd yyyy</string>
     <string name="format_caldroid_info_timerange">hh:mm a.</string>
 

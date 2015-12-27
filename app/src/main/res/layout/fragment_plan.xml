@@ -2,7 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorListView">
 
     <View
         android:layout_width="wrap_content"
@@ -15,30 +16,58 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/space_vertical_margin"
+        android:background="@color/colorPrimary"/>
+
     <TextView
         android:id="@+id/caldroid_info_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_vertical_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:textAppearance="@android:style/TextAppearance.Large"/>
+        android:textAppearance="@android:style/TextAppearance.Large"
+        android:textColor="@color/colorTextPrimaryInverse"/>
 
     <TextView
         android:id="@+id/caldroid_info_timerange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:textColor="@color/colorTextPrimaryInverse"/>
 
     <TextView
         android:id="@+id/caldroid_info_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:lines="8"
+        android:maxLines="8"
+        android:scrollbars="vertical"
+        android:textColor="@color/colorTextPrimaryInverse"/>
 
-    <TextView
-        android:id="@+id/text_route_information"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text_route_information_distance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:textColor="@color/colorTextPrimaryInverse"/>
+
+        <TextView
+            android:id="@+id/text_route_information_duration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:textColor="@color/colorTextPrimaryInverse"/>
+
+    </LinearLayout>
 
 </LinearLayout>

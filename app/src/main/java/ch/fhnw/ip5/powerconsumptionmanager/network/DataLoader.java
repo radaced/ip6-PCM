@@ -142,24 +142,32 @@ public class DataLoader {
                     return;
                 }
 
-                /* TODO What happens when no route available? */
                 // When response was successful ...
                 try {
                     JSONObject routeJson = new JSONObject(response.body().string());
                     // ... navigate through JSON-tree
                     JSONArray routesArray = routeJson.getJSONArray("routes");
-                    JSONObject route = routesArray.getJSONObject(0);
-                    JSONArray legs = route.getJSONArray("legs");
-                    JSONObject leg = legs.getJSONObject(0);
+                    // Check if routes exist
+                    if(!routesArray.isNull(0)) {
+                        JSONObject route = routesArray.getJSONObject(0);
+                        JSONArray legs = route.getJSONArray("legs");
+                        JSONObject leg = legs.getJSONObject(0);
 
-                    // Extract data
-                    JSONObject distance = leg.getJSONObject("distance");
-                    String distanceText = distance.getString("text");
-                    JSONObject duration = leg.getJSONObject("duration");
-                    String durationText = duration.getString("text");
+                        // Extract data
+                        JSONObject distance = leg.getJSONObject("distance");
+                        String distanceText = distance.getString("text");
+                        JSONObject duration = leg.getJSONObject("duration");
+                        String durationText = duration.getString("text");
 
-                    // Store in application context
-                    mContext.setRouteInformation(new RouteInformationModel(durationText, distanceText));
+                        // Store in application context
+                        mContext.setRouteInformation(new RouteInformationModel(durationText, distanceText));
+                    } else {
+                        mContext.setRouteInformation(new RouteInformationModel(
+                            mContext.getString(R.string.text_route_information_no_route),
+                            ""
+                        ));
+                    }
+
 
                     mCallback.DataLoaderDidFinish();
                 } catch (JSONException e) {
