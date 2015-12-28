@@ -1,8 +1,12 @@
 package ch.fhnw.ip5.powerconsumptionmanager.network;
 
+import android.webkit.MimeTypeMap;
+
 import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.json.JSONArray;
@@ -17,6 +21,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.model.ConsumptionDataModel;
 import ch.fhnw.ip5.powerconsumptionmanager.model.RouteInformationModel;
 import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
+import okio.BufferedSink;
 
 /**
  * Loads the different data from the power consumption manager server component or other APIs
@@ -176,5 +181,91 @@ public class DataLoader {
                 }
             }
         });
+    }
+
+    public void synchronizeChargingPlan(String url) {
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        String data = generatePlanDataToSend();
+
+        RequestBody requestBody = RequestBody.create(JSON, data);
+        Request request = new Request.Builder()
+                .url(url)
+                .put(requestBody)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        // Define call and callback
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                mCallback.DataLoaderDidFail();
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    mCallback.DataLoaderDidFail();
+                    return;
+                }
+
+                mCallback.DataLoaderDidFinish();
+            }
+        });
+    }
+
+    private String generatePlanDataToSend() {
+        String data = "[" +
+                "    {" +
+                "        \"Wochentag\": \"Mo\"," +
+                "        \"Abfahrtszeit\": \"07:00\"," +
+                "        \"Kilometer\": 555," +
+                "        \"Ankunftszeit\": \"17:00\"," +
+                "        \"Zusatz km\": 0" +
+                "    }," +
+                "    {" +
+                "        \"Wochentag\": \"Di\"," +
+                "        \"Abfahrtszeit\": \"08:00\"," +
+                "        \"Kilometer\": 400," +
+                "        \"Ankunftszeit\": \"18:00\"," +
+                "        \"Zusatz km\": 0" +
+                "    }," +
+                "    {" +
+                "        \"Wochentag\": \"Mi\"," +
+                "        \"Abfahrtszeit\": \"06:00\"," +
+                "        \"Kilometer\": 100," +
+                "        \"Ankunftszeit\": \"19:00\"," +
+                "        \"Zusatz km\": 0" +
+                "    }," +
+                "    {" +
+                "        \"Wochentag\": \"Do\"," +
+                "        \"Abfahrtszeit\": \"07:30\"," +
+                "        \"Kilometer\": 200," +
+                "        \"Ankunftszeit\": \"18:30\"," +
+                "        \"Zusatz km\": 0" +
+                "    }," +
+                "    {" +
+                "        \"Wochentag\": \"Fr\"," +
+                "        \"Abfahrtszeit\": \"08:30\"," +
+                "        \"Kilometer\": 250," +
+                "        \"Ankunftszeit\": \"17:30\"," +
+                "        \"Zusatz km\": 0" +
+                "    }," +
+                "    {" +
+                "        \"Wochentag\": \"Sa\"," +
+                "        \"Abfahrtszeit\": \"10:00\"," +
+                "        \"Kilometer\": 100," +
+                "        \"Ankunftszeit\": \"16:30\"," +
+                "        \"Zusatz km\": 0" +
+                "    }," +
+                "    {" +
+                "        \"Wochentag\": \"So\"," +
+                "        \"Abfahrtszeit\": \"10:30\"," +
+                "        \"Kilometer\": 50," +
+                "        \"Ankunftszeit\": \"12:00\"," +
+                "        \"Zusatz km\": 0" +
+                "    }" +
+                "]";
+
+        return data;
     }
 }

@@ -13,4 +13,13 @@
             android:title="@string/text_pref_ip_title"/>
 
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/title_frag_plan">
+
+        <Preference
+            android:key="syncPlan"
+            android:title="Synchronize charging plan"/>
+
+    </PreferenceCategory>
 </PreferenceScreen>

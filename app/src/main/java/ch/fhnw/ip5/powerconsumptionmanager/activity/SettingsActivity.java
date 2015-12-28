@@ -8,9 +8,13 @@ import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
+import ch.fhnw.ip5.powerconsumptionmanager.network.DataLoader;
+import ch.fhnw.ip5.powerconsumptionmanager.network.DataLoaderCallback;
 import ch.fhnw.ip5.powerconsumptionmanager.util.IPSettingDialog;
+import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 public class SettingsActivity extends AppCompatActivity {
     // Flag if settings have changed
@@ -52,8 +56,9 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener, DataLoaderCallback {
         private SharedPreferences mSettings;
+        private DataLoaderCallback mContext;
 
         @Override
         public void onCreate(final Bundle savedInstanceState)
@@ -61,6 +66,20 @@ public class SettingsActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
             mSettings = getPreferenceScreen().getSharedPreferences();
+            mContext = this;
+
+            Preference syncPreference = (Preference) findPreference("syncPlan");
+
+            syncPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Syncing...", Toast.LENGTH_SHORT).show();
+                    PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
+                    DataLoader loader = new DataLoader(context, mContext);
+                    loader.synchronizeChargingPlan("http://" + context.getIPAdress() + ":" + getString(R.string.webservice_putChargePlan));
+                    return true;
+                }
+            });
 
             // Set present ip as summary of preference entry
             IPSettingDialog ipDialog = (IPSettingDialog) findPreference("IP");
@@ -85,6 +104,26 @@ public class SettingsActivity extends AppCompatActivity {
             Preference pref = findPreference(key);
             String newSummary = mSettings.getString("IP", "");
             pref.setSummary(newSummary);
+        }
+
+        @Override
+        public void DataLoaderDidFinish() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getActivity(), "Worked", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        @Override
+        public void DataLoaderDidFail() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getActivity(), "Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 }

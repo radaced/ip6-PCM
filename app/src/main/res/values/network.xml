@@ -2,6 +2,7 @@
 <resources>
     <string name="webservice_getData">8002/EM/Emobil/getData</string>
     <string name="webservice_getComponents">8002/EM/Emobil/getComponents</string>
+    <string name="webservice_putChargePlan">8002/EM/Emobil/putLadePlan</string>
     <string name="googleMaps_Api1">http://maps.googleapis.com/maps/api/directions/json?</string>
     <string name="googleMaps_Api2">&amp;mode=driving&amp;sensor=false</string>
 </resources>
