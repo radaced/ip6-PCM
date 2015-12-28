@@ -18,6 +18,7 @@
     <string name="text_route_information_no_data">No or incorrect origin/destination.</string>
     <string name="text_route_information_error">Error occurred while loading route information.</string>
     <string name="text_route_information_no_route">No route information available.</string>
+    <string name="text_information_no_description">Description not set.</string>
     <string name="format_caldroid_info_title">MMMM dd yyyy</string>
     <string name="format_caldroid_info_timerange">hh:mm a.</string>
 

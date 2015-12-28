@@ -3,12 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorListView">
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/space_vertical_margin"
-        android:background="@color/colorCaldroidBackground"/>
+    android:background="@color/colorCaldroidInfoView">
 
     <LinearLayout
         android:id="@+id/caldroid_fragment"
@@ -16,14 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/space_vertical_margin"
-        android:background="@color/colorPrimary"/>
-
     <TextView
         android:id="@+id/caldroid_info_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_vertical_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -32,25 +22,32 @@
 
     <TextView
         android:id="@+id/caldroid_info_timerange"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:textColor="@color/colorTextPrimaryInverse"/>
 
     <TextView
         android:id="@+id/caldroid_info_description"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/double_space_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/space_vertical_margin"
+        android:paddingBottom="@dimen/space_vertical_margin"
         android:lines="8"
         android:maxLines="8"
         android:scrollbars="vertical"
+        android:scrollbarThumbVertical="@drawable/scrollbar_info_description"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbarSize="@dimen/scroll_info_description"
         android:textColor="@color/colorTextPrimaryInverse"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/double_space_vertical_margin">
 
         <TextView
             android:id="@+id/text_route_information_distance"

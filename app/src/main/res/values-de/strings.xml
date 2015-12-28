@@ -18,6 +18,7 @@
     <string name="text_route_information_no_data">Keine oder fehlerhafter Start- und Zielort.</string>
     <string name="text_route_information_error">Beim Laden der Routeninformationen ist ein Fehler aufgetreten.</string>
     <string name="text_route_information_no_route">Keine Routen-Informationen verfügbar.</string>
+    <string name="text_information_no_description">Keine Beschreibung vorhanden.</string>
     <string name="format_caldroid_info_title">dd. MMMM yyyy</string>
     <string name="format_caldroid_info_timerange">HH:mm</string>
 

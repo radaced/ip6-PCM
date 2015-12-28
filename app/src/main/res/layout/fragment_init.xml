@@ -14,7 +14,7 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:textAlignment="center"
         android:text="@string/text_init_description"
-        android:textColor="@color/colorTextPrimaryInverse"/>
+        android:textColor="@color/colorTextPrimary"/>
 
     <LinearLayout
           android:orientation="horizontal"
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/text_init_ip"
-            android:textColor="@color/colorTextPrimaryInverse"/>
+            android:textColor="@color/colorTextPrimary"/>
 
         <EditText
             android:layout_width="@dimen/text_ip_width"
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/text_init_dot"
-            android:textColor="@color/colorTextPrimaryInverse"/>
+            android:textColor="@color/colorTextPrimary"/>
 
         <EditText
             android:layout_width="@dimen/text_ip_width"
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/text_init_dot"
-            android:textColor="@color/colorTextPrimaryInverse"/>
+            android:textColor="@color/colorTextPrimary"/>
 
         <EditText
             android:layout_width="@dimen/text_ip_width"
@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/text_init_dot"
-            android:textColor="@color/colorTextPrimaryInverse"/>
+            android:textColor="@color/colorTextPrimary"/>
 
         <EditText
             android:layout_width="@dimen/text_ip_width"

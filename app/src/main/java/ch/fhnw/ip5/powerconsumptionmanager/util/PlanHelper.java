@@ -1,5 +1,6 @@
 package ch.fhnw.ip5.powerconsumptionmanager.util;
 
+import android.app.ActionBar;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.database.Cursor;
@@ -9,8 +10,11 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,7 +65,7 @@ public class PlanHelper implements DataLoaderCallback {
     private PowerConsumptionManagerAppContext mAppContext;
     // Calendar instance to make date operations
     private Calendar mCalendar;
-    // Holds the read instances from the calendar.instances table
+    // Holds the read instances from the calendar.instances table of one month
     private HashMap<Integer, PlanEntryModel> mInstances;
     // The actual selected date in the caldroid fragment
     private Date mSelectedDate = new Date();
@@ -178,14 +182,22 @@ public class PlanHelper implements DataLoaderCallback {
                     mSelectedDate = date;
                     mCaldroid.refreshView();
 
-                    // Display data
+                    // Display instance data
                     PlanEntryModel pem = mInstances.get(pressedDay);
                     View v = mContext.getView();
+                    // Title
                     TextView title = (TextView) v.findViewById(R.id.caldroid_info_title);
                     title.setText(titleFormat.format(pem.getBegin()));
+                    // Description
                     TextView description = (TextView) v.findViewById(R.id.caldroid_info_description);
-                    description.setText(pem.getDescription());
-                    description.setMovementMethod(new ScrollingMovementMethod());
+                    if(!pem.getDescription().equals("")) {
+                        description.setText(pem.getDescription());
+                    } else {
+                        description.setText(mContext.getString(R.string.text_information_no_description));
+                    }
+                    description.setBackgroundResource(R.color.colorTextViewBackground);
+                    description.setMovementMethod(ScrollingMovementMethod.getInstance());
+                    // Time range of instance
                     TextView timeRange = (TextView) v.findViewById(R.id.caldroid_info_timerange);
                     timeRange.setText(timeRangeFormat.format(pem.getBegin()) + " - " + timeRangeFormat.format(pem.getEnd()));
 
@@ -194,15 +206,10 @@ public class PlanHelper implements DataLoaderCallback {
                     if(locations != null && !"".equals(locations[0]) && !"".equals(locations[1])) {
                         calculateDistance(locations[0].trim(), locations[1].trim());
                     } else {
-                        /* TODO ERROR */
-                        TextView routeDistance = (TextView) view.findViewById(R.id.text_route_information_distance);
-                        TextView routeDuration = (TextView) view.findViewById(R.id.text_route_information_duration);
-                        routeDistance.setText(mContext.getString(R.string.text_route_information_no_data));
-                        routeDuration.setText("");
+                        displayRouteInformation(v, mContext.getString(R.string.text_route_information_no_data), "", false);
                     }
                 }
             }
-
 
             @Override
             public void onChangeMonth(int month, int year) {
@@ -228,17 +235,18 @@ public class PlanHelper implements DataLoaderCallback {
             @Override
             public void run() {
                 View view = mContext.getView();
-                TextView routeDistance = (TextView) view.findViewById(R.id.text_route_information_distance);
-                TextView routeDuration = (TextView) view.findViewById(R.id.text_route_information_duration);
                 RouteInformationModel rim = mAppContext.getRouteInformation();
 
                 // Check if a route existed
                 if(rim.getDistanceText().equals("")) {
-                    routeDistance.setText(mContext.getString(R.string.text_route_information_no_route));
-                    routeDuration.setText("");
+                    displayRouteInformation(view, mContext.getString(R.string.text_route_information_no_route), "", false);
                 } else {
-                    routeDistance.setText(mContext.getString(R.string.text_route_information_distance) + " " + rim.getDistanceText());
-                    routeDuration.setText(mContext.getString(R.string.text_route_information_duration) + " " + rim.getDurationText());
+                    displayRouteInformation(
+                        view,
+                        mContext.getString(R.string.text_route_information_distance) + " " + rim.getDistanceText(),
+                        mContext.getString(R.string.text_route_information_duration) + " " + rim.getDurationText(),
+                        true
+                    );
                 }
             }
         });
@@ -251,10 +259,7 @@ public class PlanHelper implements DataLoaderCallback {
             @Override
             public void run() {
                 View view = mContext.getView();
-                TextView routeDistance = (TextView) view.findViewById(R.id.text_route_information_distance);
-                TextView routeDuration = (TextView) view.findViewById(R.id.text_route_information_duration);
-                routeDistance.setText(mContext.getString(R.string.text_route_information_error));
-                routeDuration.setText("");
+                displayRouteInformation(view, mContext.getString(R.string.text_route_information_error), "", false);
             }
         });
     }
@@ -267,9 +272,35 @@ public class PlanHelper implements DataLoaderCallback {
         DataLoader loader = new DataLoader(mAppContext, this);
         loader.loadDistanceBetweenAddresses(
             mContext.getString(R.string.googleMaps_Api1) +
-            "origin=" + origin +
-            "&destination=" + destination +
-            mContext.getString(R.string.googleMaps_Api2)
+                "origin=" + origin +
+                "&destination=" + destination +
+                mContext.getString(R.string.googleMaps_Api2)
         );
+    }
+
+    /* Displays the route information (error, no route available or loaded information). On errors
+     * one of the fields width is minimized so a longer error-message can be shown.
+     */
+    private void displayRouteInformation(View v, String distance, String duration, boolean valid) {
+        TextView routeDistance = (TextView) v.findViewById(R.id.text_route_information_distance);
+        TextView routeDuration = (TextView) v.findViewById(R.id.text_route_information_duration);
+
+        if(valid) {
+            routeDistance.setText(distance);
+            routeDuration.setText(duration);
+            routeDuration.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                1f
+            ));
+        } else {
+            routeDistance.setText(distance);
+            routeDuration.setText("");
+            routeDuration.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                0f
+            ));
+        }
     }
 }

@@ -10,6 +10,7 @@
     <color name="colorChartBackground">#eceff1</color>
     <color name="colorCaldroidBackground">#eceff1</color>
     <color name="colorCaldroidDateDisabled">#294c5d</color>
+    <color name="colorCaldroidInfoView">#b0bec5</color>
     <color name="colorTextViewBackground">#eceff1</color>
     <color name="colorListView">#b0bec5</color>
     <color name="colorTextPrimary">#ffffff</color>

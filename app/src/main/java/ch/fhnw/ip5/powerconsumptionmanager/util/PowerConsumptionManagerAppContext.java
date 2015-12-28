@@ -1,6 +1,7 @@
 package ch.fhnw.ip5.powerconsumptionmanager.util;
 
 import android.app.Application;
+import android.support.v4.content.ContextCompat;
 
 import java.util.ArrayList;
 
