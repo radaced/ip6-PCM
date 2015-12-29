@@ -1,32 +1,18 @@
 package ch.fhnw.ip5.powerconsumptionmanager.view;
 
-import android.Manifest;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.CalendarContract;
-import android.provider.CalendarContract.Instances;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.roomorama.caldroid.CaldroidFragment;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
-import ch.fhnw.ip5.powerconsumptionmanager.network.DataLoaderCallback;
 import ch.fhnw.ip5.powerconsumptionmanager.util.PlanHelper;
-import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
  * This Fragment shows the charge plan created by the user, but managed over the standard
@@ -57,8 +43,8 @@ public class PlanFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         int month = cal.get(Calendar.MONTH);
         int year = cal.get(Calendar.YEAR);
-        long startOfMonth = planHelper.generateLowerRangeEnd(year, month);
-        long endOfMonth = planHelper.generateUpperRangeEnd(year, month);
+        long startOfMonth = planHelper.generateLowerMonthRangeEnd(year, month);
+        long endOfMonth = planHelper.generateUpperMonthRangeEnd(year, month);
 
         // Read calender instances
         planHelper.readPlannedTrips(startOfMonth, endOfMonth);

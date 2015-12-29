@@ -1,34 +1,25 @@
 package ch.fhnw.ip5.powerconsumptionmanager.util;
 
-import android.app.ActionBar;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.database.Cursor;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
@@ -43,7 +34,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.view.PlanFragment;
  */
 public class PlanHelper implements DataLoaderCallback {
     // Projection array holding values to read from the instances table
-    public static final String[] INSTANCE_FIELDS = new String[] {
+    private static final String[] INSTANCE_FIELDS = new String[] {
             CalendarContract.Instances.TITLE,
             CalendarContract.Instances.EVENT_LOCATION,
             CalendarContract.Instances.DESCRIPTION,
@@ -93,14 +84,14 @@ public class PlanHelper implements DataLoaderCallback {
     }
 
     // Generates the lower range from the range the calendar.instances table should be read (start of month)
-    public long generateLowerRangeEnd(int year, int month) {
+    public long generateLowerMonthRangeEnd(int year, int month) {
         mCalendar = Calendar.getInstance();
         mCalendar.set(year, month, 1, 0, 0, 0);
         return mCalendar.getTimeInMillis();
     }
 
     // Generates the upper range from the range the calendar.instances table should be read (end of month)
-    public long generateUpperRangeEnd(int year, int month) {
+    public long generateUpperMonthRangeEnd(int year, int month) {
         mCalendar = Calendar.getInstance();
         mCalendar.set(year, month, 1, 23, 59, 59);
         mCalendar.set(year, month, mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
@@ -144,12 +135,14 @@ public class PlanHelper implements DataLoaderCallback {
                 mInstances.put(startDay, new PlanEntryModel(title, eventLocation, description, new Date(begin), new Date(end)));
             }
         }
+        cursor.close();
     }
 
     // Mark all dates in the caldroid fragment that have a tesla trip instance
     public void markDays() {
         Iterator iterator = mInstances.entrySet().iterator();
 
+        /* TODO foreach */
         // Iterate through all read calendar instances
         while(iterator.hasNext()) {
             Map.Entry pair = (Map.Entry) iterator.next();
@@ -213,9 +206,13 @@ public class PlanHelper implements DataLoaderCallback {
 
             @Override
             public void onChangeMonth(int month, int year) {
-                // Read calendar.instances table with new range and mark days that contain an instance
-                long startMonth = generateLowerRangeEnd(year, month);
-                long endMonth = generateUpperRangeEnd(year, month);
+                /*
+                 * Read calendar.instances table with new range and mark days that contain an instance
+                 * -1 because caldroid calculates months from 1-12 and Calendar.class does it with 0-11
+                 */
+                long startMonth = generateLowerMonthRangeEnd(year, month-1);
+                long endMonth = generateUpperMonthRangeEnd(year, month-1);
+                mInstances.clear();
                 readPlannedTrips(startMonth, endMonth);
                 markDays();
             }
@@ -270,11 +267,11 @@ public class PlanHelper implements DataLoaderCallback {
      */
     private void calculateDistance(String origin, String destination) {
         DataLoader loader = new DataLoader(mAppContext, this);
-        loader.loadDistanceBetweenAddresses(
+        loader.loadRouteInformation(
             mContext.getString(R.string.googleMaps_Api1) +
-                "origin=" + origin +
-                "&destination=" + destination +
-                mContext.getString(R.string.googleMaps_Api2)
+            "origin=" + origin +
+            "&destination=" + destination +
+            mContext.getString(R.string.googleMaps_Api2)
         );
     }
 
