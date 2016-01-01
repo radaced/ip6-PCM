@@ -39,7 +39,12 @@
     <string name="title_activity_settings">Settings</string>
     <string name="category_network">Network configuration</string>
     <string name="text_pref_ip_title">IP address</string>
+    <string name="text_pref_sync_summary">Tap to synchronize your tesla trips with the server component.</string>
     <string name="action_settings">Settings</string>
     <string name="toast_ip_updated">IP updated</string>
     <string name="toast_ip_invalid">IP invalid</string>
+    <string name="toast_sync_started">Synchronizing…</string>
+    <string name="toast_sync_ended_success">Synchronisation finished</string>
+    <string name="toast_sync_ended_error_interrupted">Synchronisation interrupted</string>
+    <string name="toast_sync_ended_error_loading">Synchronisation failed (error building data to synchronize)</string>
 </resources>

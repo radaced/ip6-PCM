@@ -1,9 +1,5 @@
 package ch.fhnw.ip5.powerconsumptionmanager.util;
 
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -33,22 +29,6 @@ import ch.fhnw.ip5.powerconsumptionmanager.view.PlanFragment;
  * Helper class to handle and modify caldroid
  */
 public class PlanHelper implements DataLoaderCallback {
-    // Projection array holding values to read from the instances table
-    private static final String[] INSTANCE_FIELDS = new String[] {
-            CalendarContract.Instances.TITLE,
-            CalendarContract.Instances.EVENT_LOCATION,
-            CalendarContract.Instances.DESCRIPTION,
-            CalendarContract.Instances.BEGIN,
-            CalendarContract.Instances.END
-    };
-
-    // Projection array indices
-    private static final int INSTANCE_TITLE = 0;
-    private static final int INSTANCE_EVENT_LOCATION = 1;
-    private static final int INSTANCE_DESCRIPTION = 2;
-    private static final int INSTANCE_BEGIN = 3;
-    private static final int INSTANCE_END = 4;
-
     // The caldroid fragment itself
     private CaldroidFragment mCaldroid;
     // Contexts
@@ -66,12 +46,12 @@ public class PlanHelper implements DataLoaderCallback {
         mCaldroid = caldroid;
         mContext = context;
         mAppContext = (PowerConsumptionManagerAppContext) mContext.getActivity().getApplicationContext();
-        mInstances = new HashMap<Integer, PlanEntryModel>();
+        mInstances = new HashMap<>();
+        mCalendar = Calendar.getInstance();
     }
 
     // Initial settings for the caldroid fragment
     public void setup() {
-        mCalendar = Calendar.getInstance();
         Bundle args = new Bundle();
         args.putInt(CaldroidFragment.MONTH, mCalendar.get(Calendar.MONTH) + 1);
         args.putInt(CaldroidFragment.YEAR, mCalendar.get(Calendar.YEAR));
@@ -98,54 +78,16 @@ public class PlanHelper implements DataLoaderCallback {
         return mCalendar.getTimeInMillis();
     }
 
-    // Reads all planned tesla trips from the calendar.instances table
+    // Reads all planned tesla trips between two dates from the calendar.instances table
     public void readPlannedTrips(long lowerRangeEnd, long upperRangeEnd) {
-        ContentResolver cr = mContext.getActivity().getContentResolver();
-        // Condition what entries in the instance table to read
-        String selection = "((" + CalendarContract.Instances.BEGIN + " >= ?) AND (" + CalendarContract.Instances.END + " <= ?))";
-        // Arguments for the condition (replacing ?)
-        String[] selectionArgs = new String[]{String.valueOf(lowerRangeEnd), String.valueOf(upperRangeEnd)};
-
-        // Build the uri
-        Uri.Builder builder = CalendarContract.Instances.CONTENT_URI.buildUpon();
-        ContentUris.appendId(builder, lowerRangeEnd);
-        ContentUris.appendId(builder, upperRangeEnd);
-
-        // Submit query
-        Cursor cursor = cr.query(builder.build(), INSTANCE_FIELDS, selection, selectionArgs, null);
-
-        // Iterate through results
-        while (cursor.moveToNext()) {
-            String title = cursor.getString(INSTANCE_TITLE);
-
-            // Check if tesla trip or not
-            if(!title.equals(mContext.getString(R.string.instance_title))) {
-                continue;
-            }
-
-            String eventLocation = cursor.getString(INSTANCE_EVENT_LOCATION);
-            String description = cursor.getString(INSTANCE_DESCRIPTION);
-            long begin = cursor.getLong(INSTANCE_BEGIN);
-            mCalendar.setTimeInMillis(begin);
-            int startDay = mCalendar.get(Calendar.DAY_OF_MONTH);
-            long end = cursor.getLong(INSTANCE_END);
-
-            // Store read data into hash map
-            if(!mInstances.containsKey(startDay)) {
-                mInstances.put(startDay, new PlanEntryModel(title, eventLocation, description, new Date(begin), new Date(end)));
-            }
-        }
-        cursor.close();
+        CalendarInstanceReader cir = new CalendarInstanceReader(mCalendar, mContext.getContext());
+        mInstances = cir.readInstancesBetweenTimestamps(lowerRangeEnd, upperRangeEnd);
     }
 
     // Mark all dates in the caldroid fragment that have a tesla trip instance
     public void markDays() {
-        Iterator iterator = mInstances.entrySet().iterator();
-
-        /* TODO foreach */
         // Iterate through all read calendar instances
-        while(iterator.hasNext()) {
-            Map.Entry pair = (Map.Entry) iterator.next();
+        for (Map.Entry pair : mInstances.entrySet()) {
             PlanEntryModel pem = (PlanEntryModel) pair.getValue();
             mCalendar.setTime(pem.getBegin());
             mCaldroid.setSelectedDate(mCalendar.getTime());
@@ -196,7 +138,7 @@ public class PlanHelper implements DataLoaderCallback {
 
                     // Load distance and duration to reach destination between two given locations from the instance
                     String[] locations = pem.getEventLocation().split("/");
-                    if(locations != null && !"".equals(locations[0]) && !"".equals(locations[1])) {
+                    if(locations.length == 2 && !"".equals(locations[0]) && !"".equals(locations[1])) {
                         calculateDistance(locations[0].trim(), locations[1].trim());
                     } else {
                         displayRouteInformation(v, mContext.getString(R.string.text_route_information_no_data), "", false);
@@ -225,6 +167,7 @@ public class PlanHelper implements DataLoaderCallback {
         return mCaldroid;
     }
 
+    /**** Return point from requests that were called after a day field was pressed in caldroid ****/
     @Override
     public void DataLoaderDidFinish() {
         // Update the text view field for the route information with the loaded data on the UI thread
@@ -235,14 +178,14 @@ public class PlanHelper implements DataLoaderCallback {
                 RouteInformationModel rim = mAppContext.getRouteInformation();
 
                 // Check if a route existed
-                if(rim.getDistanceText().equals("")) {
+                if (rim.getDistanceText().equals("")) {
                     displayRouteInformation(view, mContext.getString(R.string.text_route_information_no_route), "", false);
                 } else {
                     displayRouteInformation(
-                        view,
-                        mContext.getString(R.string.text_route_information_distance) + " " + rim.getDistanceText(),
-                        mContext.getString(R.string.text_route_information_duration) + " " + rim.getDurationText(),
-                        true
+                            view,
+                            mContext.getString(R.string.text_route_information_distance) + " " + rim.getDistanceText(),
+                            mContext.getString(R.string.text_route_information_duration) + " " + rim.getDurationText(),
+                            true
                     );
                 }
             }
@@ -260,6 +203,7 @@ public class PlanHelper implements DataLoaderCallback {
             }
         });
     }
+    /********/
 
     /*
      * Call google.maps API with the origin and destination location to find out distance and duration
@@ -275,7 +219,8 @@ public class PlanHelper implements DataLoaderCallback {
         );
     }
 
-    /* Displays the route information (error, no route available or loaded information). On errors
+    /*
+     * Displays the route information (error, no route available or loaded information). On errors
      * one of the fields width is minimized so a longer error-message can be shown.
      */
     private void displayRouteInformation(View v, String distance, String duration, boolean valid) {

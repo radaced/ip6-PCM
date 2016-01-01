@@ -44,7 +44,7 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
         transaction.commit();
     }
 
-    /************* Loader Callbacks *************/
+    /**** Return point from requests that load the consumption data ****/
     @Override
     public void DataLoaderDidFinish() {
         mContext.setIsOnline(true);
@@ -56,7 +56,9 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
         mContext.setIsOnline(false);
         changeToMain();
     }
+    /********/
 
+    // Transition to main activity
     private void changeToMain() {
         Intent mainIntent = new Intent(SplashScreenActivity.this, MainActivity.class);
         SplashScreenActivity.this.startActivity(mainIntent);

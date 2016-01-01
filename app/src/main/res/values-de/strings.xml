@@ -39,7 +39,12 @@
     <string name="title_activity_settings">Einstellungen</string>
     <string name="category_network">Netzwerk Konfiguration</string>
     <string name="text_pref_ip_title">IP Adresse</string>
+    <string name="text_pref_sync_summary">Antippen um Tesla Trips mit der Serverkomponente zu synchronisieren.</string>
     <string name="action_settings">Einstellungen</string>
     <string name="toast_ip_updated">IP aktualisiert</string>
     <string name="toast_ip_invalid">IP ungültig</string>
+    <string name="toast_sync_started">Synchronisiert…</string>
+    <string name="toast_sync_ended_success">Synchronisation beendet</string>
+    <string name="toast_sync_ended_error_interrupted">Synchronisation wurde unterbrochen</string>
+    <string name="toast_sync_ended_error_loading">Synchronisation fehlgeschlagen (Fehler beim Erstellen des Datenpakets)</string>
 </resources>

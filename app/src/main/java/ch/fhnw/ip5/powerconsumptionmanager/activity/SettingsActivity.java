@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.network.DataLoader;
 import ch.fhnw.ip5.powerconsumptionmanager.network.DataLoaderCallback;
@@ -21,7 +23,7 @@ public class SettingsActivity extends AppCompatActivity {
     public static boolean UPDATED;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+         protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         UPDATED = false;
@@ -56,6 +58,13 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent mainIntent = new Intent(SettingsActivity.this, MainActivity.class);
+        SettingsActivity.this.startActivity(mainIntent);
+        SettingsActivity.this.finish();
+    }
+
     public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener, DataLoaderCallback {
         private SharedPreferences mSettings;
         private DataLoaderCallback mContext;
@@ -68,15 +77,21 @@ public class SettingsActivity extends AppCompatActivity {
             mSettings = getPreferenceScreen().getSharedPreferences();
             mContext = this;
 
-            Preference syncPreference = (Preference) findPreference("syncPlan");
+            Preference syncPreference = findPreference("syncPlan");
 
+            // Define click listener on preference to start synching process
             syncPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    Toast.makeText(getActivity().getApplicationContext(), "Syncing...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), getString(R.string.toast_sync_started), Toast.LENGTH_SHORT).show();
                     PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
                     DataLoader loader = new DataLoader(context, mContext);
-                    loader.synchronizeChargingPlan("http://" + context.getIPAdress() + ":" + getString(R.string.webservice_putChargePlan));
+                    try {
+                        loader.synchronizeChargingPlan("http://" + context.getIPAdress() + ":" + getString(R.string.webservice_putChargePlan));
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), getString(R.string.toast_sync_ended_error_interrupted), Toast.LENGTH_LONG).show();
+                    }
                     return true;
                 }
             });
@@ -106,12 +121,13 @@ public class SettingsActivity extends AppCompatActivity {
             pref.setSummary(newSummary);
         }
 
+        /**** Return point from the sync request ****/
         @Override
         public void DataLoaderDidFinish() {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getActivity(), "Worked", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.toast_sync_ended_success), Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -121,10 +137,11 @@ public class SettingsActivity extends AppCompatActivity {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getActivity(), "Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.toast_sync_ended_error_loading), Toast.LENGTH_LONG).show();
                 }
             });
         }
+        /********/
     }
 }
 
