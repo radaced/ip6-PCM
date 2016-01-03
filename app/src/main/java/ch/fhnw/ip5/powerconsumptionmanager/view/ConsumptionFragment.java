@@ -18,12 +18,9 @@ package ch.fhnw.ip5.powerconsumptionmanager.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -87,7 +84,7 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
             chartHelper.displayAnimated();
 
             // Set up the device list
-            listView.setAdapter(new DeviceListAdapter(getActivity(), R.layout.list_item_device, context.getComponents(), chartHelper));
+            listView.setAdapter(new DeviceListAdapter(getActivity(), R.layout.list_device, context.getComponents(), chartHelper));
         }
 
     }

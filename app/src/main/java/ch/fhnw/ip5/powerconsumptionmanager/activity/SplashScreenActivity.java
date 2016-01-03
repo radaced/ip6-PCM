@@ -19,7 +19,7 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
+        setContentView(R.layout.activity_splash);
 
         // Load application context and preferences
         mContext = (PowerConsumptionManagerAppContext) getApplicationContext();

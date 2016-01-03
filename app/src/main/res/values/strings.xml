@@ -24,6 +24,9 @@
 
     <!-- Fragment tesla -->
     <string name="title_frag_tesla">Tesla</string>
+    <string name="text_login_username">Username:</string>
+    <string name="text_login_password">Password:</string>
+    <string name="button_connect_tesla">Connect to Tesla</string>
 
     <!-- Activity Splash-Screen -->
     <string name="title_activity_splash">Power Consumption Manager</string>

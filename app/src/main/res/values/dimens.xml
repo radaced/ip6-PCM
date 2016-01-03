@@ -2,20 +2,26 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">8dp</dimen>
     <dimen name="activity_vertical_margin">8dp</dimen>
-
-    <dimen name="space_vertical_margin">4dp</dimen>
-    <dimen name="double_space_vertical_margin">8dp</dimen>
-
-    <dimen name="text_ip_margin">4dp</dimen>
-    <dimen name="text_ip_width">60dp</dimen>
-
-    <dimen name="btn_continue_top_margin">8dp</dimen>
-    <dimen name="btn_continue_space">3dp</dimen>
-
-    <dimen name="scroll_info_description">3dp</dimen>
-
-    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">140dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Gener margins for the UI -->
+    <dimen name="space_vertical_margin">4dp</dimen>
+    <dimen name="double_space_vertical_margin">8dp</dimen>
+
+    <!-- Splashscreen -->
+    <dimen name="text_ip_margin">4dp</dimen>
+    <dimen name="text_ip_width">60dp</dimen>
+    <dimen name="button_continue_top_margin">8dp</dimen>
+    <dimen name="button_continue_space">10dp</dimen>
+
+    <!-- Main activity -->
+    <dimen name="text_tesla_login">4dp</dimen>
+    <dimen name="text_tesla_login_padding">2dp</dimen>
+    <dimen name="column_tesla_login_top_margin">10dp</dimen>
+    <dimen name="column_tesla_login_side_margin">20dp</dimen>
+    <dimen name="button_connect_tesla_space">10dp</dimen>
+    <dimen name="scroll_info_description">3dp</dimen>
+
 </resources>
