@@ -14,7 +14,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.view.InitFragment;
 import ch.fhnw.ip5.powerconsumptionmanager.view.SplashFragment;
 
 public class SplashScreenActivity extends AppCompatActivity implements DataLoaderCallback {
-    private PowerConsumptionManagerAppContext mContext;
+    private PowerConsumptionManagerAppContext mAppContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,17 +22,14 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
         setContentView(R.layout.activity_splash);
 
         // Load application context and preferences
-        mContext = (PowerConsumptionManagerAppContext) getApplicationContext();
+        mAppContext = (PowerConsumptionManagerAppContext) getApplicationContext();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         // On initial startup show mask to enter ip, otherwise directly load data to display
         if(settings.contains("IP")) {
             // Load IP address from preference file into application context for easier access
-            mContext.setIPAdress(settings.getString("IP", "192.168.0.1"));
-            // Clear device list and data list because new data is loaded
-            mContext.getComponents().clear();
-            mContext.getConsumptionData().clear();
+            mAppContext.setIPAdress(settings.getString("IP", "192.168.0.1"));
 
             SplashFragment fragment = SplashFragment.newInstance();
             transaction.replace(R.id.splash_fragment, fragment);
@@ -47,13 +44,13 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
     /**** Return point from requests that load the consumption data ****/
     @Override
     public void DataLoaderDidFinish() {
-        mContext.setIsOnline(true);
+        mAppContext.setIsOnline(true);
         changeToMain();
     }
 
     @Override
     public void DataLoaderDidFail() {
-        mContext.setIsOnline(false);
+        mAppContext.setIsOnline(false);
         changeToMain();
     }
     /********/

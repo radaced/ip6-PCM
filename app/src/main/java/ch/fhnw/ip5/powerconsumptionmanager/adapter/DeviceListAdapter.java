@@ -8,8 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.utils.ColorTemplate;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,14 +21,13 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 public class DeviceListAdapter extends ArrayAdapter<String> {
     private int mLayout;
     private List<String> mDevices;
-    private ChartHelper mConsumptionChart;
-    private ArrayList<Integer> removedDataSetIndexes = new ArrayList<>();
+    private ChartHelper mChartHelper;
 
     public DeviceListAdapter(Context context, int resource, ArrayList<String> objects, ChartHelper chart) {
         super(context, resource, objects);
         mLayout = resource;
         mDevices = objects;
-        mConsumptionChart = chart;
+        mChartHelper = chart;
     }
 
     @Override
@@ -38,7 +35,7 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
         ViewHolder mainViewHolder = null;
 
         if(convertView == null) {
-            if(mConsumptionChart == null && mDevices.size() == 1) {
+            if(mChartHelper == null && mDevices.size() == 1) {
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 convertView = inflater.inflate(mLayout, parent, false);
 
@@ -54,8 +51,8 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
                 vh.textDevice.setText(mDevices.get(position));
 
                 // Set color indicator to see which device is connected to each graph
-                vh.graphColor = (View) convertView.findViewById(R.id.graphColor);
-                vh.graphColor.setBackgroundColor(mConsumptionChart.getGraphColor(position));
+                vh.graphColor = convertView.findViewById(R.id.graphColor);
+                vh.graphColor.setBackgroundColor(mChartHelper.getGraphColor(position));
 
                 vh.switchDevice = (Switch) convertView.findViewById(R.id.switchDevice);
                 vh.switchDevice.setOnClickListener(new View.OnClickListener() {
@@ -66,18 +63,18 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
                             /* Data sets are managed in a list and as soon one device graph is not shown in the chart anymore
                              * the indices are out of sync
                              */
-                            mConsumptionChart.getChart().getLineData().removeDataSet(position - shiftPos);
-                            mConsumptionChart.displayNoneAnimated();
+                            mChartHelper.getChart().getLineData().removeDataSet(position - shiftPos);
+                            mChartHelper.displayNoneAnimated();
                             // Add removed data set index to list
-                            removedDataSetIndexes.add(position);
+                            mChartHelper.getRemovedDataSetIndexes().add(position);
                         } else {
                             PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
                             // Indicate that graph of certain device is visible again
-                            removedDataSetIndexes.remove(Integer.valueOf(position));
+                            mChartHelper.getRemovedDataSetIndexes().remove(Integer.valueOf(position));
                             // Generate new data set with the correct consumption data
-                            mConsumptionChart.generateDataSet(appContext.getConsumptionData().get(position - shiftPos), position - shiftPos);
-                            mConsumptionChart.updateChartData(removedDataSetIndexes);
-                            mConsumptionChart.displayNoneAnimated();
+                            mChartHelper.generateDataSet(appContext.getConsumptionData().get(position - shiftPos), position - shiftPos);
+                            mChartHelper.updateChartData();
+                            mChartHelper.displayNoneAnimated();
                         }
                     }
                 });
@@ -94,8 +91,8 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
     // Returns amount of not shown device-graphs in the chart that have a smaller index in the list view as the clicked one
     public int getShiftPosition(int position) {
         int shiftPos = 0;
-        for(int i = 0; i < removedDataSetIndexes.size(); i++) {
-            if(removedDataSetIndexes.get(i) < position) {
+        for(int i = 0; i < mChartHelper.getRemovedDataSetIndexes().size(); i++) {
+            if(mChartHelper.getRemovedDataSetIndexes().get(i) < position) {
                 shiftPos++;
             }
         }

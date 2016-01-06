@@ -9,6 +9,7 @@
     <string name="chart_connection_error_description">Check your entered IP address.</string>
     <string name="chart_no_data">No data available.</string>
     <string name="list_device_error">No devices found.</string>
+    <string name="toast_chart_update_error">Error while updating chart data</string>
 
     <!-- Fragment charge plan -->
     <string name="title_frag_plan">Charge plan</string>

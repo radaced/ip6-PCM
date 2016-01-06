@@ -1,7 +1,6 @@
 package ch.fhnw.ip5.powerconsumptionmanager.util;
 
 import android.app.Application;
-import android.support.v4.content.ContextCompat;
 
 import java.util.ArrayList;
 
@@ -14,8 +13,8 @@ import ch.fhnw.ip5.powerconsumptionmanager.model.RouteInformationModel;
 public class PowerConsumptionManagerAppContext extends Application{
     private String mIPAdress;
     private boolean isOnline;
-    private ArrayList<ConsumptionDataModel> mConsumptionData = new ArrayList<ConsumptionDataModel>();
-    private ArrayList<String> mComponents = new ArrayList<String>();
+    private ArrayList<ConsumptionDataModel> mConsumptionData = new ArrayList<>();
+    private ArrayList<String> mComponents = new ArrayList<>();
     private RouteInformationModel mRouteInformation;
 
     public String getIPAdress() {
@@ -34,8 +33,16 @@ public class PowerConsumptionManagerAppContext extends Application{
         this.isOnline = isOnline;
     }
 
+    public void setConsumptionData(ArrayList<ConsumptionDataModel> mConsumptionData) {
+        this.mConsumptionData = mConsumptionData;
+    }
+
     public ArrayList<ConsumptionDataModel> getConsumptionData() {
         return mConsumptionData;
+    }
+
+    public void setComponents(ArrayList<String> mComponents) {
+        this.mComponents = mComponents;
     }
 
     public ArrayList<String> getComponents() {

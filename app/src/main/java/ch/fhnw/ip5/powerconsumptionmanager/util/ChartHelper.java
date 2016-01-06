@@ -10,7 +10,6 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,9 +25,11 @@ public class ChartHelper {
     private LineChart mConsumptionChart;
     private ConsumptionFragment mContext;
     // Holds x values (timestamps)
-    private ArrayList<String> mXValues = new ArrayList<String>();
+    private ArrayList<String> mXValues;
     // Holds all data sets from the chart
-    private HashMap<Integer, LineDataSet> mConsumptionDataSet = new HashMap<Integer, LineDataSet>();
+    private HashMap<Integer, LineDataSet> mConsumptionDataSet;
+    // Holds the unselected dataset indices
+    private ArrayList<Integer> mRemovedDataSetIndexes;
     // Members to modify colors
     private int[] mGraphColors;
     private Paint mChartDrawer;
@@ -37,6 +38,11 @@ public class ChartHelper {
     public ChartHelper(LineChart chart, ConsumptionFragment context) {
         mConsumptionChart = chart;
         mContext = context;
+
+        mXValues = new ArrayList<>();
+        mConsumptionDataSet = new HashMap<>();
+        mRemovedDataSetIndexes = new ArrayList<>();
+
         mGraphColors = context.getResources().getIntArray(R.array.colorsGraph);
         mChartDrawer = chart.getPaint(Chart.PAINT_INFO);
     }
@@ -89,6 +95,10 @@ public class ChartHelper {
 
     // Generates the x values of the chart (amount of x and y values need to be equal)
     public void generateXValues(ConsumptionDataModel data) {
+        if(!mXValues.isEmpty()) {
+            mXValues.clear();
+        }
+
         for (int i = 0; i < data.getComponentData().size(); i++) {
             // Only 1 day
             if(i > 287) {
@@ -100,7 +110,7 @@ public class ChartHelper {
 
     // Generates a single data set and adds it to the hash map that holds all data sets
     public void generateDataSet(ConsumptionDataModel data, int iteration) {
-        ArrayList<Entry> values = new ArrayList<Entry>();
+        ArrayList<Entry> values = new ArrayList<>();
 
         for (int i = 0; i < data.getComponentData().size(); i++) {
             // Only 1 day
@@ -122,7 +132,7 @@ public class ChartHelper {
 
     // Show all data sets
     public void initChartData() {
-        ArrayList<LineDataSet> list = new ArrayList<LineDataSet>();
+        ArrayList<LineDataSet> list = new ArrayList<>();
         for(int i = 0; i < mConsumptionDataSet.size(); i++) {
             list.add(mConsumptionDataSet.get(i));
         }
@@ -135,19 +145,10 @@ public class ChartHelper {
      * Show only data sets where the toggle button for each device is active. Pass a parameter (list
      * that holds the indices to ignore)
      */
-    public void updateChartData(ArrayList<Integer> ignoreList) {
-        /* TODO: Refactor with contains! */
-        ArrayList<LineDataSet> list = new ArrayList<LineDataSet>();
-        boolean skip = false;
+    public void updateChartData() {
+        ArrayList<LineDataSet> list = new ArrayList<>();
         for(int i = 0; i < mConsumptionDataSet.size(); i++) {
-            for(int j = 0; j < ignoreList.size(); j++) {
-                if(i == ignoreList.get(j)) {
-                    skip = true;
-                    break;
-                }
-            }
-            if(skip) {
-                skip = false;
+            if(mRemovedDataSetIndexes.contains(i)) {
                 continue;
             }
             list.add(mConsumptionDataSet.get(i));
@@ -156,6 +157,7 @@ public class ChartHelper {
         LineData data = new LineData(this.getXValues(), list);
         mConsumptionChart.setData(data);
     }
+
 
     // Display chart data animated (chart data fades in from bottom to top)
     public void displayAnimated() {
@@ -173,6 +175,10 @@ public class ChartHelper {
 
     public LineChart getChart() {
         return mConsumptionChart;
+    }
+
+    public ArrayList<Integer> getRemovedDataSetIndexes() {
+        return mRemovedDataSetIndexes;
     }
 
     public int getGraphColor(int index) {

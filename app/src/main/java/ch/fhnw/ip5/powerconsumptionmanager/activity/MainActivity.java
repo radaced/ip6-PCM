@@ -92,10 +92,12 @@ public class MainActivity extends AppCompatActivity {
                 ContextCompat.getColor(this, R.color.colorSlideTabIndicator),
                 ContextCompat.getColor(this, R.color.colorSlideTabDivider)
         ));
+        /*
         mTabs.add(new PagerItemModel(
                 getString(R.string.title_frag_tesla),
                 ContextCompat.getColor(this, R.color.colorSlideTabIndicator),
                 ContextCompat.getColor(this, R.color.colorSlideTabDivider)
         ));
+        */
     }
 }

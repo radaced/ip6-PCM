@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
@@ -55,19 +56,24 @@ public class DataLoader {
                     return;
                 }
 
-                // When response was successful ...
+                // List to hold the loaded consumption data
+                ArrayList<ConsumptionDataModel> consumptionData = new ArrayList<>();
+
                 try {
                     JSONArray dataJson = new JSONArray(response.body().string());
 
-                    // ... fill model containers with each device and add the data to application context
+                    // Fill model containers with each device and add the data to the list
                     for(int i = 0; i < dataJson.length(); i++) {
                         // TEST
                         if(i > 3) {
                             continue;
                         }
                         ConsumptionDataModel usageData = new ConsumptionDataModel((JSONObject) dataJson.get(i));
-                        mContext.getConsumptionData().add(usageData);
+                        consumptionData.add(usageData);
                     }
+
+                    // Make consumption data available for the application through the application context
+                    mContext.setConsumptionData(consumptionData);
 
                     // Directly call the loader for getComponents
                     loadComponents("http://" + mContext.getIPAdress() + ":" + mContext.getString(R.string.webservice_getComponents));
@@ -101,21 +107,25 @@ public class DataLoader {
                     return;
                 }
 
-                // When response was successful ...
+                // List to hold the components that are connected with the power consumption manager
+                ArrayList<String> components = new ArrayList<>();
+
                 try {
                     JSONArray componentsJson = new JSONArray(response.body().string());
 
-                    // ... get all component names from the response and store them in application context
+                    // Get all component names from the response and store them in application context
                     for(int i = 0; i < componentsJson.length(); i++) {
                         // TEST
                         if(i > 3) {
                             continue;
                         }
                         String component = componentsJson.getString(i);
-                        mContext.getComponents().add(component);
+                        components.add(component);
                     }
 
-                    //mCallback.DataLoaderDidFinish();
+                    // Make components data available for the application through the application context
+                    mContext.setComponents(components);
+                    // returns to loadConsumptionData and calls DataLoaderDidFinish() (if no error)
                 } catch (JSONException e) {
                     e.printStackTrace();
                     mCallback.DataLoaderDidFail();
@@ -154,6 +164,7 @@ public class DataLoader {
         });
     }
 
+    // Synchronize the tesla trips of the current week with the server component
     public void synchronizeChargingPlan(String url) throws ExecutionException, InterruptedException {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         String data = new PlanSyncStringBuilderTask(mContext).execute().get();

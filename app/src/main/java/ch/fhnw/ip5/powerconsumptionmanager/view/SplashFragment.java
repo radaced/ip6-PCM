@@ -17,6 +17,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 
 
 public class SplashFragment extends Fragment {
+    private PowerConsumptionManagerAppContext mContext;
 
     public static SplashFragment newInstance() {
         SplashFragment fragment = new SplashFragment();
@@ -39,10 +40,10 @@ public class SplashFragment extends Fragment {
             loadingMsg.setText(extras.getString("settings_changed", getString(R.string.text_splash_info)));
         }
 
-        PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
-        DataLoader loader = new DataLoader(context, (DataLoaderCallback) getActivity());
+        mContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
+        DataLoader loader = new DataLoader(mContext, (DataLoaderCallback) getActivity());
 
         // Web request to load the consumption data
-        loader.loadConsumptionData("http://" + context.getIPAdress() + ":" + getString(R.string.webservice_getData));
+        loader.loadConsumptionData("http://" + mContext.getIPAdress() + ":" + getString(R.string.webservice_getData));
     }
 }

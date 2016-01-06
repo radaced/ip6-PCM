@@ -9,6 +9,7 @@
     <string name="chart_connection_error_description">Überprüfen Sie die angegebene IP-Adresse.</string>
     <string name="chart_no_data">Keine Daten verfügbar.</string>
     <string name="list_device_error">Keine Geräte gefunden.</string>
+    <string name="toast_chart_update_error">Fehler beim Updaten von Verbrauchsdaten</string>
 
     <!-- Fragment charge plan -->
     <string name="title_frag_plan">Ladeplan</string>
@@ -24,6 +25,9 @@
 
     <!-- Fragment tesla -->
     <string name="title_frag_tesla">Tesla</string>
+    <string name="text_login_username">Benutzername:</string>
+    <string name="text_login_password">Passwort:</string>
+    <string name="button_connect_tesla">Mit Tesla verbinden</string>
 
     <!-- Activity Splash-Screen -->
     <string name="title_activity_splash">Eigenverbrauchsmanager</string>
