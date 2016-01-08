@@ -73,7 +73,7 @@ public class DataLoader {
 
                     // Fill model containers with each device and add the data to the list
                     for(int i = 0; i < dataJson.length(); i++) {
-                        // TEST
+                        /* TODO lower loaded for testing */
                         if(i > 3) {
                             continue;
                         }
