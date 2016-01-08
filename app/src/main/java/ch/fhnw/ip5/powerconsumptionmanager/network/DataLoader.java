@@ -184,7 +184,7 @@ public class DataLoader {
      * @throws InterruptedException
      */
     //
-    public void synchronizeChargingPlan(String url) throws ExecutionException, InterruptedException {
+    public void synchronizeChargePlan(String url) throws ExecutionException, InterruptedException {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         String data = new PlanSyncStringBuilderTask(mAppContext).execute().get();
 
@@ -252,7 +252,7 @@ public class DataLoader {
                 ));
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "JSON exception while processing routes data.");
             success = false;
         }
 

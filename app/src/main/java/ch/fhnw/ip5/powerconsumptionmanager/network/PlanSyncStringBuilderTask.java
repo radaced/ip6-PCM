@@ -1,6 +1,7 @@
 package ch.fhnw.ip5.powerconsumptionmanager.network;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -22,11 +23,12 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
  * Background task to build the JSON of the charge plan data that needs to be synced
  */
 public class PlanSyncStringBuilderTask extends AsyncTask<Void, Void, String> {
-    private PowerConsumptionManagerAppContext mContext;
+    private static final String TAG = "PlanSyncStringBuilder";
+    private PowerConsumptionManagerAppContext mAppContext;
     private StringBuilder mData;
 
     public PlanSyncStringBuilderTask(PowerConsumptionManagerAppContext context) {
-        mContext = context;
+        mAppContext = context;
         mData = new StringBuilder(1000);
     }
 
@@ -40,7 +42,7 @@ public class PlanSyncStringBuilderTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         boolean error = false;
         Calendar calendar = Calendar.getInstance();
-        CalendarInstanceReader cir = new CalendarInstanceReader(calendar, mContext.getApplicationContext());
+        CalendarInstanceReader cir = new CalendarInstanceReader(calendar, mAppContext.getApplicationContext());
 
         // Calculate the lower and upper range to request tesla trips to sync (one week range)
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1, 0, 0, 0);
@@ -81,21 +83,21 @@ public class PlanSyncStringBuilderTask extends AsyncTask<Void, Void, String> {
                 // Check if an event location has been specified
                 if (locations.length == 2 && !"".equals(locations[0]) && !"".equals(locations[1])) {
                     Request request = new Request.Builder()
-                            .url(mContext.getString(R.string.googleMaps_Api1) +
+                            .url(mAppContext.getString(R.string.googleMaps_Api1) +
                                     "origin=" + locations[0] +
                                     "&destination=" + locations[1] +
-                                    mContext.getString(R.string.googleMaps_Api2))
+                                    mAppContext.getString(R.string.googleMaps_Api2))
                             .build();
 
                     OkHttpClient client = new OkHttpClient();
                     try {
                         Response response = client.newCall(request).execute();
-                        DataLoader loader = new DataLoader(mContext, null);
+                        DataLoader loader = new DataLoader(mAppContext, null);
                         if (!loader.processRoutes(response)) {
                             error = true;
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Log.e(TAG, "Exception while loading routes data for synchronisation.");
                         error = true;
                     }
                 }
@@ -108,7 +110,7 @@ public class PlanSyncStringBuilderTask extends AsyncTask<Void, Void, String> {
                 start = time.format(pem.getBegin());
                 end = time.format(pem.getEnd());
 
-                RouteInformationModel rim = mContext.getRouteInformation();
+                RouteInformationModel rim = mAppContext.getRouteInformation();
                 if (rim.getDistanceText().equals("")) {
                     kilometer = 0;
                 } else {

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
@@ -18,6 +19,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
  * Holds the different settings in a preference fragment and displays them accordingly.
  */
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener, DataLoaderCallback {
+    private static final String TAG = "SettingsFragment";
     private SharedPreferences mSettings;
     private SettingsFragment mContext;
 
@@ -39,9 +41,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
                 DataLoader loader = new DataLoader(context, mContext);
                 try {
-                    loader.synchronizeChargingPlan("http://" + context.getIPAdress() + ":" + getString(R.string.webservice_putChargePlan));
+                    loader.synchronizeChargePlan("http://" + context.getIPAdress() + ":" + getString(R.string.webservice_putChargePlan));
                 } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "Exception while synchronizing charge plan.");
                     Toast.makeText(getActivity(), getString(R.string.toast_sync_ended_error_interrupted), Toast.LENGTH_LONG).show();
                 }
                 return true;
