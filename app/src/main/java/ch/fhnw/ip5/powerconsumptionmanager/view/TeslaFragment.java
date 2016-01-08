@@ -11,12 +11,11 @@ import ch.fhnw.ip5.powerconsumptionmanager.R;
 
 
 /**
- * This Fragment shows the charge plan created by the user.
+ * This Fragment is not in use yet.
  */
 public class TeslaFragment extends Fragment {
     public static TeslaFragment newInstance() {
-        TeslaFragment fragment = new TeslaFragment();
-        return fragment;
+        return new TeslaFragment();
     }
 
     @Override

@@ -13,6 +13,10 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 import ch.fhnw.ip5.powerconsumptionmanager.view.InitFragment;
 import ch.fhnw.ip5.powerconsumptionmanager.view.SplashFragment;
 
+/**
+ * Activity that is called when the app gets started. Contains some navigation logic and delegates
+ * the initial settings logic and the loading/reading of data to fragments.
+ */
 public class SplashScreenActivity extends AppCompatActivity implements DataLoaderCallback {
     private PowerConsumptionManagerAppContext mAppContext;
 
@@ -55,7 +59,9 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
     }
     /********/
 
-    // Transition to main activity
+    /**
+     * Transition to main activity
+     */
     private void changeToMain() {
         Intent mainIntent = new Intent(SplashScreenActivity.this, MainActivity.class);
         SplashScreenActivity.this.startActivity(mainIntent);

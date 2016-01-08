@@ -1,7 +1,6 @@
 package ch.fhnw.ip5.powerconsumptionmanager.util;
 
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -15,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
@@ -50,7 +48,9 @@ public class PlanHelper implements DataLoaderCallback {
         mCalendar = Calendar.getInstance();
     }
 
-    // Initial settings for the caldroid fragment
+    /**
+     * Initial settings for the caldroid fragment
+     */
     public void setup() {
         Bundle args = new Bundle();
         args.putInt(CaldroidFragment.MONTH, mCalendar.get(Calendar.MONTH) + 1);
@@ -63,14 +63,23 @@ public class PlanHelper implements DataLoaderCallback {
         mCaldroid.setArguments(args);
     }
 
-    // Generates the lower range from the range the calendar.instances table should be read (start of month)
+    /**
+     * Generates the lower range from the range the calendar.instances table should be read (start of month)
+     * @param year Year
+     * @param month Month
+     * @return First day of month
+     */
     public long generateLowerMonthRangeEnd(int year, int month) {
         mCalendar = Calendar.getInstance();
         mCalendar.set(year, month, 1, 0, 0, 0);
         return mCalendar.getTimeInMillis();
     }
 
-    // Generates the upper range from the range the calendar.instances table should be read (end of month)
+    /** Generates the upper range from the range the calendar.instances table should be read (end of month)
+     * @param year Year
+     * @param month Month
+     * @return Last day of month
+     */
     public long generateUpperMonthRangeEnd(int year, int month) {
         mCalendar = Calendar.getInstance();
         mCalendar.set(year, month, 1, 23, 59, 59);
@@ -78,13 +87,19 @@ public class PlanHelper implements DataLoaderCallback {
         return mCalendar.getTimeInMillis();
     }
 
-    // Reads all planned tesla trips between two dates from the calendar.instances table
+    /**
+     * Reads all planned tesla trips between two dates from the calendar.instances table
+     * @param lowerRangeEnd Lower end of the dates to read in calendar.instances table
+     * @param upperRangeEnd Upper end of the dates to read in calendar.instances table
+     */
     public void readPlannedTrips(long lowerRangeEnd, long upperRangeEnd) {
         CalendarInstanceReader cir = new CalendarInstanceReader(mCalendar, mContext.getContext());
         mInstances = cir.readInstancesBetweenTimestamps(lowerRangeEnd, upperRangeEnd);
     }
 
-    // Mark all dates in the caldroid fragment that have a tesla trip instance
+    /**
+     * Mark all dates in the caldroid fragment that have a tesla trip instance
+     */
     public void markDays() {
         // Iterate through all read calendar instances
         for (Map.Entry pair : mInstances.entrySet()) {
@@ -97,7 +112,9 @@ public class PlanHelper implements DataLoaderCallback {
         mCaldroid.refreshView();
     }
 
-    // Define the listener for the caldroid fragment
+    /**
+     * Define the listener for the caldroid fragment
+     */
     public void generateListener() {
         // Date format masks to display dates
         final SimpleDateFormat titleFormat = new SimpleDateFormat(mContext.getString(R.string.format_caldroid_info_title));
@@ -205,9 +222,11 @@ public class PlanHelper implements DataLoaderCallback {
     }
     /********/
 
-    /*
+    /**
      * Call google.maps API with the origin and destination location to find out distance and duration
      * of the planned trip
+     * @param origin The origin of the route
+     * @param destination The destination of the route
      */
     private void calculateDistance(String origin, String destination) {
         DataLoader loader = new DataLoader(mAppContext, this);
@@ -219,9 +238,13 @@ public class PlanHelper implements DataLoaderCallback {
         );
     }
 
-    /*
+    /**
      * Displays the route information (error, no route available or loaded information). On errors
      * one of the fields width is minimized so a longer error-message can be shown.
+     * @param v View to display the information on
+     * @param distance Distance of the route
+     * @param duration Duration of the route
+     * @param valid true when no errors occurred while requesting the route information
      */
     private void displayRouteInformation(View v, String distance, String duration, boolean valid) {
         TextView routeDistance = (TextView) v.findViewById(R.id.text_route_information_distance);

@@ -40,7 +40,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.ChartHelper;
 import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
- * This Fragment shows usage data in a chart and connected devices
+ * This Fragment shows usage data in a chart and connected devices in a list
  */
 public class ConsumptionFragment extends Fragment implements OnChartValueSelectedListener, DataLoaderCallback {
     private Handler mUpdateHandler;
@@ -142,11 +142,14 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
     public void DataLoaderDidFinish() {
         mChartHelper.generateXValues(mAppContext.getConsumptionData().get(0));
 
+        // Generate the updated data sets
         for (int z = 0; z < mAppContext.getConsumptionData().size(); z++) {
             mChartHelper.generateDataSet(mAppContext.getConsumptionData().get(z), z);
         }
 
+        // Add the data sets to the chart
         mChartHelper.updateChartData();
+        // Update the chart on the view
         mContext.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -170,6 +173,9 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
     }
     /********/
 
+    /**
+     * Runnable for updating the chart (every 10 seconds)
+     */
     private final Runnable updateData = new Runnable() {
         public void run() {
             DataLoader loader = new DataLoader(mAppContext, mContext);

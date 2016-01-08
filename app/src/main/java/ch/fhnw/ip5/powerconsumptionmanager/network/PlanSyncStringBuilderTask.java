@@ -30,6 +30,12 @@ public class PlanSyncStringBuilderTask extends AsyncTask<Void, Void, String> {
         mData = new StringBuilder(1000);
     }
 
+    /**
+     * Task is executed in background (necessary because no network activity can be run on the UI- or
+     * main thread) and generates the string for the synchronization.
+     * @param params No params needed
+     * @return String for the put-Request
+     */
     @Override
     protected String doInBackground(Void... params) {
         boolean error = false;
@@ -43,7 +49,7 @@ public class PlanSyncStringBuilderTask extends AsyncTask<Void, Void, String> {
         long lowerRangeEnd = calendar.getTimeInMillis();
 
         /*
-         * Get all the days that are being synched (needed because the keys in the hashmap are the
+         * Get all the days that are being synchronized (needed because the keys in the hashmap are the
          * days where the calendar instance takes place)
          */
         int[] dayKeys = new int[7];

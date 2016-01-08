@@ -21,8 +21,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PlanHelper;
 public class PlanFragment extends Fragment {
 
     public static PlanFragment newInstance() {
-        PlanFragment fragment = new PlanFragment();
-        return fragment;
+        return new PlanFragment();
     }
 
     @Override

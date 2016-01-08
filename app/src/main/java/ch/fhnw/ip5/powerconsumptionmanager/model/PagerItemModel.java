@@ -22,7 +22,12 @@ public class PagerItemModel {
         mDividerColor = dividerColor;
     }
 
-    // Delegate the creation of the new fragment when page changed to the right fragment class
+    /**
+     * Creation of the new fragment when page changed to the right fragment class
+     * @param i Index from the viewpager tab that gets active
+     * @return Fragment instance
+     */
+    //
     public Fragment createFragment(int i) {
         switch (i) {
             case 0:

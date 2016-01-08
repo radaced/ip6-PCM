@@ -12,13 +12,12 @@ import android.widget.TextView;
 import ch.fhnw.ip5.powerconsumptionmanager.R;
 
 /**
- * Created by Patrik on 02.01.2016.
+ * This Fragment is not in use yet.
  */
 public class TeslaLoginFragment extends Fragment {
 
     public static TeslaLoginFragment newInstance() {
-        TeslaLoginFragment fragment = new TeslaLoginFragment();
-        return fragment;
+        return new TeslaLoginFragment();
     }
 
     @Override

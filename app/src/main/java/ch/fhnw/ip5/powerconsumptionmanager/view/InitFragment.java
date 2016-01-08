@@ -20,8 +20,7 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 public class InitFragment extends Fragment {
 
     public static InitFragment newInstance() {
-        InitFragment fragment = new InitFragment();
-        return fragment;
+        return new InitFragment();
     }
 
     @Override
@@ -67,7 +66,7 @@ public class InitFragment extends Fragment {
                     SharedPreferences.Editor editor = settings.edit();
                     String ip = ip1.getText().toString() + "." + ip2.getText().toString() + "." + ip3.getText().toString() + "." + ip4.getText().toString();
                     editor.putString("IP", ip);
-                    editor.commit();
+                    editor.apply();
 
                     // Set the IP in the application context for easier access
                     PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
@@ -83,7 +82,11 @@ public class InitFragment extends Fragment {
         });
     }
 
-    // Error detection for IP
+    /**
+     * Error detection for IP
+     * @param ip The textfield where the content needs to be checked
+     * @return true when ip number is valid, false otherwise
+     */
     private boolean isValidIPNumber(EditText ip) {
         // IP field can't be empty
         if(ip.getText().length() <= 0) {
@@ -92,10 +95,6 @@ public class InitFragment extends Fragment {
 
         // Entered number needs to be between 0 and 255
         int ipNumber = Integer.parseInt(ip.getText().toString());
-        if(ipNumber < 0 || ipNumber > 255) {
-            return false;
-        }
-
-        return true;
+        return !(ipNumber < 0 || ipNumber > 255);
     }
 }

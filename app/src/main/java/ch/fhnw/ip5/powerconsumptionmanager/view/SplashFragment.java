@@ -1,14 +1,11 @@
 package ch.fhnw.ip5.powerconsumptionmanager.view;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import ch.fhnw.ip5.powerconsumptionmanager.R;
 import ch.fhnw.ip5.powerconsumptionmanager.network.DataLoader;
@@ -17,11 +14,9 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 
 
 public class SplashFragment extends Fragment {
-    private PowerConsumptionManagerAppContext mContext;
 
     public static SplashFragment newInstance() {
-        SplashFragment fragment = new SplashFragment();
-        return fragment;
+        return new SplashFragment();
     }
 
     @Override
@@ -40,10 +35,10 @@ public class SplashFragment extends Fragment {
             loadingMsg.setText(extras.getString("settings_changed", getString(R.string.text_splash_info)));
         }
 
-        mContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
-        DataLoader loader = new DataLoader(mContext, (DataLoaderCallback) getActivity());
+        PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
+        DataLoader loader = new DataLoader(appContext, (DataLoaderCallback) getActivity());
 
         // Web request to load the consumption data
-        loader.loadConsumptionData("http://" + mContext.getIPAdress() + ":" + getString(R.string.webservice_getData));
+        loader.loadConsumptionData("http://" + appContext.getIPAdress() + ":" + getString(R.string.webservice_getData));
     }
 }

@@ -42,12 +42,16 @@ public class CalendarInstanceReader {
         mCalendar = calendar;
         mContext = context;
         /* TODO SparseIntArray */
-        mInstances = new HashMap<Integer, PlanEntryModel>();
+        mInstances = new HashMap<>();
     }
 
-    /*
-     * Reads all the instances in the calendar.instances table and returns the information according to
+    /**
+     * Reads all the instances in the calendar.instances table. and returns the information according to
      * the projection array in a hashmap where the key is the day on which the instance is
+     * @param lowerRangeEnd Lower end of the dates to read in calendar.instances table
+     * @param upperRangeEnd Upper end of the dates to read in calendar.instances table
+     * @return Hashmap that contains information according to the projection array (key is the day where
+     * the instance occures)
      */
     public HashMap<Integer, PlanEntryModel> readInstancesBetweenTimestamps(long lowerRangeEnd, long upperRangeEnd) {
         ContentResolver cr = mContext.getApplicationContext().getContentResolver();
@@ -65,6 +69,7 @@ public class CalendarInstanceReader {
         Cursor cursor = cr.query(builder.build(), INSTANCE_FIELDS, selection, selectionArgs, null);
 
         // Iterate through results
+        assert cursor != null;
         while (cursor.moveToNext()) {
             String title = cursor.getString(INSTANCE_TITLE);
 

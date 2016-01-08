@@ -64,7 +64,7 @@ public class IPSettingDialog extends DialogPreference {
                 SharedPreferences.Editor editor = mSettings.edit();
                 String ip = mIP1.getText().toString() + "." + mIP2.getText().toString() + "." + mIP3.getText().toString() + "." + mIP4.getText().toString();
                 editor.putString("IP", ip);
-                editor.commit();
+                editor.apply();
 
                 // Update application context
                 PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
@@ -100,7 +100,11 @@ public class IPSettingDialog extends DialogPreference {
         }
     }
 
-    // Error detection for IP
+    /**
+     * Error detection for IP
+     * @param ip The textfield where the content needs to be checked
+     * @return true when ip number is valid, false otherwise
+     */
     private boolean isValidIPNumber(EditText ip) {
         // IP field can't be empty
         if(ip.getText().length() <= 0) {
@@ -109,10 +113,6 @@ public class IPSettingDialog extends DialogPreference {
 
         // Entered number needs to be between 0 and 255
         int ipNumber = Integer.parseInt(ip.getText().toString());
-        if(ipNumber < 0 || ipNumber > 255) {
-            return false;
-        }
-
-        return true;
+        return !(ipNumber < 0 || ipNumber > 255);
     }
 }

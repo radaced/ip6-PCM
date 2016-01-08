@@ -1,5 +1,6 @@
 package ch.fhnw.ip5.powerconsumptionmanager.network;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.squareup.okhttp.Callback;
@@ -24,26 +25,33 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 
 /**
  * Loads the different data from the power consumption manager server component or other APIs
- * over asynchronous web requests
+ * over asynchronous web requests with OkHttp
  */
 public class DataLoader {
-    private PowerConsumptionManagerAppContext mContext;
+    private static final String TAG = "DataLoader";
+
+    private PowerConsumptionManagerAppContext mAppContext;
     private DataLoaderCallback mCallback;
+    private OkHttpClient mClient;
 
     public DataLoader(PowerConsumptionManagerAppContext context, DataLoaderCallback callback) {
-        this.mContext = context;
+        this.mAppContext = context;
         this.mCallback = callback;
+        this.mClient = new OkHttpClient();
     }
 
-    // getData call to get consumption data (24h) of all connected devices
+    /**
+     * getData call to get consumption data (24h) of all connected devices
+     * @param url Address that needs to be called
+     */
+    //
     public void loadConsumptionData(String url) {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
 
-        OkHttpClient client = new OkHttpClient();
         // Define call and callback
-        client.newCall(request).enqueue(new Callback() {
+        mClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
                 mCallback.DataLoaderDidFail();
@@ -73,28 +81,30 @@ public class DataLoader {
                     }
 
                     // Make consumption data available for the application through the application context
-                    mContext.setConsumptionData(consumptionData);
+                    mAppContext.setConsumptionData(consumptionData);
 
                     // Directly call the loader for getComponents
-                    loadComponents("http://" + mContext.getIPAdress() + ":" + mContext.getString(R.string.webservice_getComponents));
+                    loadComponents("http://" + mAppContext.getIPAdress() + ":" + mAppContext.getString(R.string.webservice_getComponents));
                     mCallback.DataLoaderDidFinish();
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "JSON exception while processing consumption data.");
                     mCallback.DataLoaderDidFail();
                 }
             }
         });
     }
 
-    // getComponents call to get names of all connected devices
+    /**
+     * getComponents call to get names of all connected devices
+     * @param url Address that needs to be called
+     */
     public void loadComponents(String url) {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
 
-        OkHttpClient client = new OkHttpClient();
         // Define call and callback
-        client.newCall(request).enqueue(new Callback() {
+        mClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
                 mCallback.DataLoaderDidFail();
@@ -124,25 +134,28 @@ public class DataLoader {
                     }
 
                     // Make components data available for the application through the application context
-                    mContext.setComponents(components);
+                    mAppContext.setComponents(components);
                     // returns to loadConsumptionData and calls DataLoaderDidFinish() (if no error)
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "JSON exception while processing component data.");
                     mCallback.DataLoaderDidFail();
                 }
             }
         });
     }
 
-    // Get distance and duration to reach it between origin and destination
+
+    /**
+     * Get distance and duration to reach it between origin and destination
+     * @param url Address that needs to be called
+     */
     public void loadRouteInformation(String url) {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
 
-        OkHttpClient client = new OkHttpClient();
         // Define call and callback
-        client.newCall(request).enqueue(new Callback() {
+        mClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
                 mCallback.DataLoaderDidFail();
@@ -164,10 +177,16 @@ public class DataLoader {
         });
     }
 
-    // Synchronize the tesla trips of the current week with the server component
+    /**
+     * Synchronize the tesla trips of the current week with the server component
+     * @param url Address that needs to be called
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    //
     public void synchronizeChargingPlan(String url) throws ExecutionException, InterruptedException {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        String data = new PlanSyncStringBuilderTask(mContext).execute().get();
+        String data = new PlanSyncStringBuilderTask(mAppContext).execute().get();
 
         if(!data.equals("")) {
             RequestBody requestBody = RequestBody.create(JSON, data);
@@ -177,9 +196,8 @@ public class DataLoader {
                     .put(requestBody)
                     .build();
 
-            OkHttpClient client = new OkHttpClient();
             // Define call and callback
-            client.newCall(request).enqueue(new Callback() {
+            mClient.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
                     mCallback.DataLoaderDidFail();
@@ -196,11 +214,17 @@ public class DataLoader {
                 }
             });
         } else {
-            Toast.makeText(mContext.getApplicationContext(), "Sync failed (error building data to sync)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mAppContext.getApplicationContext(), "Sync failed (error building data to sync)", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // Processes the route information to two locations and stores the loaded information for further use
+    /**
+     * Processes the route information to two locations and stores the loaded information for further use
+     * @param response The response from the OkHttp request
+     * @return true when no successful, false when errors occured
+     * @throws IOException
+     */
+    //
     public boolean processRoutes(Response response) throws IOException {
         boolean success = true;
         try {
@@ -220,11 +244,11 @@ public class DataLoader {
                 String durationText = duration.getString("text");
 
                 // Store in application context
-                mContext.setRouteInformation(new RouteInformationModel(durationText, distanceText));
+                mAppContext.setRouteInformation(new RouteInformationModel(durationText, distanceText));
             } else {
-                mContext.setRouteInformation(new RouteInformationModel(
-                    mContext.getString(R.string.text_route_information_no_route),
-                    ""
+                mAppContext.setRouteInformation(new RouteInformationModel(
+                        mAppContext.getString(R.string.text_route_information_no_route),
+                        ""
                 ));
             }
         } catch (JSONException e) {

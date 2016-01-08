@@ -18,19 +18,23 @@ import ch.fhnw.ip5.powerconsumptionmanager.adapter.EVMPagerAdapter;
 import ch.fhnw.ip5.powerconsumptionmanager.model.PagerItemModel;
 import ch.fhnw.ip5.powerconsumptionmanager.util.SlidingTabLayout;
 
+/**
+ * The main activity is called after the initial data loading on the splash screen
+ * activity. It contains the two pages for displaying the consumption data and the
+ * charge plan.
+ */
 public class MainActivity extends AppCompatActivity {
-    private SlidingTabLayout mSlidingTabLayout;
-    private View mView;
-    private ViewPager mViewPager;
     private List<PagerItemModel> mTabs = new ArrayList<PagerItemModel>();
 
+    /**
+     * Setup main menu
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mView = findViewById(android.R.id.content);
+        View view = findViewById(android.R.id.content);
 
-        /************* Setup main menu *************/
         createViewPagerTabs();
 
         // Main toolbar
@@ -39,15 +43,15 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(tb);
 
         // Sliding layout
-        mViewPager = (ViewPager) mView.findViewById(R.id.viewpager);
-        mViewPager.setAdapter(new EVMPagerAdapter(getSupportFragmentManager(), mTabs));
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        viewPager.setAdapter(new EVMPagerAdapter(getSupportFragmentManager(), mTabs));
 
-        mSlidingTabLayout = (SlidingTabLayout) mView.findViewById(R.id.sliding_tabs);
-        mSlidingTabLayout.setDistributeEvenly(true);
-        mSlidingTabLayout.setViewPager(mViewPager);
+        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+        slidingTabLayout.setDistributeEvenly(true);
+        slidingTabLayout.setViewPager(viewPager);
 
         // Colorized indicator that shows which tab is currently displayed
-        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+        slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
                 return mTabs.get(position).getIndicatorColor();
@@ -80,7 +84,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Generate tabs as pager models to later display in sliding tab layout
+    /**
+     * Generate tabs as pager models to later display in sliding tab layout
+     */
     private void createViewPagerTabs() {
         mTabs.add(new PagerItemModel(
                 getString(R.string.title_frag_consumption),

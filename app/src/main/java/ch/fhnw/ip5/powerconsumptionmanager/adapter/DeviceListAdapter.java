@@ -16,7 +16,8 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.ChartHelper;
 import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
- * List adapter to manage the device list that is shown below consumption chart
+ * List adapter to manage the device list that is shown below consumption chart and some logic for
+ * the interaction with the device list.
  */
 public class DeviceListAdapter extends ArrayAdapter<String> {
     private int mLayout;
@@ -35,6 +36,7 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
         ViewHolder mainViewHolder = null;
 
         if(convertView == null) {
+            // Check if devices/data could be loaded
             if(mChartHelper == null && mDevices.size() == 1) {
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 convertView = inflater.inflate(mLayout, parent, false);
@@ -65,11 +67,11 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
                              */
                             mChartHelper.getChart().getLineData().removeDataSet(position - shiftPos);
                             mChartHelper.displayNoneAnimated();
-                            // Add removed data set index to list
+                            // Add removed data set index to ignore list
                             mChartHelper.getRemovedDataSetIndexes().add(position);
                         } else {
                             PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
-                            // Indicate that graph of certain device is visible again
+                            // Indicate that graph of certain device is visible again (remove from ignore list
                             mChartHelper.getRemovedDataSetIndexes().remove(Integer.valueOf(position));
                             // Generate new data set with the correct consumption data
                             mChartHelper.generateDataSet(appContext.getConsumptionData().get(position - shiftPos), position - shiftPos);
@@ -88,7 +90,10 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
         return convertView;
     }
 
-    // Returns amount of not shown device-graphs in the chart that have a smaller index in the list view as the clicked one
+    /**
+     * @param position Index of the device-list that has been clicked
+     * @return Amount of not shown device-graphs in the chart that have a smaller index in the list view as position
+     */
     public int getShiftPosition(int position) {
         int shiftPos = 0;
         for(int i = 0; i < mChartHelper.getRemovedDataSetIndexes().size(); i++) {
@@ -99,7 +104,9 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
         return shiftPos;
     }
 
-    // View holder contains all ui elements on a list item
+    /**
+     * View holder contains all ui elements on a list item
+     */
     static class ViewHolder {
         TextView textDevice;
         View graphColor;

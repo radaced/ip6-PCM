@@ -47,7 +47,9 @@ public class ChartHelper {
         mChartDrawer = chart.getPaint(Chart.PAINT_INFO);
     }
 
-    // Inital settings for the chart
+    /**
+     * Inital settings for the chart
+     */
     public void setup() {
         // Set looks
         mConsumptionChart.setBackgroundColor(ContextCompat.getColor(mContext.getActivity(), R.color.colorChartBackground));
@@ -76,7 +78,9 @@ public class ChartHelper {
         mConsumptionChart.setOnChartValueSelectedListener(mContext);
     }
 
-    // Set error messages for empty chart
+    /**
+     * Set error messages for empty chart
+     */
     public void setupOnError() {
         mConsumptionChart.setNoDataText(mContext.getActivity().getString(R.string.chart_connection_error_title));
         mConsumptionChart.setNoDataTextDescription(mContext.getActivity().getString(R.string.chart_connection_error_description));
@@ -84,7 +88,10 @@ public class ChartHelper {
         mChartDrawer.setColor(ContextCompat.getColor(mContext.getActivity(), R.color.colorTextPrimaryInverse));
     }
 
-    // Shows or hides the legend
+    /**
+     * Shows or hides the legend
+     * @param enable true to show, false to hide
+     */
     public void setLegend(boolean enable) {
         Legend l = mConsumptionChart.getLegend();
         if(enable) {
@@ -93,7 +100,10 @@ public class ChartHelper {
         l.setEnabled(enable);
     }
 
-    // Generates the x values of the chart (amount of x and y values need to be equal)
+    /**
+     * Generates the x values of the chart (amount of x and y values need to be equal)
+     * @param data Loaded consumption data of a single device
+     */
     public void generateXValues(ConsumptionDataModel data) {
         if(!mXValues.isEmpty()) {
             mXValues.clear();
@@ -108,8 +118,13 @@ public class ChartHelper {
         }
     }
 
+    /**
+     * Generates a single data set and adds it to the hash map that holds all data sets to display
+     * @param data Loaded consumption data of a single device
+     * @param colorCode Array index to set color for the graph (data set)
+     */
     // Generates a single data set and adds it to the hash map that holds all data sets
-    public void generateDataSet(ConsumptionDataModel data, int iteration) {
+    public void generateDataSet(ConsumptionDataModel data, int colorCode) {
         ArrayList<Entry> values = new ArrayList<>();
 
         for (int i = 0; i < data.getComponentData().size(); i++) {
@@ -125,12 +140,14 @@ public class ChartHelper {
         lds.setCircleSize(2f);
 
         // Set the graph colors as they appear in the server component
-        lds.setColor(getGraphColor(iteration));
-        lds.setCircleColor(getGraphColor(iteration));
-        mConsumptionDataSet.put(iteration, lds);
+        lds.setColor(getGraphColor(colorCode));
+        lds.setCircleColor(getGraphColor(colorCode));
+        mConsumptionDataSet.put(colorCode, lds);
     }
 
-    // Show all data sets
+    /**
+     * Show all data sets
+     */
     public void initChartData() {
         ArrayList<LineDataSet> list = new ArrayList<>();
         for(int i = 0; i < mConsumptionDataSet.size(); i++) {
@@ -141,7 +158,7 @@ public class ChartHelper {
         mConsumptionChart.setData(data);
     }
 
-    /*
+    /**
      * Show only data sets where the toggle button for each device is active. Pass a parameter (list
      * that holds the indices to ignore)
      */
@@ -159,12 +176,16 @@ public class ChartHelper {
     }
 
 
-    // Display chart data animated (chart data fades in from bottom to top)
+    /**
+     * Display chart data animated (chart data fades in from bottom to top)
+     */
     public void displayAnimated() {
         mConsumptionChart.animateY(2000);
     }
 
-    // Display without animation
+    /**
+     * Display without animation
+     */
     public void displayNoneAnimated() {
         mConsumptionChart.invalidate();
     }

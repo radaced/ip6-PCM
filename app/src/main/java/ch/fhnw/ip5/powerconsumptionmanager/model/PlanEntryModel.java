@@ -3,7 +3,7 @@ package ch.fhnw.ip5.powerconsumptionmanager.model;
 import java.util.Date;
 
 /**
- * Holds the necessary information to a tesla trip instance
+ * Holds the necessary information to a tesla trip instance (from calendar.instance table)
  */
 public class PlanEntryModel {
     private String mTitle;

@@ -9,7 +9,7 @@ import java.util.List;
 import ch.fhnw.ip5.powerconsumptionmanager.model.PagerItemModel;
 
 /**
- * Pager adapter to show correct fragment per tab
+ * Pager adapter to show correct fragment for each tab
  */
 public class EVMPagerAdapter extends FragmentPagerAdapter {
     List<PagerItemModel> mTabs;
