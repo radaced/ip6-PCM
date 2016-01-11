@@ -15,7 +15,7 @@
     <ch.fhnw.ip5.powerconsumptionmanager.util.SlidingTabLayout
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"/>
 
     <android.support.v4.view.ViewPager

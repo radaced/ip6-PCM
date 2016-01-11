@@ -1,10 +1,8 @@
 package ch.fhnw.ip5.powerconsumptionmanager.util;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.roomorama.caldroid.CaldroidFragment;
@@ -151,15 +149,26 @@ public class PlanHelper implements DataLoaderCallback {
                     description.setMovementMethod(ScrollingMovementMethod.getInstance());
                     // Time range of instance
                     TextView timeRange = (TextView) v.findViewById(R.id.caldroid_info_timerange);
-                    timeRange.setText(timeRangeFormat.format(pem.getBegin()) + " - " + timeRangeFormat.format(pem.getEnd()));
-
-                    // Load distance and duration to reach destination between two given locations from the instance
+                    String time = timeRangeFormat.format(pem.getBegin()) + " - " + timeRangeFormat.format(pem.getEnd());
+                    timeRange.setText(time);
+                    /*
+                     * Display route and load distance and duration to reach destination between two given
+                     * locations from the instance
+                     */
+                    TextView routeOrigDest = (TextView) v.findViewById(R.id.caldroid_info_route);
                     String[] locations = pem.getEventLocation().split("/");
+                    String route = "-";
                     if(locations.length == 2 && !"".equals(locations[0]) && !"".equals(locations[1])) {
+                        route = locations[0].trim() +
+                                       " " +
+                                       mContext.getString(R.string.text_route_information_route_to) +
+                                       " " +
+                                       locations[1].trim();
                         calculateDistance(locations[0].trim(), locations[1].trim());
                     } else {
-                        displayRouteInformation(v, mContext.getString(R.string.text_route_information_no_data), "", false);
+                        displayRouteInformation(v, mContext.getString(R.string.text_route_information_no_data), "");
                     }
+                    routeOrigDest.setText(route);
                 }
             }
 
@@ -196,13 +205,12 @@ public class PlanHelper implements DataLoaderCallback {
 
                 // Check if a route existed
                 if (rim.getDistanceText().equals("")) {
-                    displayRouteInformation(view, mContext.getString(R.string.text_route_information_no_route), "", false);
+                    displayRouteInformation(view, mContext.getString(R.string.text_route_information_no_route), "");
                 } else {
                     displayRouteInformation(
-                            view,
-                            mContext.getString(R.string.text_route_information_distance) + " " + rim.getDistanceText(),
-                            mContext.getString(R.string.text_route_information_duration) + " " + rim.getDurationText(),
-                            true
+                        view,
+                        mContext.getString(R.string.text_route_information_distance) + " " + rim.getDistanceText(),
+                        mContext.getString(R.string.text_route_information_duration) + " " + rim.getDurationText()
                     );
                 }
             }
@@ -216,7 +224,7 @@ public class PlanHelper implements DataLoaderCallback {
             @Override
             public void run() {
                 View view = mContext.getView();
-                displayRouteInformation(view, mContext.getString(R.string.text_route_information_error), "", false);
+                displayRouteInformation(view, mContext.getString(R.string.text_route_information_error), "");
             }
         });
     }
@@ -239,33 +247,19 @@ public class PlanHelper implements DataLoaderCallback {
     }
 
     /**
-     * Displays the route information (error, no route available or loaded information). On errors
-     * one of the fields width is minimized so a longer error-message can be shown.
+     * Displays the route information (error, no route available or loaded information).
      * @param v View to display the information on
      * @param distance Distance of the route
      * @param duration Duration of the route
-     * @param valid true when no errors occurred while requesting the route information
      */
-    private void displayRouteInformation(View v, String distance, String duration, boolean valid) {
-        TextView routeDistance = (TextView) v.findViewById(R.id.text_route_information_distance);
-        TextView routeDuration = (TextView) v.findViewById(R.id.text_route_information_duration);
-
-        if(valid) {
-            routeDistance.setText(distance);
-            routeDuration.setText(duration);
-            routeDuration.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                1f
-            ));
+    private void displayRouteInformation(View v, String distance, String duration) {
+        TextView routeInformation = (TextView) v.findViewById(R.id.caldroid_info_route_information);
+        String information;
+        if("".equals(duration)) {
+            information = distance;
         } else {
-            routeDistance.setText(distance);
-            routeDuration.setText("");
-            routeDuration.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                0f
-            ));
+            information = distance + " | " + duration;
         }
+        routeInformation.setText(information);
     }
 }
