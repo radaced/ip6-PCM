@@ -37,7 +37,6 @@ public class PlanHelper implements DataLoaderCallback {
     // The actual selected date in the caldroid fragment
     private Date mSelectedDate = new Date();
 
-
     public PlanHelper(CaldroidFragment caldroid, PlanFragment context) {
         mCaldroid = caldroid;
         mContext = context;
@@ -47,12 +46,13 @@ public class PlanHelper implements DataLoaderCallback {
     }
 
     /**
-     * Initial settings for the caldroid fragment
+     * Initial settings for the caldroid fragment (when rotated don't set month and year)
+     * @param cal Calendar object with the month and year to set
      */
-    public void setup() {
+    public void setup(Calendar cal) {
         Bundle args = new Bundle();
-        args.putInt(CaldroidFragment.MONTH, mCalendar.get(Calendar.MONTH) + 1);
-        args.putInt(CaldroidFragment.YEAR, mCalendar.get(Calendar.YEAR));
+        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
         args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
         args.putInt(CaldroidFragment.THEME_RESOURCE, R.style.CustomCaldroidTheme);
         args.putBoolean(CaldroidFragment.SHOW_NAVIGATION_ARROWS, false);
@@ -191,6 +191,14 @@ public class PlanHelper implements DataLoaderCallback {
 
     public CaldroidFragment getCaldroid() {
         return mCaldroid;
+    }
+
+    public Date getSelectedDate() {
+        return mSelectedDate;
+    }
+
+    public void setSelectedDate(Date mSelectedDate) {
+        this.mSelectedDate = mSelectedDate;
     }
 
     /**** Return point from requests that were called after a day field was pressed in caldroid ****/
