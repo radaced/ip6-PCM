@@ -38,7 +38,8 @@ public class SplashFragment extends Fragment {
         PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
         DataLoader loader = new DataLoader(appContext, (DataLoaderCallback) getActivity());
 
-        // Web request to load the consumption data
+        // Web request to load the consumption and component data (load consumption data includes reading components)
         loader.loadConsumptionData("http://" + appContext.getIPAdress() + ":" + getString(R.string.webservice_getData));
+        //loader.loadComponents("http://" + appContext.getIPAdress() + ":" + appContext.getString(R.string.webservice_getComponents));
     }
 }

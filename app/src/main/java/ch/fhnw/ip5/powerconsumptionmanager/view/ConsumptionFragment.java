@@ -19,6 +19,7 @@ package ch.fhnw.ip5.powerconsumptionmanager.view;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,8 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
  * This Fragment shows usage data in a chart and connected devices in a list
  */
 public class ConsumptionFragment extends Fragment implements OnChartValueSelectedListener, DataLoaderCallback {
+    private static final String TAG = "ConsumptionFragment";
+
     private Handler mUpdateHandler;
     private ChartHelper mChartHelper;
     private PowerConsumptionManagerAppContext mAppContext;
@@ -140,36 +143,44 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
     /**** Return point from requests that update consumption data ****/
     @Override
     public void DataLoaderDidFinish() {
-        mChartHelper.generateXValues(mAppContext.getConsumptionData().get(0));
+        try {
+            mChartHelper.generateXValues(mAppContext.getConsumptionData().get(0));
 
-        // Generate the updated data sets
-        for (int z = 0; z < mAppContext.getConsumptionData().size(); z++) {
-            mChartHelper.generateDataSet(mAppContext.getConsumptionData().get(z), z);
-        }
-
-        // Add the data sets to the chart
-        mChartHelper.updateChartData();
-        // Update the chart on the view
-        mContext.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mChartHelper.displayNoneAnimated();
+            // Generate the updated data sets
+            for (int z = 0; z < mAppContext.getConsumptionData().size(); z++) {
+                mChartHelper.generateDataSet(mAppContext.getConsumptionData().get(z), z);
             }
-        });
+
+            // Add the data sets to the chart
+            mChartHelper.updateChartData();
+            // Update the chart on the view
+            mContext.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mChartHelper.displayNoneAnimated();
+                }
+            });
+        } catch (NullPointerException e) {
+            Log.e(TAG, "Activity/Fragment destroyed or changed while updating.");
+        }
     }
 
     @Override
     public void DataLoaderDidFail() {
-        mContext.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        try {
+            mContext.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
                 Toast.makeText(
                     mAppContext.getApplicationContext(),
                     mAppContext.getString(R.string.toast_chart_update_error),
                     Toast.LENGTH_SHORT
                 ).show();
-            }
-        });
+                }
+            });
+        } catch (NullPointerException e) {
+            Log.e(TAG, "Activity/Fragment destroyed or changed while updating.");
+        }
     }
     /********/
 

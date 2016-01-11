@@ -41,7 +41,7 @@ public class DataLoader {
     }
 
     /**
-     * getData call to get consumption data (24h) of all connected devices
+     * getData call to get consumption data (24h) and names of all connected devices
      * @param url Address that needs to be called
      */
     //
@@ -64,27 +64,27 @@ public class DataLoader {
                     return;
                 }
 
-                // List to hold the loaded consumption data
+                // Lists to hold the loaded consumption data and component names
                 ArrayList<ConsumptionDataModel> consumptionData = new ArrayList<>();
+                ArrayList<String> components = new ArrayList<>();
 
                 try {
                     JSONArray dataJson = new JSONArray(response.body().string());
 
                     // Fill model containers with each device and add the data to the list
                     for(int i = 0; i < dataJson.length(); i++) {
-                        // TEST
+                        /* TODO lower loaded for testing */
                         if(i > 3) {
                             continue;
                         }
                         ConsumptionDataModel usageData = new ConsumptionDataModel((JSONObject) dataJson.get(i));
                         consumptionData.add(usageData);
+                        components.add(usageData.getComponentName());
                     }
 
-                    // Make consumption data available for the application through the application context
+                    // Make consumption data and component names available for the application through the application context
                     mAppContext.setConsumptionData(consumptionData);
-
-                    // Directly call the loader for getComponents
-                    loadComponents("http://" + mAppContext.getIPAdress() + ":" + mAppContext.getString(R.string.webservice_getComponents));
+                    mAppContext.setComponents(components);
                     mCallback.DataLoaderDidFinish();
                 } catch (JSONException e) {
                     Log.e(TAG, "JSON exception while processing consumption data.");
@@ -135,7 +135,7 @@ public class DataLoader {
 
                     // Make components data available for the application through the application context
                     mAppContext.setComponents(components);
-                    // returns to loadConsumptionData and calls DataLoaderDidFinish() (if no error)
+                    mCallback.DataLoaderDidFinish();
                 } catch (JSONException e) {
                     Log.e(TAG, "JSON exception while processing component data.");
                     mCallback.DataLoaderDidFail();
