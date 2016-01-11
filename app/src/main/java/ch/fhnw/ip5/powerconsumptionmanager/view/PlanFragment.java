@@ -42,7 +42,7 @@ public class PlanFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize the ui elements
+        // Initialize the UI elements
         mTitle = (TextView) view.findViewById(R.id.caldroid_info_title);
         mTimeRange = (TextView) view.findViewById(R.id.caldroid_info_timerange);
         mRoute = (TextView) view.findViewById(R.id.caldroid_info_route);
@@ -55,7 +55,7 @@ public class PlanFragment extends Fragment {
         mPlanHelper = new PlanHelper(mCaldroidFragment, this);
         Calendar cal = Calendar.getInstance();
 
-        // Check if caldroid fragment already exists (after screen rotation) and set data if needed
+        // Check if caldroid fragment already exists (after screen rotation) and set saved data if needed
         if (savedInstanceState != null) {
             mCaldroidFragment.restoreStatesFromKey(savedInstanceState, "CALDROID_SAVED_STATE");
             long selectedDay = savedInstanceState.getLong("selectedDay");
@@ -90,6 +90,11 @@ public class PlanFragment extends Fragment {
         transaction.commit();
     }
 
+
+    /**
+     * Save states when phone gets rotated.
+     * @param outState States to save.
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
