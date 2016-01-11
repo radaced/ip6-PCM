@@ -21,7 +21,7 @@
             android:key="syncPlan"
             android:title="Synchronize charging plan"
             android:summary="@string/text_pref_sync_summary"
-            android:icon="@drawable/settings_synchronized_icon"/>
+            android:icon="@mipmap/settings_synchronized_icon"/>
 
     </PreferenceCategory>
 </PreferenceScreen>

@@ -15,13 +15,12 @@ import ch.fhnw.ip5.powerconsumptionmanager.view.SettingsFragment;
  */
 public class SettingsActivity extends AppCompatActivity {
     // Flag if settings have changed
-    public static boolean UPDATED;
+    public static boolean UPDATED = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        UPDATED = false;
 
         // Load preferences in separate fragment
         getFragmentManager().beginTransaction().replace(R.id.ip_setting_fragment, new SettingsFragment()).commit();

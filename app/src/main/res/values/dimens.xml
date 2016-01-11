@@ -6,9 +6,11 @@
     <dimen name="nav_header_height">140dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <!-- Gener margins for the UI -->
+    <!-- General margins for the UI -->
     <dimen name="space_vertical_margin">4dp</dimen>
+    <dimen name="space_horizontal_margin">4dp</dimen>
     <dimen name="double_space_vertical_margin">8dp</dimen>
+    <dimen name="double_space_horizontal_margin">8dp</dimen>
 
     <!-- Splashscreen -->
     <dimen name="text_ip_margin">4dp</dimen>
