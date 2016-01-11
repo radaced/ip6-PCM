@@ -15,13 +15,24 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/title_frag_plan">
+        android:title="@string/category_charge_plan">
 
         <Preference
             android:key="syncPlan"
             android:title="Synchronize charging plan"
             android:summary="@string/text_pref_sync_summary"
             android:icon="@mipmap/settings_synchronized_icon"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/category_help">
+
+        <Preference
+            android:key="help"
+            android:title="@string/text_pref_help_title"
+            android:summary="@string/text_pref_help_summary"
+            android:icon="@mipmap/settings_help_icon"/>
 
     </PreferenceCategory>
 </PreferenceScreen>

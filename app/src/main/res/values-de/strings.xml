@@ -36,15 +36,21 @@
     <string name="text_splash_settings_changed">Eigenverbrauchsmanager lädt mit neuen Einstellungen…</string>
     <string name="text_init_ip">IP:</string>
     <string name="text_init_dot">.</string>
-    <string name="button_continue">Fortfahren</string>
     <string name="text_init_ip_error">Zahl zwischen 0 und 255</string>
     <string name="text_init_description">Geben Sie die IP des Geräts ein, wo die Serverkomponente drauf läuft.</string>
+    <string name="button_continue">Fortfahren</string>
+    <string name="image_content_description">Progressbar</string>
 
     <!-- Activity Settings-Screen -->
     <string name="title_activity_settings">Einstellungen</string>
     <string name="category_network">Netzwerk Konfiguration</string>
+    <string name="category_charge_plan">Ladeplan</string>
+    <string name="category_help">Hilfe</string>
     <string name="text_pref_ip_title">IP Adresse</string>
+    <string name="text_pref_sync_title">Synchronisiere Ladeplan</string>
     <string name="text_pref_sync_summary">Antippen um Tesla Trips mit der Serverkomponente zu synchronisieren.</string>
+    <string name="text_pref_help_title">Benötigen Sie Hilfe?</string>
+    <string name="text_pref_help_summary">Kontaktieren Sie Herr Prof. Zogg unter david.zogg@fhnw.ch</string>
     <string name="action_settings">Einstellungen</string>
     <string name="toast_ip_updated">IP aktualisiert</string>
     <string name="toast_ip_invalid">IP ungültig</string>
