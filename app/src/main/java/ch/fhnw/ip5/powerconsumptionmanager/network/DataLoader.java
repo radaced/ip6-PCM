@@ -186,7 +186,7 @@ public class DataLoader {
     //
     public void synchronizeChargePlan(String url) throws ExecutionException, InterruptedException {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        String data = new PlanSyncStringBuilderTask(mAppContext).execute().get();
+        String data = new PlanAsyncStringBuilderTask(mAppContext).execute().get();
 
         if(!data.equals("")) {
             RequestBody requestBody = RequestBody.create(JSON, data);

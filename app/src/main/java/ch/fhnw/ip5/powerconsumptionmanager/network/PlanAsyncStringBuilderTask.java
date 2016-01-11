@@ -22,12 +22,12 @@ import ch.fhnw.ip5.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 /**
  * Background task to build the JSON of the charge plan data that needs to be synced
  */
-public class PlanSyncStringBuilderTask extends AsyncTask<Void, Void, String> {
+public class PlanAsyncStringBuilderTask extends AsyncTask<Void, Void, String> {
     private static final String TAG = "PlanSyncStringBuilder";
     private PowerConsumptionManagerAppContext mAppContext;
     private StringBuilder mData;
 
-    public PlanSyncStringBuilderTask(PowerConsumptionManagerAppContext context) {
+    public PlanAsyncStringBuilderTask(PowerConsumptionManagerAppContext context) {
         mAppContext = context;
         mData = new StringBuilder(1000);
     }
