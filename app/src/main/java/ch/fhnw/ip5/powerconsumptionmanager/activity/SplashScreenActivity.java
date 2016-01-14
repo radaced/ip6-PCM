@@ -36,10 +36,10 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
             mAppContext.setIPAdress(settings.getString("IP", "192.168.0.1"));
 
             SplashFragment fragment = SplashFragment.newInstance();
-            transaction.replace(R.id.splash_fragment, fragment);
+            transaction.replace(R.id.startup_fragment, fragment);
         } else {
             InitFragment fragment = InitFragment.newInstance();
-            transaction.replace(R.id.splash_fragment, fragment);
+            transaction.replace(R.id.startup_fragment, fragment);
         }
 
         transaction.commit();
