@@ -73,10 +73,6 @@ public class DataLoader {
 
                     // Fill model containers with each device and add the data to the list
                     for(int i = 0; i < dataJson.length(); i++) {
-                        /* TODO lower loaded for testing */
-                        if(i > 3) {
-                            continue;
-                        }
                         ConsumptionDataModel usageData = new ConsumptionDataModel((JSONObject) dataJson.get(i));
                         consumptionData.add(usageData);
                         components.add(usageData.getComponentName());

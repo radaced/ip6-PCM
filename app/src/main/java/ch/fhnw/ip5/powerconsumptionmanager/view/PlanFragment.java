@@ -68,6 +68,7 @@ public class PlanFragment extends Fragment {
             mRoute.setText(savedInstanceState.getString("mRoute"));
             mRouteInformation.setText(savedInstanceState.getString("mRouteInformation"));
             mDescription.setText(savedInstanceState.getString("mDescription"));
+            mDescription.setBackgroundResource(R.color.colorTextViewBackground);
             cal.setTime(new Date(selectedDay));
         }
 

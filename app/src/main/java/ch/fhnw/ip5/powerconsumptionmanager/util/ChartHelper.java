@@ -128,7 +128,7 @@ public class ChartHelper {
         ArrayList<Entry> values = new ArrayList<>();
 
         for (int i = 0; i < data.getComponentData().size(); i++) {
-            // Only 1 day
+            /* TODO Only read data of 1 day in Eigenverbrauchsmanager v2.36 */
             if(i > 287) {
                 continue;
             }
