@@ -3,6 +3,7 @@ package ch.fhnw.ip5.powerconsumptionmanager.view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,10 @@ public class PlanFragment extends Fragment {
             mRoute.setText(savedInstanceState.getString("mRoute"));
             mRouteInformation.setText(savedInstanceState.getString("mRouteInformation"));
             mDescription.setText(savedInstanceState.getString("mDescription"));
-            mDescription.setBackgroundResource(R.color.colorTextViewBackground);
+            if(!savedInstanceState.getString("mDescription").equals("")) {
+                mDescription.setBackgroundResource(R.color.colorTextViewBackground);
+                mDescription.setMovementMethod(ScrollingMovementMethod.getInstance());
+            }
             cal.setTime(new Date(selectedDay));
         }
 
