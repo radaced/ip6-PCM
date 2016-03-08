@@ -1,6 +1,7 @@
 package ch.fhnw.ip5.powerconsumptionmanager.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,58 +34,51 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder mainViewHolder = null;
 
         if(convertView == null) {
-            // Check if devices/data could be loaded
-            if(mChartHelper == null && mDevices.size() == 1) {
-                LayoutInflater inflater = LayoutInflater.from(getContext());
-                convertView = inflater.inflate(mLayout, parent, false);
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            convertView = inflater.inflate(mLayout, parent, false);
+        }
 
-                TextView noDevice = (TextView) convertView.findViewById(R.id.textNoDevice);
-                noDevice.setText(mDevices.get(position));
-            } else {
-                LayoutInflater inflater = LayoutInflater.from(getContext());
-                convertView = inflater.inflate(mLayout, parent, false);
+        // Check if devices/data could be loaded
+        if(mChartHelper == null && mDevices.size() == 1) {
+            TextView noDevice = (TextView) convertView.findViewById(R.id.textNoDevice);
+            noDevice.setText(mDevices.get(position));
+        } else {
+            final ViewHolder vh = new ViewHolder();
 
-                final ViewHolder vh = new ViewHolder();
+            vh.textDevice = (TextView) convertView.findViewById(R.id.textDevice);
+            vh.textDevice.setText(mDevices.get(position));
 
-                vh.textDevice = (TextView) convertView.findViewById(R.id.textDevice);
-                vh.textDevice.setText(mDevices.get(position));
+            // Set color indicator to see which device is connected to each graph
+            vh.graphColor = convertView.findViewById(R.id.graphColor);
+            vh.graphColor.setBackgroundColor(mChartHelper.getGraphColor(position));
 
-                // Set color indicator to see which device is connected to each graph
-                vh.graphColor = convertView.findViewById(R.id.graphColor);
-                vh.graphColor.setBackgroundColor(mChartHelper.getGraphColor(position));
-
-                vh.switchDevice = (Switch) convertView.findViewById(R.id.switchDevice);
-                vh.switchDevice.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int shiftPos = getShiftPosition(position);
-                        if (!vh.switchDevice.isChecked()) {
+            vh.switchDevice = (Switch) convertView.findViewById(R.id.switchDevice);
+            vh.switchDevice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int shiftPos = getShiftPosition(position);
+                    if (!vh.switchDevice.isChecked()) {
                             /* Data sets are managed in a list and as soon one device graph is not shown in the chart anymore
                              * the indices are out of sync
                              */
-                            mChartHelper.getChart().getLineData().removeDataSet(position - shiftPos);
-                            mChartHelper.displayNoneAnimated();
-                            // Add removed data set index to ignore list
-                            mChartHelper.getRemovedDataSetIndexes().add(position);
-                        } else {
-                            PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
-                            // Indicate that graph of certain device is visible again (remove from ignore list
-                            mChartHelper.getRemovedDataSetIndexes().remove(Integer.valueOf(position));
-                            // Generate new data set with the correct consumption data
-                            mChartHelper.generateDataSet(appContext.getConsumptionData().get(position - shiftPos), position - shiftPos);
-                            mChartHelper.updateChartData();
-                            mChartHelper.displayNoneAnimated();
-                        }
+                        mChartHelper.getChart().getLineData().removeDataSet(position - shiftPos);
+                        mChartHelper.displayNoneAnimated();
+                        // Add removed data set index to ignore list
+                        mChartHelper.getRemovedDataSetIndexes().add(position);
+                    } else {
+                        PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
+                        // Indicate that graph of certain device is visible again (remove from ignore list
+                        mChartHelper.getRemovedDataSetIndexes().remove(Integer.valueOf(position));
+                        // Generate new data set with the correct consumption data
+                        mChartHelper.generateDataSet(appContext.getConsumptionData().get(position - shiftPos), position - shiftPos);
+                        mChartHelper.updateChartData();
+                        mChartHelper.displayNoneAnimated();
                     }
-                });
-                convertView.setTag(vh);
-            }
-        }
-        else {
-            mainViewHolder = (ViewHolder) convertView.getTag();
+                }
+            });
+            convertView.setTag(vh);
         }
 
         return convertView;

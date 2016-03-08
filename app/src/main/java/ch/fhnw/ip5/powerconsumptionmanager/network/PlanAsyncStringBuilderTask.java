@@ -157,6 +157,11 @@ public class PlanAsyncStringBuilderTask extends AsyncTask<Void, Void, String> {
             mData.append(day);
             if (i != 6) {
                 mData.append(",");
+                day = "";
+                weekday = "";
+                start = "";
+                end = "";
+                kilometer = 0;
             }
         }
 
