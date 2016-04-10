@@ -1,5 +1,5 @@
-# IP5 - Power Consumption Manager
-The Power Consumption Manager is an android mobile application that was realized in form of a school project for the FHNW Nordwestschweiz.
+# IP6 - Power Consumption Manager
+The Power Consumption Manager is an android mobile application that was realized in form of a bachelor thesis for the FHNW Nordwestschweiz.
 
 # Installation guide
 * Download the .apk file from the release page ([Download](https://github.com/radaced/ip5-PCM/releases))
