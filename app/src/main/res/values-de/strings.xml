@@ -34,6 +34,7 @@
     <string name="title_activity_splash">Eigenverbrauchsmanager</string>
     <string name="text_splash_info">Eigenverbrauchsmanager lädt…</string>
     <string name="text_splash_settings_changed">Eigenverbrauchsmanager lädt mit neuen Einstellungen…</string>
+    <string name="text_permission_warning">Alle angeforderten Berechtigungen sind nötig um die App zu verwenden</string>
     <string name="text_init_ip">IP:</string>
     <string name="text_init_dot">.</string>
     <string name="text_init_ip_error">Zahl zwischen 0 und 255</string>

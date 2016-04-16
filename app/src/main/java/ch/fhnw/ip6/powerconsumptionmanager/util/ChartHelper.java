@@ -110,10 +110,6 @@ public class ChartHelper {
         }
 
         for (int i = 0; i < data.getComponentData().size(); i++) {
-            // Only 1 day
-            if(i > 287) {
-                continue;
-            }
             mXValues.add(data.getComponentData().get(i).getTimestamp());
         }
     }

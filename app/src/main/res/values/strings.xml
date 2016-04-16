@@ -34,6 +34,7 @@
     <string name="title_activity_splash">Power Consumption Manager</string>
     <string name="text_splash_info">Power Consumption Manager loading…</string>
     <string name="text_splash_settings_changed">Power Consumption Manager loading with new settings…</string>
+    <string name="text_permission_warning">All requested permissions are essential to use this app</string>
     <string name="text_init_ip">IP:</string>
     <string name="text_init_dot">.</string>
     <string name="text_init_ip_error">Number between 0 and 255</string>
