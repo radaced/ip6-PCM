@@ -124,10 +124,6 @@ public class ChartHelper {
         ArrayList<Entry> values = new ArrayList<>();
 
         for (int i = 0; i < data.getComponentData().size(); i++) {
-            /* TODO Only read data of 1 day in Eigenverbrauchsmanager v2.36 */
-            if(i > 287) {
-                continue;
-            }
             values.add(new Entry((float) data.getComponentData().get(i).getPowerkW(), i));
         }
 
