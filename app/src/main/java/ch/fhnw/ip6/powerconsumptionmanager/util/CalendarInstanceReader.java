@@ -41,7 +41,6 @@ public class CalendarInstanceReader {
     public CalendarInstanceReader(Calendar calendar, Context context) {
         mCalendar = calendar;
         mContext = context;
-        /* TODO SparseIntArray */
         mInstances = new HashMap<>();
     }
 

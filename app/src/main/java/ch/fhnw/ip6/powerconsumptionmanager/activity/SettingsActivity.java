@@ -23,7 +23,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         // Load preferences in separate fragment
-        getFragmentManager().beginTransaction().replace(R.id.ip_setting_fragment, new SettingsFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.ip_setting_fragment, new SettingsFragment()).commit();
 
         // Toolbar settings
         Toolbar tb = (Toolbar) findViewById(R.id.settings_toolbar);

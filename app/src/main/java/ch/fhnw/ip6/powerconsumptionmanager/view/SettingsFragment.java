@@ -2,8 +2,9 @@ package ch.fhnw.ip6.powerconsumptionmanager.view;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,12 +14,13 @@ import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoader;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoaderCallback;
 import ch.fhnw.ip6.powerconsumptionmanager.util.IPSettingDialog;
+import ch.fhnw.ip6.powerconsumptionmanager.util.IPSettingDialogFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
  * Holds the different settings in a preference fragment and displays them accordingly.
  */
-public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener, DataLoaderCallback {
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener, DataLoaderCallback {
     private static final String TAG = "SettingsFragment";
     private SharedPreferences mSettings;
     private SettingsFragment mContext;
@@ -53,6 +55,22 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         // Set present ip as summary of preference entry
         IPSettingDialog ipDialog = (IPSettingDialog) findPreference("IP");
         ipDialog.setSummary(mSettings.getString("IP", "192.168.0.1"));
+    }
+
+    @Override
+    public void onDisplayPreferenceDialog(Preference preference) {
+        final DialogFragment fragment;
+        if (preference instanceof IPSettingDialog) {
+            fragment = IPSettingDialogFragment.newInstance(preference);
+            fragment.setTargetFragment(this, 0);
+            fragment.show(getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
+        } else {
+            super.onDisplayPreferenceDialog(preference);
+        }
+    }
+
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
     }
 
     @Override
