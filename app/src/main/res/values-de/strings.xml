@@ -3,6 +3,16 @@
     <string name="app_name">Eigenverbrauchsmanager</string>
     <string name="title_activity_main">Eigenverbrauchsmanager</string>
 
+    <!-- Main activity -->
+    <string name="drawer_header">Eigenverbrauchsmanager</string>
+    <string name="drawer_menu1">Übersicht</string>
+    <string name="drawer_menu2">Angeschlossene Geräte</string>
+    <string name="drawer_menu3">Verbrauchsdaten</string>
+    <string name="drawer_menu4">Kostenstatistik</string>
+    <string name="drawer_menu5">Einstellungen</string>
+    <string name="drawer_open">Navigation geöffnet</string>
+    <string name="drawer_close">Navigation geschlossen</string>
+
     <!-- Fragment consumption data -->
     <string name="title_frag_consumption">Verbrauch</string>
     <string name="chart_connection_error_title">Verbindungsproblem.</string>

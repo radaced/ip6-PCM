@@ -7,7 +7,7 @@
     <ImageView android:id="@+id/splashscreen_icon"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:src="@mipmap/app_icon"
+               android:src="@mipmap/ic_app"
                android:layout_gravity="center"
                android:layout_weight="1.5"
                android:contentDescription="@string/image_content_description"/>

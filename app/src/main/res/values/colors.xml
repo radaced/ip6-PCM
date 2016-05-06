@@ -7,18 +7,24 @@
     <color name="colorAccentPrimary">#ff9100</color>
     <color name="colorAccentSecondary">#FFCD89</color>
     <color name="colorBackground">#607d8b</color>
-    <color name="colorChartBackground">#eceff1</color>
-    <color name="colorCaldroidBackground">#eceff1</color>
-    <color name="colorCaldroidDateDisabled">#294c5d</color>
-    <color name="colorCaldroidInfoView">#b0bec5</color>
     <color name="colorTextViewBackground">#eceff1</color>
     <color name="colorListView">#b0bec5</color>
     <color name="colorTextPrimary">#ffffff</color>
     <color name="colorTextPrimaryInverse">#000000</color>
-    <color name="colorSlideTabIndicator">#263238</color>
-    <color name="colorSlideTabDivider">#263238</color>
 
-    <!-- Graph Colors 294C5D-->
+    <!-- Navigation drawer -->
+    <color name="colorNavDrawerHeader">#7f96a1</color>
+    <color name="colorNavDrawerBackground">#b0bec5</color>
+    <color name="colorNavDrawerItemSelected">#ffffff</color>
+    <color name="colorNavDrawerDivider">#7f96a1</color>
+
+    <!-- Caldroid/Chart -->
+    <color name="colorChartBackground">#eceff1</color>
+    <color name="colorCaldroidBackground">#eceff1</color>
+    <color name="colorCaldroidDateDisabled">#294c5d</color>
+    <color name="colorCaldroidInfoView">#b0bec5</color>
+
+    <!-- Graph Colors -->
     <array name="colorsGraph">
         <item>#008040</item>
         <item>#F35D5D</item>

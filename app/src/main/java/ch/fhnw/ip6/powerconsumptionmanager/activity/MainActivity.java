@@ -1,22 +1,19 @@
 package ch.fhnw.ip6.powerconsumptionmanager.activity;
 
-import android.content.Intent;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.adapter.EVMPagerAdapter;
-import ch.fhnw.ip6.powerconsumptionmanager.model.PagerItemModel;
-import ch.fhnw.ip6.powerconsumptionmanager.util.SlidingTabLayout;
+import ch.fhnw.ip6.powerconsumptionmanager.view.ConsumptionFragment;
+import ch.fhnw.ip6.powerconsumptionmanager.view.SettingsFragment;
 
 /**
  * The main activity is called after the initial data loading on the splash screen
@@ -24,86 +21,110 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.SlidingTabLayout;
  * charge plan.
  */
 public class MainActivity extends AppCompatActivity {
-    private List<PagerItemModel> mTabs = new ArrayList<PagerItemModel>();
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mDrawerNavView;
+    private Toolbar mToolbar;
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    private CharSequence mTitle;
 
     /**
      * Setup main menu
-     */
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        View view = findViewById(android.R.id.content);
 
-        createViewPagerTabs();
+        mTitle = getTitle();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerNavView = (NavigationView) findViewById(R.id.nav_view);
 
         // Main toolbar
-        Toolbar tb = (Toolbar) findViewById(R.id.main_toolbar);
-        tb.setTitle(getString(R.string.title_activity_main));
-        setSupportActionBar(tb);
+        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(mToolbar);
+        final ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.mipmap.ic_drawer);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
-        // Sliding layout
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        viewPager.setAdapter(new EVMPagerAdapter(getSupportFragmentManager(), mTabs));
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
-        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
-        slidingTabLayout.setDistributeEvenly(true);
-        slidingTabLayout.setViewPager(viewPager);
+        setupDrawerContent(mDrawerNavView);
 
-        // Colorized indicator that shows which tab is currently displayed
-        slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+        if(savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.content, new ConsumptionFragment()).commit();
+        }
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public int getIndicatorColor(int position) {
-                return mTabs.get(position).getIndicatorColor();
-            }
-
-            @Override
-            public int getDividerColor(int position) {
-                return mTabs.get(position).getDividerColor();
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                selectDrawerItem(menuItem);
+                return true;
             }
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    private void selectDrawerItem(MenuItem menuItem) {
+        Fragment fragment;
+        switch(menuItem.getItemId()) {
+            case R.id.nav_home:
+                fragment = new ConsumptionFragment();
+                break;
+            case R.id.nav_connected_devices:
+                fragment = new ConsumptionFragment();
+                break;
+            case R.id.nav_consumption_data:
+                fragment = new ConsumptionFragment();
+                break;
+            case R.id.nav_cost_statistic:
+                fragment = new ConsumptionFragment();
+                break;
+            case R.id.nav_settings:
+                fragment = new SettingsFragment();
+                break;
+            default:
+                fragment = new ConsumptionFragment();
+                break;
+        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
+
+
+        // update selected item and title, then close the drawer
+        menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
+        mDrawerLayout.closeDrawer(mDrawerNavView);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Open settings activity when icon is pressed in actionbar
-            case R.id.action_settings:
-                Intent mainIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                MainActivity.this.startActivity(mainIntent);
-                MainActivity.this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(mTitle);
         }
     }
 
-    /**
-     * Generate tabs as pager models to later display in sliding tab layout
-     */
-    private void createViewPagerTabs() {
-        mTabs.add(new PagerItemModel(
-                getString(R.string.title_frag_consumption),
-                ContextCompat.getColor(this, R.color.colorSlideTabIndicator),
-                ContextCompat.getColor(this, R.color.colorSlideTabDivider)
-        ));
-        mTabs.add(new PagerItemModel(
-                getString(R.string.title_frag_plan),
-                ContextCompat.getColor(this, R.color.colorSlideTabIndicator),
-                ContextCompat.getColor(this, R.color.colorSlideTabDivider)
-        ));
-        /*
-        mTabs.add(new PagerItemModel(
-                getString(R.string.title_frag_tesla),
-                ContextCompat.getColor(this, R.color.colorSlideTabIndicator),
-                ContextCompat.getColor(this, R.color.colorSlideTabDivider)
-        ));
-        */
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 }

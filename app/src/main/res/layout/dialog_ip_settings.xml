@@ -3,7 +3,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:gravity="center">
+    android:gravity="center"
+    android:paddingTop="@dimen/double_space_vertical_margin">
 
     <EditText
         android:layout_width="@dimen/text_ip_width"
