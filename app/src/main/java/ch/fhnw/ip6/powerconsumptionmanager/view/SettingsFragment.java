@@ -63,7 +63,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if (preference instanceof IPSettingDialog) {
             fragment = IPSettingDialogFragment.newInstance(preference);
             fragment.setTargetFragment(this, 0);
-            fragment.show(getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
+            fragment.show(getFragmentManager(), "android.support.v7.preference.PreferenceFragmentCompat.DIALOG");
         } else {
             super.onDisplayPreferenceDialog(preference);
         }

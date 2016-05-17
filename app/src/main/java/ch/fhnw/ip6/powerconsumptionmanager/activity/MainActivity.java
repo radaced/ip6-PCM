@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.view.ConsumptionFragment;
+import ch.fhnw.ip6.powerconsumptionmanager.view.OverviewFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.SettingsFragment;
 
 /**
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment;
         switch(menuItem.getItemId()) {
             case R.id.nav_home:
-                fragment = new ConsumptionFragment();
+                fragment = new OverviewFragment();
                 break;
             case R.id.nav_connected_devices:
                 fragment = new ConsumptionFragment();

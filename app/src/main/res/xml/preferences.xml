@@ -4,7 +4,7 @@
     <PreferenceCategory
         android:title="@string/category_network">
 
-        <ch.fhnw.ip6.powerconsumptionmanager.util.IPSettingDialog
+        <ch.fhnw.ip6.powerconsumptionmanager.util.IPSettingDialog4
             android:dialogTitle="@string/text_pref_ip_title"
             android:dialogLayout="@layout/dialog_ip_settings"
             android:positiveButtonText="@android:string/ok"
