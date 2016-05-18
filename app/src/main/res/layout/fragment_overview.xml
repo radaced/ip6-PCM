@@ -10,19 +10,72 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:baselineAligned="false"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="60"
         android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50">
+
+            <ProgressBar
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:id="@+id/vProgressReceipt"
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/double_space_vertical_margin"
+                android:layout_marginBottom="@dimen/double_space_vertical_margin"
+                android:max="40"
+                android:progressDrawable="@drawable/progressbar_vertical_neutral" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@id/vProgressReceipt"
+                android:layout_toEndOf="@id/vProgressReceipt"
+                android:text=" 20"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="@color/colorTextPrimary"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/vProgressReceipt"
+                android:layout_toEndOf="@id/vProgressReceipt"
+                android:text=" 0"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="@color/colorTextPrimary"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@id/vProgressReceipt"
+                android:layout_toEndOf="@id/vProgressReceipt"
+                android:text=" -20"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="@color/colorTextPrimary"/>
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="50"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
                 <com.gigamole.library.ArcProgressStackView
                     android:id="@+id/arcProgressProducer"
@@ -32,7 +85,8 @@
                     android:layout_marginStart="@dimen/double_space_horizontal_margin"
                     android:layout_marginRight="@dimen/double_space_horizontal_margin"
                     android:layout_marginEnd="@dimen/double_space_horizontal_margin"
-                    android:layout_marginTop="@dimen/double_space_horizontal_margin"
+                    android:layout_marginTop="@dimen/double_space_vertical_margin"
+                    android:layout_marginBottom="@dimen/double_space_vertical_margin"
                     android:layout_centerInParent="true"
                     app:apsv_shadowed="true"
                     app:apsv_shadow_distance="1dp"
@@ -47,35 +101,49 @@
                     app:apsv_sweep_angle="270"
                     app:apsv_indicator_orientation="horizontal"/>
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/layoutProgressProducerValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_centerInParent="true"
-                    android:text="Hallo"
-                    android:textAppearance="@android:style/TextAppearance.Large"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:text="2.6"
+                        android:textAppearance="@android:style/TextAppearance.Large"
+                        android:textColor="@color/colorTextPrimary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:text="/6.0 kWh"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/colorTextPrimary"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_below="@id/layoutProgressProducerValue"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="35dp"
+                    android:text="Photovoltaik"
+                    android:textAppearance="@android:style/TextAppearance.Small"
                     android:textColor="@color/colorTextPrimary"/>
 
             </RelativeLayout>
 
-        </LinearLayout>
-
-        <ProgressBar
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:id="@+id/vProgressReceipt"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:max="40"
-            android:progressDrawable="@drawable/progressbar_vertical_neutral" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
                 <com.gigamole.library.ArcProgressStackView
                     android:id="@+id/arcProgressConsumer"
@@ -85,7 +153,8 @@
                     android:layout_marginStart="@dimen/double_space_horizontal_margin"
                     android:layout_marginRight="@dimen/double_space_horizontal_margin"
                     android:layout_marginEnd="@dimen/double_space_horizontal_margin"
-                    android:layout_marginTop="@dimen/double_space_horizontal_margin"
+                    android:layout_marginTop="@dimen/double_space_vertical_margin"
+                    android:layout_marginBottom="@dimen/double_space_vertical_margin"
                     android:layout_centerInParent="true"
                     app:apsv_shadowed="true"
                     app:apsv_shadow_distance="1dp"
@@ -100,13 +169,41 @@
                     app:apsv_sweep_angle="270"
                     app:apsv_indicator_orientation="horizontal"/>
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/layoutProgressConsumerValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_centerInParent="true"
-                    android:text="Hallo"
-                    android:textAppearance="@android:style/TextAppearance.Large"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:text="4.6"
+                        android:textAppearance="@android:style/TextAppearance.Large"
+                        android:textColor="@color/colorTextPrimary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:text="/6.0 kWh"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:textColor="@color/colorTextPrimary"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_below="@id/layoutProgressConsumerValue"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="35dp"
+                    android:text="Verbrauch Tot"
+                    android:textAppearance="@android:style/TextAppearance.Small"
                     android:textColor="@color/colorTextPrimary"/>
 
             </RelativeLayout>
@@ -115,19 +212,19 @@
 
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/frame"
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.5">
+        android:layout_weight="40">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Placeholder"
+            android:layout_gravity="center_vertical"
+            android:text="Placeholder looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong"
             android:textAppearance="@android:style/TextAppearance.Large"
             android:textColor="@color/colorTextPrimary"/>
 
-    </FrameLayout>
+    </HorizontalScrollView>
 
 </LinearLayout>
