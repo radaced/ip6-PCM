@@ -13,6 +13,9 @@
     <string name="drawer_open">Opened navigation drawer</string>
     <string name="drawer_close">Closed navigation drawer</string>
 
+    <!-- Fragment overview -->
+    <string name="text_today"><u>today:</u></string>
+
     <!-- Fragment consumption data -->
     <string name="title_frag_consumption">Consumption</string>
     <string name="chart_connection_error_title">Connection error.</string>

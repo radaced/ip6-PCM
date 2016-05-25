@@ -34,4 +34,5 @@ dependencies {
     compile 'com.roomorama:caldroid:2.3.1'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.github.gigamole.arcprogressstackview:library:1.0.3'
+    compile 'me.itangqi.waveloadingview:library:0.2.3'
 }

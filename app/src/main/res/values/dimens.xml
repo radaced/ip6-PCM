@@ -24,4 +24,8 @@
     <dimen name="button_connect_tesla_space">10dp</dimen>
     <dimen name="scroll_info_description">3dp</dimen>
 
+    <!-- Overview -->
+    <dimen name="vertical_progressbar_width">25dp</dimen>
+    <dimen name="vertical_progressbar_horizontal_space">4dp</dimen>
+
 </resources>
