@@ -14,7 +14,11 @@
     <string name="drawer_close">Closed navigation drawer</string>
 
     <!-- Fragment overview -->
-    <string name="text_today"><u>today:</u></string>
+    <string name="text_autarchy">Autarchy</string>
+    <string name="text_self_consumption">Self consumption</string>
+    <string name="text_occupation">Occupation</string>
+    <string name="radio_btn_now">Now</string>
+    <string name="radio_btn_today">Today</string>
 
     <!-- Fragment consumption data -->
     <string name="title_frag_consumption">Consumption</string>

@@ -10,7 +10,11 @@ import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformationModel;
 /**
  * Application context (storage of global app data and data received from web requests)
  */
-public class PowerConsumptionManagerAppContext extends Application{
+public class PowerConsumptionManagerAppContext extends Application {
+    public final String UNIT_KW = "kW";
+    public final String UNIT_KWH = "kWh";
+    public final String UNIT_PERCENTAGE = "%";
+
     private String mIPAdress;
     private boolean isOnline;
     private ArrayList<ConsumptionDataModel> mConsumptionData = new ArrayList<>();

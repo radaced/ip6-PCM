@@ -6,7 +6,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,15 +18,17 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.view.OverviewFragment;
+import me.itangqi.waveloadingview.WaveLoadingView;
 
 public class DashboardHelper {
     private static final AtomicInteger GENERATED_ID = new AtomicInteger(1);
     private static final HashMap<String, Integer> GENERATED_ARCSV_IDS = new HashMap<>();
     private static final HashMap<String, Integer> GENERATED_POWER_IDS = new HashMap<>();
-    private static final HashMap<String, Integer> GENERATED_VALUECONTAINER_IDS = new HashMap<>();
+    private static final HashMap<String, Integer> GENERATED_LABELCONTAINER_IDS = new HashMap<>();
 
     private HashMap<String, ArcProgressStackView> mComponentViews;
-    private HashMap<String, ProgressBar> mVerticalProgressbars;
+    private HashMap<String, WaveLoadingView> mSummaryViews;
     private LinearLayout mLinearLayout;
     private Context mContext;
     private float mDensity;
@@ -36,7 +37,7 @@ public class DashboardHelper {
         mContext = c;
         mLinearLayout = ll;
         mComponentViews = new HashMap<>();
-        mVerticalProgressbars = new HashMap<>();
+        mSummaryViews = new HashMap<>();
         mDensity = mContext.getResources().getDisplayMetrics().density;
     }
 
@@ -48,24 +49,34 @@ public class DashboardHelper {
         return mDensity;
     }
 
-    public void addVerticalProgressbar(String key, ProgressBar pb) { mVerticalProgressbars.put(key, pb); }
+    public void addSummaryView(String key, WaveLoadingView wlv, String unit) {
+        wlv.setTopTitle(key);
+        wlv.setBottomTitle("(" + unit + ")");
+        mSummaryViews.put(key, wlv);
+    }
 
-    public void setVerticalProgress(String key, int progress) {
-        ProgressBar pb = mVerticalProgressbars.get(key);
-        double lowerMiddle = pb.getMax()/2 - pb.getMax() * 0.05;
-        double upperMiddle = pb.getMax()/2 + pb.getMax() * 0.05;
+    public void setSummaryRatio(String key, int ratio) {
+        WaveLoadingView wlv = mSummaryViews.get(key);
 
-        if(key.equals("Bezug")) {
-            if(progress <= lowerMiddle) {
-                pb.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progressbar_vertical_positive));
-            } else if(progress > lowerMiddle && progress < upperMiddle) {
-                pb.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progressbar_vertical_neutral));
+        if(OverviewFragment.OCCUPATION.equals(key)) {
+            if(ratio > 3) {
+                wlv.setWaveColor(ContextCompat.getColor(mContext, R.color.colorProgressPositive));
+            } else if (ratio < -3) {
+                wlv.setWaveColor(ContextCompat.getColor(mContext, R.color.colorProgressNegative));
             } else {
-                pb.setProgressDrawable(ContextCompat.getDrawable(mContext, R.drawable.progressbar_vertical_negative));
+                wlv.setWaveColor(ContextCompat.getColor(mContext, R.color.colorProgressNeutral));
             }
+            int absRatio = Math.abs(ratio);
+            int progress = (Math.signum((double) ratio) >= 0) ? (int) (50 + absRatio * 2.5) : (int) (50 - absRatio * 2.5);
+            wlv.setProgressValue(progress);
+        } else {
+            wlv.setProgressValue(ratio);
         }
+        wlv.setCenterTitle(String.valueOf(ratio));
+    }
 
-        pb.setProgress(progress);
+    public void updateSummaryRatio(String key, int ratio, String unit) {
+        this.setSummaryRatio(key, ratio);
     }
 
     public void addComponentView(String key, ArcProgressStackView apsv) {
@@ -110,6 +121,13 @@ public class DashboardHelper {
         );
         rlContainer.setLayoutParams(rlContainerLayoutParams);
 
+        mLinearLayout.addView(rlContainer);
+
+        /**
+         * LayoutParams for the ArcProgressStackView is set after layout dimensions for parent container have been set.
+         * See setupViewTreeObserver in OverviewFragment.
+         */
+
         // ArcProgressStackView
         ArcProgressStackView arcsv = new ArcProgressStackView(mContext);
         arcsv.setId(handleNewId(componentId + "arcsvId", GENERATED_ARCSV_IDS));
@@ -135,71 +153,70 @@ public class DashboardHelper {
                 color
             )
         );
-
-        /**
-         * LayoutParams for the ArcProgressStackView is set after layout dimensions for parent container have been set.
-         * See setupViewTreeObserver in OverviewFragment.
-         */
-
         rlContainer.addView(arcsv);
 
-        // LinearLayout for values
-        LinearLayout llValueContainer = new LinearLayout(mContext);
-        llValueContainer.setId(handleNewId(componentId + "llValueContainerId", GENERATED_VALUECONTAINER_IDS));
-        llValueContainer.setOrientation(LinearLayout.HORIZONTAL);
-        llValueContainer.setGravity(Gravity.CENTER);
-
-        RelativeLayout.LayoutParams llValueContainerLayoutParams = new RelativeLayout.LayoutParams(
+        // LinearLayout for labels
+        RelativeLayout.LayoutParams llLabelContainerLayoutParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
         );
-        llValueContainerLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-        llValueContainer.setLayoutParams(llValueContainerLayoutParams);
+        llLabelContainerLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 
-        // Textviews for values
-        TextView tvValue = new TextView(mContext);
-        tvValue.setId(handleNewId(componentId + "powerId", GENERATED_POWER_IDS));
-        tvValue.setText("5.6");
-        tvValue.setTextSize(25);
-        tvValue.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
+        LinearLayout llLabelContainer = new LinearLayout(mContext);
+        llLabelContainer.setId(handleNewId(componentId + "llLabelContainerId", GENERATED_LABELCONTAINER_IDS));
+        llLabelContainer.setOrientation(LinearLayout.VERTICAL);
+        llLabelContainer.setGravity(Gravity.CENTER);
+        llLabelContainer.setLayoutParams(llLabelContainerLayoutParams);
 
-        TextView tvValueMax = new TextView(mContext);
-        tvValueMax.setText("/6.0 kW");
-        tvValueMax.setTextSize(10);
-        tvValueMax.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
+        rlContainer.addView(llLabelContainer);
 
-        LinearLayout.LayoutParams tvValueLayoutParams = new LinearLayout.LayoutParams(
+        // LinearLayout for power values
+        LinearLayout.LayoutParams llValueLabelContainerLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        tvValueLayoutParams.gravity = Gravity.BOTTOM;
 
-        tvValue.setLayoutParams(tvValueLayoutParams);
-        tvValueMax.setLayoutParams(tvValueLayoutParams);
+        LinearLayout llValueLabelContainer = new LinearLayout(mContext);
+        llValueLabelContainer.setOrientation(LinearLayout.HORIZONTAL);
+        llValueLabelContainer.setLayoutParams(llValueLabelContainerLayoutParams);
 
-        llValueContainer.addView(tvValue);
-        llValueContainer.addView(tvValueMax);
+        llLabelContainer.addView(llValueLabelContainer);
 
-        rlContainer.addView(llValueContainer);
+        // Textviews for values
+        LinearLayout.LayoutParams tvValueLabelLayoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        tvValueLabelLayoutParams.gravity = Gravity.BOTTOM;
 
-        // Textview component description
+        TextView tvValue = new TextView(mContext);
+        tvValue.setId(handleNewId(componentId + "powerId", GENERATED_POWER_IDS));
+        tvValue.setText("5.6");
+        tvValue.setTextSize(40);
+        tvValue.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
+        tvValue.setLayoutParams(tvValueLabelLayoutParams);
+        llValueLabelContainer.addView(tvValue);
+
+        TextView tvValueUnit = new TextView(mContext);
+        tvValueUnit.setText("kW");
+        tvValueUnit.setTextSize(10);
+        tvValueUnit.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
+        tvValueUnit.setLayoutParams(tvValueLabelLayoutParams);
+        llValueLabelContainer.addView(tvValueUnit);
+
+        // Textview for component description
+        LinearLayout.LayoutParams tvComponentDescLayoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        tvComponentDescLayoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+
         TextView tvComponent = new TextView(mContext);
         tvComponent.setText(componentId);
         tvComponent.setTextSize(14);
         tvComponent.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
-
-        RelativeLayout.LayoutParams tvComponentLayoutParams = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT
-        );
-        tvComponentLayoutParams.setMargins(0, (int) mDensity * 35, 0, 0);
-        tvComponentLayoutParams.addRule(RelativeLayout.BELOW, GENERATED_VALUECONTAINER_IDS.get(componentId + "llValueContainerId"));
-        tvComponentLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-        tvComponent.setLayoutParams(tvComponentLayoutParams);
-
-        rlContainer.addView(tvComponent);
-
-        mLinearLayout.addView(rlContainer);
+        tvComponent.setLayoutParams(tvComponentDescLayoutParams);
+        llLabelContainer.addView(tvComponent);
     }
 
     // Implementation from google

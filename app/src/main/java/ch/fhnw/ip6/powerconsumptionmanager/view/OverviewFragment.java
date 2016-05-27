@@ -11,21 +11,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.gigamole.library.ArcProgressStackView;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.activity.MainActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.util.DashboardHelper;
+import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
+import me.itangqi.waveloadingview.WaveLoadingView;
 
 public class OverviewFragment extends Fragment {
-    private final static String PRODUCER_NAME = "Photovoltaik";
-    private final static String CONSUMER_NAME = "VerbrauchTot";
-    private final static String AUTARCHY = "Autarkie";
-    private final static String POWERCONSUMPTION = "Eigenverbrauch";
-    private final static String RECEIPT = "Bezug";
+    public final static String AUTARCHY = "Autarchy";
+    public final static String SELF_CONSUMPTION = "Self consumption";
+    public final static String OCCUPATION = "Occupation";
+    private final static String PRODUCER = "Producer";
+    private final static String CONSUMER = "Consumer";
 
+    private PowerConsumptionManagerAppContext mAppContext;
     private DashboardHelper mDashBoardHelper;
     private Handler mUpdateHandler;
 
@@ -43,49 +46,29 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mAppContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
 
         final int[] graphColors = getContext().getResources().getIntArray(R.array.colorsGraph);
 
         mDashBoardHelper = new DashboardHelper(getContext(), (LinearLayout) getView().findViewById(R.id.llDynamicContent));
-        mDashBoardHelper.addComponentView(PRODUCER_NAME, (ArcProgressStackView) getView().findViewById(R.id.arcProgressProducer));
-        mDashBoardHelper.addComponentView(CONSUMER_NAME, (ArcProgressStackView) getView().findViewById(R.id.arcProgressConsumer));
-        mDashBoardHelper.addVerticalProgressbar(AUTARCHY, (ProgressBar) getView().findViewById(R.id.vProgressAutarchy));
-        mDashBoardHelper.addVerticalProgressbar(RECEIPT, (ProgressBar) getView().findViewById(R.id.vProgressReceipt));
-        mDashBoardHelper.addVerticalProgressbar(POWERCONSUMPTION, (ProgressBar) getView().findViewById(R.id.vProgressPowerConsumption));
+
+        mDashBoardHelper.addSummaryView(AUTARCHY, (WaveLoadingView) getView().findViewById(R.id.wlvAutarchy), mAppContext.UNIT_PERCENTAGE);
+        mDashBoardHelper.addSummaryView(SELF_CONSUMPTION, (WaveLoadingView) getView().findViewById(R.id.wlvSelfConsumption), mAppContext.UNIT_PERCENTAGE);
+        mDashBoardHelper.addSummaryView(OCCUPATION, (WaveLoadingView) getView().findViewById(R.id.wlvOccupation), mAppContext.UNIT_KW);
+
+        mDashBoardHelper.setSummaryRatio(AUTARCHY, 50);
+        mDashBoardHelper.setSummaryRatio(SELF_CONSUMPTION, 20);
+        mDashBoardHelper.setSummaryRatio(OCCUPATION, -10);
 
         //Dynamisch
         mDashBoardHelper.generateDynamicComponentsLayout("Boiler", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer1));
         mDashBoardHelper.generateDynamicComponentsLayout("Wärmepumpe", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer2));
         mDashBoardHelper.generateDynamicComponentsLayout("Emobil", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer3));
 
-        mDashBoardHelper.setPowerForComponent(
-            PRODUCER_NAME,
-            mDashBoardHelper.generateModelForComponent(
-                "",
-                (int) Math.floor(Math.random() * 101),
-                ContextCompat.getColor(getContext(), R.color.colorArcBackground),
-                graphColors[0]
-            )
-        );
-
-        mDashBoardHelper.setPowerForComponent(
-                CONSUMER_NAME,
-                mDashBoardHelper.generateModelForComponent(
-                        "",
-                        (int) Math.floor(Math.random() * 101),
-                        ContextCompat.getColor(getContext(), R.color.colorArcBackground),
-                        graphColors[1]
-                )
-        );
-
-        mDashBoardHelper.setVerticalProgress(AUTARCHY, (int) Math.floor(Math.random() * 101));
-        mDashBoardHelper.setVerticalProgress(RECEIPT, (int) Math.floor(Math.random() * 41));
-        mDashBoardHelper.setVerticalProgress(POWERCONSUMPTION, (int) Math.floor(Math.random() * 101));
-
         mDashBoardHelper.displayAnimated();
 
-        mUpdateHandler = new Handler();
-        mUpdateHandler.postDelayed(updateData, 5000);
+//        mUpdateHandler = new Handler();
+//        mUpdateHandler.postDelayed(updateData, 5000);
     }
 
     @Override
@@ -99,9 +82,9 @@ public class OverviewFragment extends Fragment {
 
     private final Runnable updateData = new Runnable() {
         public void run() {
-            mDashBoardHelper.updatePowerForComponent(CONSUMER_NAME, (int) Math.floor(Math.random() * 101));
-            mDashBoardHelper.displayAnimated();
-            mUpdateHandler.postDelayed(this, 5000);
+//            mDashBoardHelper.updatePowerForComponent(CONSUMER_NAME, (int) Math.floor(Math.random() * 101));
+//            mDashBoardHelper.displayAnimated();
+//            mUpdateHandler.postDelayed(this, 5000);
         }
     };
 
