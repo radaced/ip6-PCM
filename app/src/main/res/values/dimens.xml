@@ -23,9 +23,6 @@
     <dimen name="column_tesla_login_side_margin">20dp</dimen>
     <dimen name="button_connect_tesla_space">10dp</dimen>
     <dimen name="scroll_info_description">3dp</dimen>
-
-    <!-- Overview -->
-    <dimen name="vertical_progressbar_width">25dp</dimen>
-    <dimen name="vertical_progressbar_horizontal_space">4dp</dimen>
+    <dimen name="scroll_components_container">3dp</dimen>
 
 </resources>

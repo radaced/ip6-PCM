@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -37,11 +38,15 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
             ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(this,
-                                              new String[] {Manifest.permission.INTERNET,
-                                                            Manifest.permission.READ_CALENDAR,
-                                                            Manifest.permission.ACCESS_FINE_LOCATION},
-                                              PERMISSIONS_REQUEST);
+            ActivityCompat.requestPermissions(
+                this,
+                new String[] {
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.READ_CALENDAR,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                },
+                PERMISSIONS_REQUEST
+            );
         } else {
             continueStartup();
         }
@@ -98,19 +103,18 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
         mAppContext = (PowerConsumptionManagerAppContext) getApplicationContext();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment fragment;
 
         // On initial startup show mask to enter ip, otherwise directly load data to display
         if (settings.contains("IP")) {
             // Load IP address from preference file into application context for easier access
             mAppContext.setIPAdress(settings.getString("IP", "192.168.0.1"));
-
-            SplashFragment fragment = SplashFragment.newInstance();
-            transaction.replace(R.id.startup_fragment, fragment);
+            fragment = SplashFragment.newInstance();
         } else {
-            InitFragment fragment = InitFragment.newInstance();
-            transaction.replace(R.id.startup_fragment, fragment);
+            fragment = InitFragment.newInstance();
         }
 
+        transaction.replace(R.id.startup_fragment, fragment);
         transaction.commitAllowingStateLoss();
     }
 }

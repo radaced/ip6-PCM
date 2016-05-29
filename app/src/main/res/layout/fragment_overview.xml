@@ -13,13 +13,45 @@
         android:baselineAligned="false"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        android:layout_marginLeft="@dimen/double_space_horizontal_margin"
-        android:layout_marginStart="@dimen/double_space_horizontal_margin"
-        android:layout_marginRight="@dimen/double_space_horizontal_margin"
-        android:layout_marginEnd="@dimen/double_space_horizontal_margin"
+        android:layout_weight="3.5"
+        android:layout_marginLeft="@dimen/space_horizontal_margin"
+        android:layout_marginStart="@dimen/space_horizontal_margin"
+        android:layout_marginRight="@dimen/space_horizontal_margin"
+        android:layout_marginEnd="@dimen/space_horizontal_margin"
         android:layout_marginTop="@dimen/double_space_vertical_margin"
-        android:layout_marginBottom="@dimen/double_space_vertical_margin"
+        android:layout_marginBottom="@dimen/space_vertical_margin"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <me.itangqi.waveloadingview.WaveLoadingView
+            android:id="@+id/wlvOccupation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:wlv_borderColor="@color/colorProgressDefault"
+            app:wlv_borderWidth="10dp"
+            app:wlv_shapeType="circle"
+            app:wlv_titleTopColor="@color/colorTextPrimary"
+            app:wlv_titleTopSize="12sp"
+            app:wlv_titleCenterColor="@color/colorTextPrimary"
+            app:wlv_titleCenterSize="40sp"
+            app:wlv_titleBottomColor="@color/colorTextPrimary"
+            app:wlv_titleBottomSize="12sp"
+            app:wlv_waveAmplitude="30"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:baselineAligned="false"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3.5"
+        android:layout_marginLeft="@dimen/space_horizontal_margin"
+        android:layout_marginStart="@dimen/space_horizontal_margin"
+        android:layout_marginRight="@dimen/space_horizontal_margin"
+        android:layout_marginEnd="@dimen/space_horizontal_margin"
+        android:layout_marginTop="@dimen/space_vertical_margin"
+        android:layout_marginBottom="@dimen/space_vertical_margin"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -28,8 +60,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginRight="@dimen/space_horizontal_margin"
-            android:layout_marginEnd="@dimen/space_horizontal_margin"
+            android:layout_marginRight="@dimen/double_space_horizontal_margin"
+            android:layout_marginEnd="@dimen/double_space_horizontal_margin"
             app:wlv_borderColor="@color/colorProgressAutarchy"
             app:wlv_borderWidth="10dp"
             app:wlv_shapeType="circle"
@@ -47,8 +79,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginLeft="@dimen/space_horizontal_margin"
-            android:layout_marginStart="@dimen/space_horizontal_margin"
+            android:layout_marginLeft="@dimen/double_space_horizontal_margin"
+            android:layout_marginStart="@dimen/double_space_horizontal_margin"
             app:wlv_borderColor="@color/colorProgressPowerConsumption"
             app:wlv_borderWidth="10dp"
             app:wlv_shapeType="circle"
@@ -63,69 +95,17 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:baselineAligned="false"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:layout_marginLeft="@dimen/double_space_horizontal_margin"
-        android:layout_marginStart="@dimen/double_space_horizontal_margin"
-        android:layout_marginRight="@dimen/double_space_horizontal_margin"
-        android:layout_marginEnd="@dimen/double_space_horizontal_margin"
-        android:layout_marginTop="@dimen/double_space_vertical_margin"
-        android:layout_marginBottom="@dimen/double_space_vertical_margin"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <me.itangqi.waveloadingview.WaveLoadingView
-            android:id="@+id/wlvOccupation"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="@dimen/space_horizontal_margin"
-            android:layout_marginEnd="@dimen/space_horizontal_margin"
-            app:wlv_borderColor="@color/colorProgressDefault"
-            app:wlv_borderWidth="10dp"
-            app:wlv_shapeType="circle"
-            app:wlv_titleTopColor="@color/colorTextPrimary"
-            app:wlv_titleTopSize="12sp"
-            app:wlv_titleCenterColor="@color/colorTextPrimary"
-            app:wlv_titleCenterSize="40sp"
-            app:wlv_titleBottomColor="@color/colorTextPrimary"
-            app:wlv_titleBottomSize="12sp"
-            app:wlv_waveAmplitude="30"/>
-
-        <RadioGroup
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <RadioButton
-                android:id="@+id/radioNow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_btn_now"
-                android:checked="true" />
-
-            <RadioButton
-                android:id="@+id/radioToday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_btn_today" />
-
-        </RadioGroup>
-
-    </LinearLayout>
-
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4">
+        android:layout_weight="3"
+        android:scrollbarSize="@dimen/scroll_components_container">
 
         <LinearLayout
-            android:id="@+id/llDynamicContent"
+            android:id="@+id/dynamic_content_fragment"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/double_space_vertical_margin"
             android:orientation="horizontal"/>
 
     </HorizontalScrollView>

@@ -5,8 +5,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -16,21 +21,23 @@ import android.widget.RelativeLayout;
 import com.gigamole.library.ArcProgressStackView;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.activity.MainActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.util.DashboardHelper;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
+import hirondelle.date4j.DateTime;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 public class OverviewFragment extends Fragment {
     public final static String AUTARCHY = "Autarchy";
     public final static String SELF_CONSUMPTION = "Self consumption";
     public final static String OCCUPATION = "Occupation";
-    private final static String PRODUCER = "Producer";
-    private final static String CONSUMER = "Consumer";
+
+    private enum Mode { DAILY, NOW };
+    private final String TAG_DAILY = "daily";
+    private final String TAG_NOW = "now";
 
     private PowerConsumptionManagerAppContext mAppContext;
     private DashboardHelper mDashBoardHelper;
-    private Handler mUpdateHandler;
+    private Mode mMode;
 
     public static OverviewFragment newInstance() {
         return new OverviewFragment();
@@ -39,7 +46,13 @@ public class OverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
-        setupViewTreeObserver(view);
+        setHasOptionsMenu(true);
+
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.dynamic_content_fragment, new NowFragment(), TAG_NOW);
+        transaction.add(R.id.dynamic_content_fragment, new DailyFragment(), TAG_DAILY);
+        transaction.commit();
+
         return view;
     }
 
@@ -47,10 +60,10 @@ public class OverviewFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mAppContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
+        mMode = Mode.NOW;
 
-        final int[] graphColors = getContext().getResources().getIntArray(R.array.colorsGraph);
-
-        mDashBoardHelper = new DashboardHelper(getContext(), (LinearLayout) getView().findViewById(R.id.llDynamicContent));
+        mDashBoardHelper = DashboardHelper.getInstance();
+        mDashBoardHelper.init(getContext(), null);
 
         mDashBoardHelper.addSummaryView(AUTARCHY, (WaveLoadingView) getView().findViewById(R.id.wlvAutarchy), mAppContext.UNIT_PERCENTAGE);
         mDashBoardHelper.addSummaryView(SELF_CONSUMPTION, (WaveLoadingView) getView().findViewById(R.id.wlvSelfConsumption), mAppContext.UNIT_PERCENTAGE);
@@ -59,60 +72,48 @@ public class OverviewFragment extends Fragment {
         mDashBoardHelper.setSummaryRatio(AUTARCHY, 50);
         mDashBoardHelper.setSummaryRatio(SELF_CONSUMPTION, 20);
         mDashBoardHelper.setSummaryRatio(OCCUPATION, -10);
-
-        //Dynamisch
-        mDashBoardHelper.generateDynamicComponentsLayout("Boiler", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer1));
-        mDashBoardHelper.generateDynamicComponentsLayout("Wärmepumpe", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer2));
-        mDashBoardHelper.generateDynamicComponentsLayout("Emobil", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer3));
-
-        mDashBoardHelper.displayAnimated();
-
-//        mUpdateHandler = new Handler();
-//        mUpdateHandler.postDelayed(updateData, 5000);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        // Stop data updater if instantiated
-        if(mUpdateHandler != null) {
-            mUpdateHandler.removeCallbacks(updateData);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.overview_menu, menu);
+
+        if(mMode == Mode.DAILY) {
+            MenuItem now = menu.findItem(R.id.action_now);
+            now.setVisible(false);
+        } else {
+            MenuItem daily = menu.findItem(R.id.action_daily);
+            daily.setVisible(false);
         }
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private final Runnable updateData = new Runnable() {
-        public void run() {
-//            mDashBoardHelper.updatePowerForComponent(CONSUMER_NAME, (int) Math.floor(Math.random() * 101));
-//            mDashBoardHelper.displayAnimated();
-//            mUpdateHandler.postDelayed(this, 5000);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_daily:
+                mMode = Mode.NOW;
+                switchFragments(TAG_NOW, TAG_DAILY);
+                break;
+            case R.id.action_now:
+                mMode = Mode.DAILY;
+                switchFragments(TAG_DAILY, TAG_NOW);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-    };
 
-    private void setupViewTreeObserver(View view) {
-        final LinearLayout llDynamicContent = (LinearLayout) view.findViewById(R.id.llDynamicContent);
-        ViewTreeObserver vto = llDynamicContent.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (Build.VERSION.SDK_INT < 16) {
-                    llDynamicContent.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                } else {
-                    llDynamicContent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
+        getActivity().invalidateOptionsMenu();
 
-                RelativeLayout.LayoutParams arcsvLayoutParams = new RelativeLayout.LayoutParams(
-                        llDynamicContent.getWidth(),
-                        llDynamicContent.getHeight()
-                );
-                arcsvLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-                int margins = (int) mDashBoardHelper.getDensity() * 8;
-                arcsvLayoutParams.setMargins(margins, margins, margins, margins);
+        return true;
+    }
 
-                for (int id: mDashBoardHelper.getArcsvIdsMap().values()) {
-                    ArcProgressStackView arcsv = (ArcProgressStackView) getView().findViewById(id);
-                    arcsv.setLayoutParams(arcsvLayoutParams);
-                }
-            }
-        });
+    private void switchFragments(String attachTag, String detachTag) {
+        Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag(attachTag);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.detach(getActivity().getSupportFragmentManager().findFragmentByTag(detachTag));
+        transaction.attach(fragment);
+        transaction.commit();
     }
 }

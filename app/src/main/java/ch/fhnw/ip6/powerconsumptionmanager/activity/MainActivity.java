@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         setupDrawerContent(mDrawerNavView);
 
         if(savedInstanceState == null) {
+            setTitle(R.string.title_frag_overview);
             getSupportFragmentManager().beginTransaction().replace(R.id.content, new OverviewFragment()).commit();
         }
     }

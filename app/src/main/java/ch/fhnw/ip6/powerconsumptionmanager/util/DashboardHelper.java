@@ -22,31 +22,50 @@ import ch.fhnw.ip6.powerconsumptionmanager.view.OverviewFragment;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 public class DashboardHelper {
+    private static DashboardHelper mInstance;
+
     private static final AtomicInteger GENERATED_ID = new AtomicInteger(1);
     private static final HashMap<String, Integer> GENERATED_ARCSV_IDS = new HashMap<>();
     private static final HashMap<String, Integer> GENERATED_POWER_IDS = new HashMap<>();
     private static final HashMap<String, Integer> GENERATED_LABELCONTAINER_IDS = new HashMap<>();
 
+    private Context mContext;
     private HashMap<String, ArcProgressStackView> mComponentViews;
     private HashMap<String, WaveLoadingView> mSummaryViews;
-    private LinearLayout mLinearLayout;
-    private Context mContext;
+    private LinearLayout mDynamicLayoutContainer;
+    private int mDynamicLayoutContainerWidth = 0;
+    private int mDynamicLayoutContainerHeight = 0;
     private float mDensity;
 
-    public DashboardHelper(Context c, LinearLayout ll) {
+    public DashboardHelper() {}
+
+    public static synchronized DashboardHelper getInstance() {
+        if(mInstance == null) {
+            mInstance = new DashboardHelper();
+        }
+
+        return mInstance;
+    }
+
+    // Implementation from google
+    public static int generateViewId() {
+        for (;;) {
+            final int result = GENERATED_ID.get();
+            // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
+            int newValue = result + 1;
+            if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
+            if (GENERATED_ID.compareAndSet(result, newValue)) {
+                return result;
+            }
+        }
+    }
+
+    public void init(Context c, LinearLayout ll) {
         mContext = c;
-        mLinearLayout = ll;
+        mDynamicLayoutContainer = ll;
         mComponentViews = new HashMap<>();
         mSummaryViews = new HashMap<>();
         mDensity = mContext.getResources().getDisplayMetrics().density;
-    }
-
-    public HashMap<String, Integer> getArcsvIdsMap() {
-        return GENERATED_ARCSV_IDS;
-    }
-
-    public float getDensity() {
-        return mDensity;
     }
 
     public void addSummaryView(String key, WaveLoadingView wlv, String unit) {
@@ -58,6 +77,7 @@ public class DashboardHelper {
     public void setSummaryRatio(String key, int ratio) {
         WaveLoadingView wlv = mSummaryViews.get(key);
 
+        // TODO: make dynamic
         if(OverviewFragment.OCCUPATION.equals(key)) {
             if(ratio > 3) {
                 wlv.setWaveColor(ContextCompat.getColor(mContext, R.color.colorProgressPositive));
@@ -121,12 +141,7 @@ public class DashboardHelper {
         );
         rlContainer.setLayoutParams(rlContainerLayoutParams);
 
-        mLinearLayout.addView(rlContainer);
-
-        /**
-         * LayoutParams for the ArcProgressStackView is set after layout dimensions for parent container have been set.
-         * See setupViewTreeObserver in OverviewFragment.
-         */
+        mDynamicLayoutContainer.addView(rlContainer);
 
         // ArcProgressStackView
         ArcProgressStackView arcsv = new ArcProgressStackView(mContext);
@@ -153,6 +168,22 @@ public class DashboardHelper {
                 color
             )
         );
+
+        /**
+         * LayoutParams for the ArcProgressStackView are set after layout dimensions for parent container
+         * have been set. See setupViewTreeObserver in OverviewFragment.
+         */
+        if(mDynamicLayoutContainerWidth != 0 && mDynamicLayoutContainerHeight != 0) {
+            RelativeLayout.LayoutParams arcsvLayoutParams = new RelativeLayout.LayoutParams(
+                    mDynamicLayoutContainerWidth,
+                    mDynamicLayoutContainerHeight
+            );
+            arcsvLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+            int margins = (int) mDensity * 8;
+            arcsvLayoutParams.setMargins(margins, margins, margins, margins);
+            arcsv.setLayoutParams(arcsvLayoutParams);
+        }
+
         rlContainer.addView(arcsv);
 
         // LinearLayout for labels
@@ -219,17 +250,32 @@ public class DashboardHelper {
         llLabelContainer.addView(tvComponent);
     }
 
-    // Implementation from google
-    public static int generateViewId() {
-        for (;;) {
-            final int result = GENERATED_ID.get();
-            // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
-            int newValue = result + 1;
-            if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
-            if (GENERATED_ID.compareAndSet(result, newValue)) {
-                return result;
-            }
-        }
+    public boolean isInitialized() {
+        return mContext != null && mDynamicLayoutContainer != null;
+    }
+
+    public HashMap<String, Integer> getArcsvIdsMap() {
+        return GENERATED_ARCSV_IDS;
+    }
+
+    public int getmDynamicLayoutContainerWidth() {
+        return mDynamicLayoutContainerWidth;
+    }
+
+    public void setmDynamicLayoutContainerWidth(int mDynamicLayoutContainerWidth) {
+        this.mDynamicLayoutContainerWidth = mDynamicLayoutContainerWidth;
+    }
+
+    public int getmDynamicLayoutContainerHeight() {
+        return mDynamicLayoutContainerHeight;
+    }
+
+    public void setmDynamicLayoutContainerHeight(int mDynamicLayoutContainerHeight) {
+        this.mDynamicLayoutContainerHeight = mDynamicLayoutContainerHeight;
+    }
+
+    public float getDensity() {
+        return mDensity;
     }
 
     private int handleNewId(String key, HashMap<String, Integer> map) {

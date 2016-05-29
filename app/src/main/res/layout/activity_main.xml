@@ -19,8 +19,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize"
                 android:background="@color/colorPrimaryDark"
-                android:fitsSystemWindows="true"
-                android:title="@string/title_activity_main"/>
+                android:fitsSystemWindows="true"/>
 
             <FrameLayout
                 android:id="@+id/content"
