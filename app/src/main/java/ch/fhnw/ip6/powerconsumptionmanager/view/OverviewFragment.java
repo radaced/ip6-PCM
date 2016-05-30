@@ -1,29 +1,19 @@
 package ch.fhnw.ip6.powerconsumptionmanager.view;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-
-import com.gigamole.library.ArcProgressStackView;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.util.DashboardHelper;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
-import hirondelle.date4j.DateTime;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 public class OverviewFragment extends Fragment {
@@ -31,9 +21,7 @@ public class OverviewFragment extends Fragment {
     public final static String SELF_CONSUMPTION = "Self consumption";
     public final static String OCCUPATION = "Occupation";
 
-    private enum Mode { DAILY, NOW };
-    private final String TAG_DAILY = "daily";
-    private final String TAG_NOW = "now";
+    private enum Mode { DAILY, NOW }
 
     private PowerConsumptionManagerAppContext mAppContext;
     private DashboardHelper mDashBoardHelper;
@@ -47,11 +35,6 @@ public class OverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
         setHasOptionsMenu(true);
-
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.dynamic_content_fragment, new NowFragment(), TAG_NOW);
-        transaction.add(R.id.dynamic_content_fragment, new DailyFragment(), TAG_DAILY);
-        transaction.commit();
 
         return view;
     }
@@ -72,6 +55,10 @@ public class OverviewFragment extends Fragment {
         mDashBoardHelper.setSummaryRatio(AUTARCHY, 50);
         mDashBoardHelper.setSummaryRatio(SELF_CONSUMPTION, 20);
         mDashBoardHelper.setSummaryRatio(OCCUPATION, -10);
+
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.dynamic_content_fragment, NowFragment.newInstance());
+        transaction.commit();
     }
 
     @Override
@@ -91,29 +78,23 @@ public class OverviewFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         switch (item.getItemId()) {
             case R.id.action_daily:
                 mMode = Mode.NOW;
-                switchFragments(TAG_NOW, TAG_DAILY);
+                transaction.replace(R.id.dynamic_content_fragment, NowFragment.newInstance());
                 break;
             case R.id.action_now:
                 mMode = Mode.DAILY;
-                switchFragments(TAG_DAILY, TAG_NOW);
+                transaction.replace(R.id.dynamic_content_fragment, DailyFragment.newInstance());
                 break;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
+        transaction.commit();
         getActivity().invalidateOptionsMenu();
 
         return true;
-    }
-
-    private void switchFragments(String attachTag, String detachTag) {
-        Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag(attachTag);
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.detach(getActivity().getSupportFragmentManager().findFragmentByTag(detachTag));
-        transaction.attach(fragment);
-        transaction.commit();
     }
 }
