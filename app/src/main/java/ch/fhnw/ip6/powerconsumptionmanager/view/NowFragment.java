@@ -58,8 +58,6 @@ public class NowFragment extends Fragment {
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                // TODO: Seems to get called before real height and width are available --> nothing is visible on attach
-
                 if (Build.VERSION.SDK_INT < 16) {
                     dynamicContentContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 } else {

@@ -32,11 +32,11 @@
             app:wlv_borderWidth="10dp"
             app:wlv_shapeType="circle"
             app:wlv_titleTopColor="@color/colorTextPrimary"
-            app:wlv_titleTopSize="12sp"
+            app:wlv_titleTopSize="@dimen/wlv_desc_value_size"
             app:wlv_titleCenterColor="@color/colorTextPrimary"
-            app:wlv_titleCenterSize="40sp"
+            app:wlv_titleCenterSize="@dimen/wlv_main_value_size"
             app:wlv_titleBottomColor="@color/colorTextPrimary"
-            app:wlv_titleBottomSize="12sp"
+            app:wlv_titleBottomSize="@dimen/wlv_desc_value_size"
             app:wlv_waveAmplitude="30"/>
 
     </LinearLayout>
@@ -66,11 +66,11 @@
             app:wlv_borderWidth="10dp"
             app:wlv_shapeType="circle"
             app:wlv_titleTopColor="@color/colorTextPrimary"
-            app:wlv_titleTopSize="12sp"
+            app:wlv_titleTopSize="@dimen/wlv_desc_value_size"
             app:wlv_titleCenterColor="@color/colorTextPrimary"
-            app:wlv_titleCenterSize="40sp"
+            app:wlv_titleCenterSize="@dimen/wlv_main_value_size"
             app:wlv_titleBottomColor="@color/colorTextPrimary"
-            app:wlv_titleBottomSize="12sp"
+            app:wlv_titleBottomSize="@dimen/wlv_desc_value_size"
             app:wlv_waveAmplitude="30"
             app:wlv_waveColor="@color/colorProgressAutarchy"/>
 
@@ -85,11 +85,11 @@
             app:wlv_borderWidth="10dp"
             app:wlv_shapeType="circle"
             app:wlv_titleTopColor="@color/colorTextPrimary"
-            app:wlv_titleTopSize="12sp"
+            app:wlv_titleTopSize="@dimen/wlv_desc_value_size"
             app:wlv_titleCenterColor="@color/colorTextPrimary"
-            app:wlv_titleCenterSize="40sp"
+            app:wlv_titleCenterSize="@dimen/wlv_main_value_size"
             app:wlv_titleBottomColor="@color/colorTextPrimary"
-            app:wlv_titleBottomSize="12sp"
+            app:wlv_titleBottomSize="@dimen/wlv_desc_value_size"
             app:wlv_waveAmplitude="30"
             app:wlv_waveColor="@color/colorProgressPowerConsumption"/>
 

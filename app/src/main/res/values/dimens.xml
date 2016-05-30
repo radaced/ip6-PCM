@@ -4,7 +4,7 @@
     <dimen name="activity_vertical_margin">8dp</dimen>
     <dimen name="nav_drawer_width">240dp</dimen>
 
-    <!-- General margins for the UI -->
+    <!-- General margins for UI margins and paddings -->
     <dimen name="space_vertical_margin">4dp</dimen>
     <dimen name="space_horizontal_margin">4dp</dimen>
     <dimen name="double_space_vertical_margin">8dp</dimen>
@@ -16,13 +16,12 @@
     <dimen name="button_continue_top_margin">8dp</dimen>
     <dimen name="button_continue_space">10dp</dimen>
 
-    <!-- Main activity -->
-    <dimen name="text_tesla_login">4dp</dimen>
-    <dimen name="text_tesla_login_padding">2dp</dimen>
-    <dimen name="column_tesla_login_top_margin">10dp</dimen>
-    <dimen name="column_tesla_login_side_margin">20dp</dimen>
-    <dimen name="button_connect_tesla_space">10dp</dimen>
+    <!-- Fragment charge plan -->
     <dimen name="scroll_info_description">3dp</dimen>
+
+    <!-- Fragment overview -->
     <dimen name="scroll_components_container">3dp</dimen>
+    <dimen name="wlv_main_value_size">40sp</dimen>
+    <dimen name="wlv_desc_value_size">12sp</dimen>
 
 </resources>
