@@ -152,7 +152,7 @@ public class DashboardHelper {
         arcsv.setIsAnimated(true);
         arcsv.setAnimationDuration(2000);
         arcsv.setIsDragged(false);
-        arcsv.setTextColor(color);
+        arcsv.setTextColor(ContextCompat.getColor(mContext, android.R.color.transparent));
         arcsv.setDrawWidthFraction((float) 0.15);
         arcsv.setModelBgEnabled(true);
         arcsv.setStartAngle(135);
