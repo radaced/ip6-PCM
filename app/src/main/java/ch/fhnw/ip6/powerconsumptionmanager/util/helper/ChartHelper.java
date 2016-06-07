@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.util;
+package ch.fhnw.ip6.powerconsumptionmanager.util.helper;
 
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +16,7 @@ import java.util.HashMap;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionDataModel;
+import ch.fhnw.ip6.powerconsumptionmanager.util.XAxisDateFormatter;
 import ch.fhnw.ip6.powerconsumptionmanager.view.ConsumptionFragment;
 
 /**

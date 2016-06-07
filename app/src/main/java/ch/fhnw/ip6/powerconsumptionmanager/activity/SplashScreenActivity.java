@@ -17,8 +17,8 @@ import android.widget.Toast;
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoaderCallback;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
-import ch.fhnw.ip6.powerconsumptionmanager.view.InitFragment;
-import ch.fhnw.ip6.powerconsumptionmanager.view.SplashFragment;
+import ch.fhnw.ip6.powerconsumptionmanager.view.startup.InitFragment;
+import ch.fhnw.ip6.powerconsumptionmanager.view.startup.SplashFragment;
 
 /**
  * Activity that is called when the app gets started. Contains some navigation logic and delegates

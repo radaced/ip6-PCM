@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.util;
+package ch.fhnw.ip6.powerconsumptionmanager.util.helper;
 
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -19,6 +19,8 @@ import ch.fhnw.ip6.powerconsumptionmanager.model.PlanEntryModel;
 import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformationModel;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoader;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoaderCallback;
+import ch.fhnw.ip6.powerconsumptionmanager.util.CalendarInstanceReader;
+import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.view.PlanFragment;
 
 /**

@@ -15,7 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.util.PlanHelper;
+import ch.fhnw.ip6.powerconsumptionmanager.util.helper.PlanHelper;
 
 /**
  * This Fragment shows the charge plan created by the user, but managed over the standard

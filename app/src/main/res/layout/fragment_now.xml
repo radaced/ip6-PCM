@@ -4,6 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context="ch.fhnw.ip6.powerconsumptionmanager.view.NowFragment">
+    tools:context=".view.dashboard.CurrentValuesFragment">
 
 </LinearLayout>

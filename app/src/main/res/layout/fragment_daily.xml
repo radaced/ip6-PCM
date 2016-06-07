@@ -2,11 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ch.fhnw.ip6.powerconsumptionmanager.view.DailyFragment">
+    tools:context=".view.dashboard.DailyValuesFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Placeholder Daily"/>
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/dailyDataBarChart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -1,6 +1,8 @@
-package ch.fhnw.ip6.powerconsumptionmanager.util;
+package ch.fhnw.ip6.powerconsumptionmanager.util.helper;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
@@ -12,13 +14,16 @@ import android.widget.TextView;
 import com.gigamole.library.ArcProgressStackView;
 import com.gigamole.library.ArcProgressStackView.IndicatorOrientation;
 import com.gigamole.library.ArcProgressStackView.Model;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.components.YAxis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.view.OverviewFragment;
+import ch.fhnw.ip6.powerconsumptionmanager.view.dashboard.OverviewFragment;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 public class DashboardHelper {
@@ -29,13 +34,20 @@ public class DashboardHelper {
     private static final HashMap<String, Integer> GENERATED_POWER_IDS = new HashMap<>();
     private static final HashMap<String, Integer> GENERATED_LABELCONTAINER_IDS = new HashMap<>();
 
-    private Context mContext;
-    private HashMap<String, ArcProgressStackView> mComponentViews;
-    private HashMap<String, WaveLoadingView> mSummaryViews;
+    private Context mOverviewContext;
+    private Context mCurrentValuesContext;
+    private Context mDailyValuesContext;
+
+    private HashMap<String, ArcProgressStackView> mComponentViews = new HashMap<>();;
+    private HashMap<String, WaveLoadingView> mSummaryViews = new HashMap<>();
+    private float mDensity;
+
     private LinearLayout mDynamicLayoutContainer;
     private int mDynamicLayoutContainerWidth = 0;
     private int mDynamicLayoutContainerHeight = 0;
-    private float mDensity;
+
+    private BarChart mDailyDataBarChart;
+    private Paint mDailyDataBarChartDrawer;
 
     public DashboardHelper() {}
 
@@ -60,14 +72,27 @@ public class DashboardHelper {
         }
     }
 
-    public void init(Context c, LinearLayout ll) {
-        mContext = c;
-        mDynamicLayoutContainer = ll;
-        mComponentViews = new HashMap<>();
-        mSummaryViews = new HashMap<>();
-        mDensity = mContext.getResources().getDisplayMetrics().density;
+
+    /**
+     * CONTEXTS
+     */
+    public void initOverviewContext(Context c) {
+        mOverviewContext = c;
+        mDensity = mOverviewContext.getResources().getDisplayMetrics().density;
     }
 
+    public void initCurrentValuesContext(Context c) {
+        mCurrentValuesContext = c;
+    }
+
+    public void initDailyValuesContext(Context c) {
+        mDailyValuesContext = c;
+    }
+
+
+    /**
+     * OVERVIEW FRAGMENT
+     */
     public void addSummaryView(String key, WaveLoadingView wlv, String unit) {
         wlv.setTopTitle(key);
         wlv.setBottomTitle("(" + unit + ")");
@@ -80,11 +105,11 @@ public class DashboardHelper {
         // TODO: make dynamic
         if(OverviewFragment.OCCUPATION.equals(key)) {
             if(ratio > 3) {
-                wlv.setWaveColor(ContextCompat.getColor(mContext, R.color.colorProgressPositive));
+                wlv.setWaveColor(ContextCompat.getColor(mOverviewContext, R.color.colorProgressPositive));
             } else if (ratio < -3) {
-                wlv.setWaveColor(ContextCompat.getColor(mContext, R.color.colorProgressNegative));
+                wlv.setWaveColor(ContextCompat.getColor(mOverviewContext, R.color.colorProgressNegative));
             } else {
-                wlv.setWaveColor(ContextCompat.getColor(mContext, R.color.colorProgressNeutral));
+                wlv.setWaveColor(ContextCompat.getColor(mOverviewContext, R.color.colorProgressNeutral));
             }
             int absRatio = Math.abs(ratio);
             int progress = (Math.signum((double) ratio) >= 0) ? (int) (50 + absRatio * 2.5) : (int) (50 - absRatio * 2.5);
@@ -99,6 +124,10 @@ public class DashboardHelper {
         this.setSummaryRatio(key, ratio);
     }
 
+
+    /**
+     * CURRENTVALUES FRAGMENT
+     */
     public void addComponentView(String key, ArcProgressStackView apsv) {
         mComponentViews.put(key, apsv);
     }
@@ -120,21 +149,15 @@ public class DashboardHelper {
         return models;
     }
 
-    public void displayNonAnimated() {
-        for (ArcProgressStackView apsv : mComponentViews.values()) {
-            apsv.invalidate();
-        }
-    }
-
     public void displayAnimated() {
         for (ArcProgressStackView apsv : mComponentViews.values()) {
             apsv.animateProgress();
         }
     }
 
-    public void generateDynamicComponentsLayout(String componentId, int color) {
+    public void generateComponentUIElement(String componentId, int color) {
         // RelativeLayout container
-        RelativeLayout rlContainer = new RelativeLayout(mContext);
+        RelativeLayout rlContainer = new RelativeLayout(mCurrentValuesContext);
         LinearLayout.LayoutParams rlContainerLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
@@ -144,7 +167,7 @@ public class DashboardHelper {
         mDynamicLayoutContainer.addView(rlContainer);
 
         // ArcProgressStackView
-        ArcProgressStackView arcsv = new ArcProgressStackView(mContext);
+        ArcProgressStackView arcsv = new ArcProgressStackView(mCurrentValuesContext);
         arcsv.setId(handleNewId(componentId + "arcsvId", GENERATED_ARCSV_IDS));
         arcsv.setIsShadowed(true);
         arcsv.setShadowDistance(1);
@@ -152,7 +175,7 @@ public class DashboardHelper {
         arcsv.setIsAnimated(true);
         arcsv.setAnimationDuration(2000);
         arcsv.setIsDragged(false);
-        arcsv.setTextColor(ContextCompat.getColor(mContext, android.R.color.transparent));
+        arcsv.setTextColor(ContextCompat.getColor(mCurrentValuesContext, android.R.color.transparent));
         arcsv.setDrawWidthFraction((float) 0.15);
         arcsv.setModelBgEnabled(true);
         arcsv.setStartAngle(135);
@@ -164,7 +187,7 @@ public class DashboardHelper {
             this.generateModelForComponent(
                 "",
                 30, // TODO Progress
-                ContextCompat.getColor(mContext, R.color.colorArcBackground),
+                ContextCompat.getColor(mCurrentValuesContext, R.color.colorArcBackground),
                 color
             )
         );
@@ -193,7 +216,7 @@ public class DashboardHelper {
         );
         llLabelContainerLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 
-        LinearLayout llLabelContainer = new LinearLayout(mContext);
+        LinearLayout llLabelContainer = new LinearLayout(mCurrentValuesContext);
         llLabelContainer.setId(handleNewId(componentId + "llLabelContainerId", GENERATED_LABELCONTAINER_IDS));
         llLabelContainer.setOrientation(LinearLayout.VERTICAL);
         llLabelContainer.setGravity(Gravity.CENTER);
@@ -207,7 +230,7 @@ public class DashboardHelper {
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 
-        LinearLayout llValueLabelContainer = new LinearLayout(mContext);
+        LinearLayout llValueLabelContainer = new LinearLayout(mCurrentValuesContext);
         llValueLabelContainer.setOrientation(LinearLayout.HORIZONTAL);
         llValueLabelContainer.setLayoutParams(llValueLabelContainerLayoutParams);
 
@@ -220,18 +243,18 @@ public class DashboardHelper {
         );
         tvValueLabelLayoutParams.gravity = Gravity.BOTTOM;
 
-        TextView tvValue = new TextView(mContext);
+        TextView tvValue = new TextView(mCurrentValuesContext);
         tvValue.setId(handleNewId(componentId + "powerId", GENERATED_POWER_IDS));
         tvValue.setText("5.6");
         tvValue.setTextSize(40);
-        tvValue.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
+        tvValue.setTextColor(ContextCompat.getColor(mCurrentValuesContext, R.color.colorTextPrimary));
         tvValue.setLayoutParams(tvValueLabelLayoutParams);
         llValueLabelContainer.addView(tvValue);
 
-        TextView tvValueUnit = new TextView(mContext);
+        TextView tvValueUnit = new TextView(mCurrentValuesContext);
         tvValueUnit.setText("kW");
         tvValueUnit.setTextSize(10);
-        tvValueUnit.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
+        tvValueUnit.setTextColor(ContextCompat.getColor(mCurrentValuesContext, R.color.colorTextPrimary));
         tvValueUnit.setLayoutParams(tvValueLabelLayoutParams);
         llValueLabelContainer.addView(tvValueUnit);
 
@@ -242,16 +265,68 @@ public class DashboardHelper {
         );
         tvComponentDescLayoutParams.gravity = Gravity.CENTER_HORIZONTAL;
 
-        TextView tvComponent = new TextView(mContext);
+        TextView tvComponent = new TextView(mCurrentValuesContext);
         tvComponent.setText(componentId);
         tvComponent.setTextSize(14);
-        tvComponent.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
+        tvComponent.setTextColor(ContextCompat.getColor(mCurrentValuesContext, R.color.colorTextPrimary));
         tvComponent.setLayoutParams(tvComponentDescLayoutParams);
         llLabelContainer.addView(tvComponent);
     }
 
+
+    /**
+     * DAILYVALUES FRAGMENT
+     */
+    public void setupDailyBarChart() {
+        // Set looks
+        mDailyDataBarChart.setBackgroundColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorChartBackground));
+        mDailyDataBarChart.setDrawGridBackground(false);
+        mDailyDataBarChart.setDrawBorders(false);
+        mDailyDataBarChart.setDescription(null);
+        mDailyDataBarChart.setNoDataText(mDailyValuesContext.getString(R.string.chart_no_data));
+        mDailyDataBarChartDrawer.setColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimaryInverse));
+
+        YAxis leftAxis = mDailyDataBarChart.getAxisLeft();
+        leftAxis.setDrawAxisLine(true);
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setGridColor(Color.BLACK);
+        leftAxis.setAxisLineColor(Color.BLUE);
+        leftAxis.setDrawAxisLine(false);
+        leftAxis.setDrawGridLines(false);
+//        leftAxis.setSpaceTop(20);
+
+        mDailyDataBarChart.getAxisRight().setEnabled(false);
+
+        // Set functionality
+        mDailyDataBarChart.setDoubleTapToZoomEnabled(true);
+        mDailyDataBarChart.setTouchEnabled(true);
+        mDailyDataBarChart.setDragEnabled(true);
+        mDailyDataBarChart.setScaleEnabled(true);
+        mDailyDataBarChart.setPinchZoom(true);
+//        mDailyDataBarChart.setOnChartValueSelectedListener(mContext);
+    }
+
+    public void generateXValues(ArrayList<String> components) {
+
+    }
+
+
+
+
+    /**
+     * HELPER FUNCTIONS
+     */
     public HashMap<String, Integer> getArcsvIdsMap() {
         return GENERATED_ARCSV_IDS;
+    }
+
+    public void setDynamicLayoutContainer(LinearLayout ll) {
+        this.mDynamicLayoutContainer = ll;
+    }
+
+    public void setDailyDataBarChart(BarChart bc) {
+        this.mDailyDataBarChart = bc;
+        this.mDailyDataBarChartDrawer = bc.getPaint(Chart.PAINT_INFO);
     }
 
     public int getDynamicLayoutContainerWidth() {

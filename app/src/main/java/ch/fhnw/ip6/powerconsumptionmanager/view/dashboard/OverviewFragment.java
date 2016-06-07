@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.view;
+package ch.fhnw.ip6.powerconsumptionmanager.view.dashboard;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.util.DashboardHelper;
+import ch.fhnw.ip6.powerconsumptionmanager.util.helper.DashboardHelper;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
@@ -46,7 +46,7 @@ public class OverviewFragment extends Fragment {
         mMode = Mode.NOW;
 
         mDashBoardHelper = DashboardHelper.getInstance();
-        mDashBoardHelper.init(getContext(), null);
+        mDashBoardHelper.initOverviewContext(getContext());
 
         mDashBoardHelper.addSummaryView(AUTARCHY, (WaveLoadingView) getView().findViewById(R.id.wlvAutarchy), mAppContext.UNIT_PERCENTAGE);
         mDashBoardHelper.addSummaryView(SELF_CONSUMPTION, (WaveLoadingView) getView().findViewById(R.id.wlvSelfConsumption), mAppContext.UNIT_PERCENTAGE);
@@ -57,7 +57,7 @@ public class OverviewFragment extends Fragment {
         mDashBoardHelper.setSummaryRatio(OCCUPATION, -10);
 
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.dynamic_content_fragment, NowFragment.newInstance());
+        transaction.replace(R.id.dynamic_content_fragment, CurrentValuesFragment.newInstance());
         transaction.commit();
     }
 
@@ -82,11 +82,11 @@ public class OverviewFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_daily:
                 mMode = Mode.NOW;
-                transaction.replace(R.id.dynamic_content_fragment, NowFragment.newInstance());
+                transaction.replace(R.id.dynamic_content_fragment, CurrentValuesFragment.newInstance());
                 break;
             case R.id.action_now:
                 mMode = Mode.DAILY;
-                transaction.replace(R.id.dynamic_content_fragment, DailyFragment.newInstance());
+                transaction.replace(R.id.dynamic_content_fragment, DailyValuesFragment.newInstance());
                 break;
             default:
                 return super.onOptionsItemSelected(item);

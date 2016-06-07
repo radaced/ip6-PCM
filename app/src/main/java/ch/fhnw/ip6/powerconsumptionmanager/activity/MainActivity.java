@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.view.ConsumptionFragment;
-import ch.fhnw.ip6.powerconsumptionmanager.view.OverviewFragment;
+import ch.fhnw.ip6.powerconsumptionmanager.view.dashboard.OverviewFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.SettingsFragment;
 
 /**

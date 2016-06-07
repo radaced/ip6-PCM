@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.view;
+package ch.fhnw.ip6.powerconsumptionmanager.view.startup;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

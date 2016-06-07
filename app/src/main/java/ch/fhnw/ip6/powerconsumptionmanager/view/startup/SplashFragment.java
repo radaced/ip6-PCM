@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.view;
+package ch.fhnw.ip6.powerconsumptionmanager.view.startup;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

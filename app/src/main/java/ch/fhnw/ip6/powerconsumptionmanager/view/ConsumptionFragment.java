@@ -21,7 +21,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.adapter.DeviceListAdapter;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoader;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoaderCallback;
-import ch.fhnw.ip6.powerconsumptionmanager.util.ChartHelper;
+import ch.fhnw.ip6.powerconsumptionmanager.util.helper.ChartHelper;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
@@ -50,7 +50,7 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
         mAppContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
         mContext = this;
 
-        LineChart consumptionChart = (LineChart) view.findViewById(R.id.lineChart);
+        LineChart consumptionChart = (LineChart) view.findViewById(R.id.consumptionDataLineChart);
         mChartHelper = new ChartHelper(consumptionChart, this);
         ListView listView = (ListView) view.findViewById(R.id.deviceList);
 

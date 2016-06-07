@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.view;
+package ch.fhnw.ip6.powerconsumptionmanager.view.dashboard;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -15,13 +15,13 @@ import android.widget.RelativeLayout;
 import com.gigamole.library.ArcProgressStackView;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.util.DashboardHelper;
+import ch.fhnw.ip6.powerconsumptionmanager.util.helper.DashboardHelper;
 
-public class NowFragment extends Fragment {
+public class CurrentValuesFragment extends Fragment {
     private DashboardHelper mDashBoardHelper;
 
-    public static NowFragment newInstance() {
-        return new NowFragment();
+    public static CurrentValuesFragment newInstance() {
+        return new CurrentValuesFragment();
     }
 
     @Override
@@ -29,7 +29,8 @@ public class NowFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_now, container, false);
 
         mDashBoardHelper = DashboardHelper.getInstance();
-        mDashBoardHelper.init(getContext(), (LinearLayout) view.findViewById(R.id.dynamic_components_container));
+        mDashBoardHelper.initCurrentValuesContext(getContext());
+        mDashBoardHelper.setDynamicLayoutContainer((LinearLayout) view.findViewById(R.id.dynamic_components_container));
 
         if(mDashBoardHelper.getDynamicLayoutContainerWidth() == 0 && mDashBoardHelper.getDynamicLayoutContainerHeight() == 0) {
             setupViewTreeObserver(view);
@@ -43,9 +44,9 @@ public class NowFragment extends Fragment {
 
         mDashBoardHelper.getArcsvIdsMap().clear();
 
-        mDashBoardHelper.generateDynamicComponentsLayout("Boiler", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer1));
-        mDashBoardHelper.generateDynamicComponentsLayout("Wärmepumpe", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer2));
-        mDashBoardHelper.generateDynamicComponentsLayout("Emobil", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer3));
+        mDashBoardHelper.generateComponentUIElement("Boiler", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer1));
+        mDashBoardHelper.generateComponentUIElement("Wärmepumpe", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer2));
+        mDashBoardHelper.generateComponentUIElement("Emobil", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer3));
 
         mDashBoardHelper.displayAnimated();
     }

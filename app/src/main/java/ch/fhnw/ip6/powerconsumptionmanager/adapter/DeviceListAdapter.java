@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.util.ChartHelper;
+import ch.fhnw.ip6.powerconsumptionmanager.util.helper.ChartHelper;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
