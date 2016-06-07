@@ -5,14 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.gigamole.library.ArcProgressStackView;
 
@@ -33,7 +31,7 @@ public class NowFragment extends Fragment {
         mDashBoardHelper = DashboardHelper.getInstance();
         mDashBoardHelper.init(getContext(), (LinearLayout) view.findViewById(R.id.dynamic_components_container));
 
-        if(mDashBoardHelper.getmDynamicLayoutContainerWidth() == 0 && mDashBoardHelper.getmDynamicLayoutContainerHeight() == 0) {
+        if(mDashBoardHelper.getDynamicLayoutContainerWidth() == 0 && mDashBoardHelper.getDynamicLayoutContainerHeight() == 0) {
             setupViewTreeObserver(view);
         }
         return view;
@@ -64,8 +62,8 @@ public class NowFragment extends Fragment {
                     dynamicContentContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
 
-                mDashBoardHelper.setmDynamicLayoutContainerWidth(dynamicContentContainer.getWidth());
-                mDashBoardHelper.setmDynamicLayoutContainerHeight(dynamicContentContainer.getWidth());
+                mDashBoardHelper.setDynamicLayoutContainerWidth(dynamicContentContainer.getWidth());
+                mDashBoardHelper.setDynamicLayoutContainerHeight(dynamicContentContainer.getWidth());
 
                 RelativeLayout.LayoutParams arcsvLayoutParams = new RelativeLayout.LayoutParams(
                         dynamicContentContainer.getWidth(),

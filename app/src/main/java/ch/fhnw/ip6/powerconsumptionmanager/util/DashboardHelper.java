@@ -250,27 +250,23 @@ public class DashboardHelper {
         llLabelContainer.addView(tvComponent);
     }
 
-    public boolean isInitialized() {
-        return mContext != null && mDynamicLayoutContainer != null;
-    }
-
     public HashMap<String, Integer> getArcsvIdsMap() {
         return GENERATED_ARCSV_IDS;
     }
 
-    public int getmDynamicLayoutContainerWidth() {
+    public int getDynamicLayoutContainerWidth() {
         return mDynamicLayoutContainerWidth;
     }
 
-    public void setmDynamicLayoutContainerWidth(int mDynamicLayoutContainerWidth) {
+    public void setDynamicLayoutContainerWidth(int mDynamicLayoutContainerWidth) {
         this.mDynamicLayoutContainerWidth = mDynamicLayoutContainerWidth;
     }
 
-    public int getmDynamicLayoutContainerHeight() {
+    public int getDynamicLayoutContainerHeight() {
         return mDynamicLayoutContainerHeight;
     }
 
-    public void setmDynamicLayoutContainerHeight(int mDynamicLayoutContainerHeight) {
+    public void setDynamicLayoutContainerHeight(int mDynamicLayoutContainerHeight) {
         this.mDynamicLayoutContainerHeight = mDynamicLayoutContainerHeight;
     }
 
