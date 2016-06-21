@@ -19,12 +19,12 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
  * List adapter to manage the device list that is shown below consumption chart and some logic for
  * the interaction with the device list.
  */
-public class DeviceListAdapter extends ArrayAdapter<String> {
+public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
     private int mLayout;
     private List<String> mDevices;
     private ChartHelper mChartHelper;
 
-    public DeviceListAdapter(Context context, int resource, ArrayList<String> objects, ChartHelper chart) {
+    public ConsumptionDeviceListAdapter(Context context, int resource, ArrayList<String> objects, ChartHelper chart) {
         super(context, resource, objects);
         mLayout = resource;
         mDevices = objects;
@@ -46,19 +46,19 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
         } else {
             final ViewHolder vh = new ViewHolder();
 
-            vh.textDevice = (TextView) convertView.findViewById(R.id.textDevice);
-            vh.textDevice.setText(mDevices.get(position));
+            vh.tvDevice = (TextView) convertView.findViewById(R.id.tvDevice);
+            vh.tvDevice.setText(mDevices.get(position));
 
             // Set color indicator to see which device is connected to each graph
-            vh.graphColor = convertView.findViewById(R.id.graphColor);
-            vh.graphColor.setBackgroundColor(mChartHelper.getGraphColor(position));
+            vh.vGraphColor = convertView.findViewById(R.id.vGraphColor);
+            vh.vGraphColor.setBackgroundColor(mChartHelper.getGraphColor(position));
 
-            vh.switchDevice = (Switch) convertView.findViewById(R.id.switchDevice);
-            vh.switchDevice.setOnClickListener(new View.OnClickListener() {
+            vh.swDevice = (Switch) convertView.findViewById(R.id.swDevice);
+            vh.swDevice.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int shiftPos = getShiftPosition(position);
-                    if (!vh.switchDevice.isChecked()) {
+                    if (!vh.swDevice.isChecked()) {
                             /* Data sets are managed in a list and as soon one device graph is not shown in the chart anymore
                              * the indices are out of sync
                              */
@@ -101,8 +101,8 @@ public class DeviceListAdapter extends ArrayAdapter<String> {
      * View holder contains all ui elements on a list item
      */
     static class ViewHolder {
-        TextView textDevice;
-        View graphColor;
-        Switch switchDevice;
+        TextView tvDevice;
+        View vGraphColor;
+        Switch swDevice;
     }
 }

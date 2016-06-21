@@ -6,10 +6,11 @@
     android:background="@color/colorListView">
 
     <TextView
-        android:id="@+id/textDevice"
+        android:id="@+id/tvDevice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
         android:layout_weight="3"
         android:layout_gravity="center"
         android:textAppearance="?android:attr/textAppearance"
@@ -18,19 +19,20 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1.2">
+        android:layout_weight="0.8">
 
         <View
-            android:id="@+id/graphColor"
+            android:id="@+id/vGraphColor"
             android:layout_height="15dp"
             android:layout_width="15dp"
             android:layout_gravity="center"/>
 
         <Switch
-            android:id="@+id/switchDevice"
+            android:id="@+id/swDevice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
             android:onClick="showComponentData"
             android:checked="true"/>
 

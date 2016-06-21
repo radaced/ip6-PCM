@@ -18,7 +18,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import java.util.ArrayList;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.adapter.DeviceListAdapter;
+import ch.fhnw.ip6.powerconsumptionmanager.adapter.ConsumptionDeviceListAdapter;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoader;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoaderCallback;
 import ch.fhnw.ip6.powerconsumptionmanager.util.helper.ChartHelper;
@@ -61,7 +61,7 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
 
             ArrayList<String> errorMsg = new ArrayList<>();
             errorMsg.add(getString(R.string.list_device_error));
-            listView.setAdapter(new DeviceListAdapter(getActivity(), R.layout.list_no_device, errorMsg, null));
+            listView.setAdapter(new ConsumptionDeviceListAdapter(getActivity(), R.layout.list_no_device, errorMsg, null));
         } else {
             // Set up the whole chart with data sets and so on with the helper class
             mChartHelper.setup();
@@ -79,8 +79,8 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
 
             // Set up the device list
             listView.setAdapter(
-                new DeviceListAdapter(getActivity(),
-                R.layout.list_device, mAppContext.getComponents(),
+                new ConsumptionDeviceListAdapter(getActivity(),
+                R.layout.list_consumption_device, mAppContext.getComponents(),
                 mChartHelper
             ));
 
