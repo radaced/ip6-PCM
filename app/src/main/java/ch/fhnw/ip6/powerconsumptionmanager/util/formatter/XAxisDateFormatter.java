@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.util;
+package ch.fhnw.ip6.powerconsumptionmanager.util.formatter;
 
 import android.text.format.DateFormat;
 

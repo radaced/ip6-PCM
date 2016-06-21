@@ -21,6 +21,7 @@
 
     <!-- Fragment overview -->
     <dimen name="scroll_components_container">3dp</dimen>
+    <dimen name="scroll_components_container_padding">10dp</dimen>
     <dimen name="wlv_main_value_size">40sp</dimen>
     <dimen name="wlv_desc_value_size">12sp</dimen>
 

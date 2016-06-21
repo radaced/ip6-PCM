@@ -30,6 +30,7 @@ public class PlanHelper implements DataLoaderCallback {
     // The caldroid fragment itself
     private CaldroidFragment mCaldroid;
     // Contexts
+    /* TODO: Change to type Context */
     private PlanFragment mContext;
     private PowerConsumptionManagerAppContext mAppContext;
     // Calendar instance to make date operations

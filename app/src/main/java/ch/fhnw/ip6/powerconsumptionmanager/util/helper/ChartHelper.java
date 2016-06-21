@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionDataModel;
-import ch.fhnw.ip6.powerconsumptionmanager.util.XAxisDateFormatter;
+import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.XAxisDateFormatter;
 import ch.fhnw.ip6.powerconsumptionmanager.view.ConsumptionFragment;
 
 /**
@@ -24,6 +24,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.view.ConsumptionFragment;
  */
 public class ChartHelper {
     private LineChart mConsumptionChart;
+    /* TODO: Change to type Context */
     private ConsumptionFragment mContext;
     // Holds x values (timestamps)
     private ArrayList<String> mXValues;
