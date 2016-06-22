@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.view.ConnectedDevicesFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.ConsumptionFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.dashboard.OverviewFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.SettingsFragment;
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new OverviewFragment();
                 break;
             case R.id.nav_connected_devices:
-                fragment = new ConsumptionFragment();
+                fragment = new ConnectedDevicesFragment();
                 break;
             case R.id.nav_consumption_data:
                 fragment = new ConsumptionFragment();

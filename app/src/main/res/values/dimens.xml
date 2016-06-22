@@ -25,4 +25,7 @@
     <dimen name="wlv_main_value_size">40sp</dimen>
     <dimen name="wlv_desc_value_size">12sp</dimen>
 
+    <!-- Fragment connected devices -->
+    <dimen name="connected_devices_list_item_text_margin">16dp</dimen>
+
 </resources>

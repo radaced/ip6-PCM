@@ -41,7 +41,7 @@ public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
 
         // Check if devices/data could be loaded
         if(mChartHelper == null && mDevices.size() == 1) {
-            TextView noDevice = (TextView) convertView.findViewById(R.id.textNoDevice);
+            TextView noDevice = (TextView) convertView.findViewById(R.id.tvNoDevice);
             noDevice.setText(mDevices.get(position));
         } else {
             final ViewHolder vh = new ViewHolder();
