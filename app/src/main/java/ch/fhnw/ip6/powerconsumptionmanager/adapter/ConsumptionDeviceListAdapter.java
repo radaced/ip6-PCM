@@ -1,10 +1,14 @@
 package ch.fhnw.ip6.powerconsumptionmanager.adapter;
 
 import android.content.Context;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -23,12 +27,14 @@ public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
     private int mLayout;
     private List<String> mDevices;
     private ChartHelper mChartHelper;
+    private boolean mIsOnline;
 
-    public ConsumptionDeviceListAdapter(Context context, int resource, ArrayList<String> objects, ChartHelper chart) {
+    public ConsumptionDeviceListAdapter(Context context, int resource, ArrayList<String> objects, ChartHelper chart, boolean isOnline) {
         super(context, resource, objects);
         mLayout = resource;
         mDevices = objects;
         mChartHelper = chart;
+        mIsOnline = isOnline;
     }
 
     @Override
@@ -40,10 +46,7 @@ public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
         }
 
         // Check if devices/data could be loaded
-        if(mChartHelper == null && mDevices.size() == 1) {
-            TextView noDevice = (TextView) convertView.findViewById(R.id.tvNoDevice);
-            noDevice.setText(mDevices.get(position));
-        } else {
+        if(mIsOnline) {
             final ViewHolder vh = new ViewHolder();
 
             vh.tvDevice = (TextView) convertView.findViewById(R.id.tvDevice);
@@ -78,6 +81,16 @@ public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
                 }
             });
             convertView.setTag(vh);
+        } else {
+            TextView noDevice = (TextView) convertView.findViewById(R.id.tvNoDevice);
+            noDevice.setText(mDevices.get(position));
+            if (Build.VERSION.SDK_INT < 23) {
+                noDevice.setTextAppearance(getContext(), android.R.style.TextAppearance_Inverse);
+            } else {
+                noDevice.setTextAppearance(android.R.style.TextAppearance_Inverse);
+            }
+            LinearLayout.LayoutParams llParams = (LinearLayout.LayoutParams) noDevice.getLayoutParams();
+            llParams.gravity = Gravity.CENTER;
         }
 
         return convertView;

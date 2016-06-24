@@ -1,10 +1,13 @@
 package ch.fhnw.ip6.powerconsumptionmanager.adapter;
 
 import android.content.Context;
+import android.os.Build;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -12,9 +15,6 @@ import java.util.List;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 
-/**
- * Created by Patrik on 21.06.2016.
- */
 public class ConnectedDeviceListAdapter extends ArrayAdapter<String> {
     private int mLayout;
     private List<String> mConnectedDevices;
@@ -44,7 +44,21 @@ public class ConnectedDeviceListAdapter extends ArrayAdapter<String> {
             convertView.setTag(vh);
         } else {
             TextView noDevice = (TextView) convertView.findViewById(R.id.tvNoDevice);
-            noDevice.setText(R.string.list_device_error);
+            noDevice.setText(mConnectedDevices.get(position));
+            if (Build.VERSION.SDK_INT < 23) {
+                noDevice.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium_Inverse);
+            } else {
+                noDevice.setTextAppearance(android.R.style.TextAppearance_Medium_Inverse);
+            }
+            LinearLayout.LayoutParams llParams = (LinearLayout.LayoutParams) noDevice.getLayoutParams();
+            llParams.gravity = Gravity.CENTER;
+            int density = (int) getContext().getResources().getDisplayMetrics().density;
+            llParams.setMargins(
+                0,
+                8 * density,
+                0,
+                8 * density
+            );
         }
 
         return convertView;

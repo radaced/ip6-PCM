@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.adapter.ConnectedDeviceListAdapter;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
@@ -30,26 +32,26 @@ public class ConnectedDevicesFragment extends ListFragment {
         super.onViewCreated(view, savedInstanceState);
         mAppContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
         ListView lvConnectedDevices = (ListView) view.findViewById(android.R.id.list);
+        int layoutResource;
+        ArrayList<String> listItems;
 
-        if (mAppContext.isOnline()) {
-            lvConnectedDevices.setAdapter(
-                    new ConnectedDeviceListAdapter(
-                            getContext(),
-                            R.layout.list_connected_device,
-                            mAppContext.getComponents(),
-                            true
-                    )
-            );
+        if(mAppContext.isOnline()) {
+            layoutResource = R.layout.list_connected_device;
+            listItems = mAppContext.getComponents();
         } else {
-            lvConnectedDevices.setAdapter(
-                    new ConnectedDeviceListAdapter(
-                            getContext(),
-                            R.layout.list_no_device,
-                            mAppContext.getComponents(),
-                            false
-                    )
-            );
+            layoutResource = R.layout.list_no_device;
+            listItems = new ArrayList<>();
+            listItems.add(getString(R.string.list_device_error));
         }
+
+        lvConnectedDevices.setAdapter(
+                new ConnectedDeviceListAdapter(
+                        getContext(),
+                        layoutResource,
+                        listItems,
+                        mAppContext.isOnline()
+                )
+        );
     }
 
     @Override

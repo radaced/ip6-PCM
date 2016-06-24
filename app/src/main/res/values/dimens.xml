@@ -16,16 +16,16 @@
     <dimen name="button_continue_top_margin">8dp</dimen>
     <dimen name="button_continue_space">10dp</dimen>
 
-    <!-- Fragment charge plan -->
+    <!-- Charge plan fragment-->
     <dimen name="scroll_info_description">3dp</dimen>
 
-    <!-- Fragment overview -->
+    <!-- Overview fragment -->
     <dimen name="scroll_components_container">3dp</dimen>
     <dimen name="scroll_components_container_padding">10dp</dimen>
     <dimen name="wlv_main_value_size">40sp</dimen>
     <dimen name="wlv_desc_value_size">12sp</dimen>
 
-    <!-- Fragment connected devices -->
-    <dimen name="connected_devices_list_item_text_margin">16dp</dimen>
+    <!-- Connected devices fragment -->
+    <dimen name="list_item_connected_devices_text_margin">16dp</dimen>
 
 </resources>

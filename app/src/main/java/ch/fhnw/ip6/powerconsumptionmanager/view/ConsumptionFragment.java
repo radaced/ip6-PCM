@@ -52,41 +52,52 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
 
         LineChart consumptionChart = (LineChart) view.findViewById(R.id.consumptionDataLineChart);
         mChartHelper = new ChartHelper(consumptionChart, this);
-        ListView listView = (ListView) view.findViewById(R.id.deviceList);
+        ListView lvDevices = (ListView) view.findViewById(R.id.lvDevices);
+        int layoutResource;
+        ArrayList<String> listItems;
 
         // Check if web requests for consumption data were successful
-        if (!mAppContext.isOnline()) {
-            // Set up an empty chart with an error message
-            mChartHelper.setupOnError();
-
-            ArrayList<String> errorMsg = new ArrayList<>();
-            errorMsg.add(getString(R.string.list_device_error));
-            listView.setAdapter(new ConsumptionDeviceListAdapter(getActivity(), R.layout.list_no_device, errorMsg, null));
-        } else {
+        if (mAppContext.isOnline()) {
             // Set up the whole chart with data sets and so on with the helper class
             mChartHelper.setup();
             mChartHelper.setLegend(false);
             mChartHelper.generateXValues(mAppContext.getConsumptionData().get(0));
 
             // Generate the data sets to display
-            for (int z = 0; z < mAppContext.getConsumptionData().size(); z++) {
-                mChartHelper.generateDataSet(mAppContext.getConsumptionData().get(z), z);
+            for (int i = 0; i < mAppContext.getConsumptionData().size(); i++) {
+                mChartHelper.generateDataSet(mAppContext.getConsumptionData().get(i), i);
             }
 
             // Display the chart
             mChartHelper.initChartData();
             mChartHelper.displayAnimated();
 
-            // Set up the device list
-            listView.setAdapter(
-                new ConsumptionDeviceListAdapter(getActivity(),
-                R.layout.list_consumption_device, mAppContext.getComponents(),
-                mChartHelper
-            ));
-
             // Instantiate the update handler
             mUpdateHandler = new Handler();
+
+            // Define device list adapter parameters
+            layoutResource = R.layout.list_connected_device;
+            listItems = mAppContext.getComponents();
+        } else {
+            // Set up an empty chart with an error message
+            mChartHelper.setupOnError();
+
+            // Define device list adapter parameters
+            layoutResource = R.layout.list_no_device;
+            listItems = new ArrayList<>();
+            listItems.add(getString(R.string.list_device_error));
         }
+
+        // Set up the device list
+        lvDevices.setAdapter(
+                new ConsumptionDeviceListAdapter(
+                        getActivity(),
+                        layoutResource,
+                        listItems,
+                        mChartHelper,
+                        mAppContext.isOnline()
+                )
+        );
     }
 
 

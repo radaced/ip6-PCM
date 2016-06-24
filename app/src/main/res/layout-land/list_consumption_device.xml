@@ -10,10 +10,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
         android:layout_weight="3"
         android:layout_gravity="center"
-        android:textAppearance="?android:attr/textAppearance"
-        android:textColor="@color/colorTextPrimaryInverse"/>
+        android:textAppearance="@android:style/TextAppearance.Inverse"/>
 
     <LinearLayout
         android:layout_width="0dp"
