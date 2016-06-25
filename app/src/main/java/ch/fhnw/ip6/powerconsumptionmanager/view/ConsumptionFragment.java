@@ -76,7 +76,7 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
             mUpdateHandler = new Handler();
 
             // Define device list adapter parameters
-            layoutResource = R.layout.list_connected_device;
+            layoutResource = R.layout.list_consumption_device;
             listItems = mAppContext.getComponents();
         } else {
             // Set up an empty chart with an error message
