@@ -8,7 +8,8 @@
     <color name="colorAccentSecondary">#ffcd89</color>
     <color name="colorBackground">#859aa4</color>
     <color name="colorTextViewBackground">#eceff1</color>
-    <color name="colorListView">#b0bec5</color>
+    <color name="colorListViewItemBackground">#b0bec5</color>
+    <color name="colorListViewItemSelected">#ffffff</color>
     <color name="colorTextPrimary">#ffffff</color>
     <color name="colorTextPrimaryInverse">#000000</color>
 

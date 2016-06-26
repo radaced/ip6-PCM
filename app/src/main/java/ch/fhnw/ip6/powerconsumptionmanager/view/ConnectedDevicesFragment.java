@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.text.ChoiceFormat;
 import java.util.ArrayList;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
@@ -30,6 +31,7 @@ public class ConnectedDevicesFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         mAppContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
         ListView lvConnectedDevices = (ListView) view.findViewById(android.R.id.list);
         int layoutResource;

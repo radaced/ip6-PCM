@@ -37,6 +37,6 @@
             app:menu="@menu/nav_drawer_menu"
             app:headerLayout="@layout/nav_drawer_header"
             app:itemTextColor="@color/colorTextPrimaryInverse"
-            app:itemBackground="@drawable/nav_drawer_item_activated"
+            app:itemBackground="@drawable/navdrawer_item_activated"
             app:itemIconTint="@android:color/black"/>
 </android.support.v4.widget.DrawerLayout>
