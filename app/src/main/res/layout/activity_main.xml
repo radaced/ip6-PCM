@@ -14,21 +14,22 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/main_toolbar"
+                android:id="@+id/tbMain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
+                android:minHeight="?android:attr/actionBarSize"
                 android:background="@color/colorPrimaryDark"
+                android:elevation="@dimen/toolbar_elevation"
                 android:fitsSystemWindows="true"/>
 
             <FrameLayout
-                android:id="@+id/content"
+                android:id="@+id/flMainContentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
 
         <android.support.design.widget.NavigationView
-            android:id="@+id/nav_view"
+            android:id="@+id/navView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"

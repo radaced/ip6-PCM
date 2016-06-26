@@ -7,14 +7,14 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
-        android:name="ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext"
+        android:name=".util.PowerConsumptionManagerAppContext"
         android:allowBackup="true"
         android:icon="@mipmap/ic_app"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="ch.fhnw.ip6.powerconsumptionmanager.activity.SplashScreenActivity"
+            android:name=".activity.SplashScreenActivity"
             android:label="@string/title_activity_splash"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -24,18 +24,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ch.fhnw.ip6.powerconsumptionmanager.activity.MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme">
         </activity>
         <activity
-            android:name="ch.fhnw.ip6.powerconsumptionmanager.activity.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme"
-            android:parentActivityName="ch.fhnw.ip6.powerconsumptionmanager.activity.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.fhnw.ip6.powerconsumptionmanager.activity.MainActivity"/>
+            android:name=".activity.ComponentSettingsActivity"
+            android:label="@string/title_activity_component_settings"
+            android:theme="@style/AppTheme">
         </activity>
     </application>
 

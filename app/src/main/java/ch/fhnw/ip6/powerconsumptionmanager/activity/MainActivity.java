@@ -1,5 +1,6 @@
 package ch.fhnw.ip6.powerconsumptionmanager.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -23,9 +24,11 @@ import ch.fhnw.ip6.powerconsumptionmanager.view.SettingsFragment;
  * charge plan.
  */
 public class MainActivity extends AppCompatActivity {
+    // Flag if settings have changed
+    public static boolean UPDATED = false;
+
     private DrawerLayout mDrawerLayout;
     private NavigationView mDrawerNavView;
-    private Toolbar mToolbar;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mTitle;
@@ -40,25 +43,25 @@ public class MainActivity extends AppCompatActivity {
 
         mTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerNavView = (NavigationView) findViewById(R.id.nav_view);
+        mDrawerNavView = (NavigationView) findViewById(R.id.navView);
 
         // Main toolbar
-        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tbMain);
+        setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
         if(actionBar != null) {
             actionBar.setHomeAsUpIndicator(R.mipmap.ic_drawer);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         setupDrawerContent(mDrawerNavView);
 
         if(savedInstanceState == null) {
             setTitle(R.string.title_frag_overview);
-            getSupportFragmentManager().beginTransaction().replace(R.id.content, new OverviewFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.flMainContentContainer, new OverviewFragment()).commit();
         }
     }
 
@@ -74,41 +77,47 @@ public class MainActivity extends AppCompatActivity {
 
     private void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment;
-        switch(menuItem.getItemId()) {
-            case R.id.nav_home:
-                fragment = new OverviewFragment();
-                break;
-            case R.id.nav_connected_devices:
-                fragment = new ConnectedDevicesFragment();
-                break;
-            case R.id.nav_consumption_data:
-                fragment = new ConsumptionFragment();
-                break;
-            case R.id.nav_cost_statistic:
-                fragment = new ConsumptionFragment();
-                break;
-            case R.id.nav_settings:
-                fragment = new SettingsFragment();
-                break;
-            default:
-                fragment = new ConsumptionFragment();
-                break;
+
+        if(UPDATED) {
+            // Navigate to splash screen activity to reload data with new settings
+            Intent intent = new Intent(MainActivity.this, SplashScreenActivity.class);
+            intent.putExtra("settings_changed", getString(R.string.text_splash_settings_changed));
+            MainActivity.this.startActivity(intent);
+            MainActivity.this.finish();
+        } else {
+            switch (menuItem.getItemId()) {
+                case R.id.nav_home:
+                    fragment = new OverviewFragment();
+                    break;
+                case R.id.nav_connected_devices:
+                    fragment = new ConnectedDevicesFragment();
+                    break;
+                case R.id.nav_consumption_data:
+                    fragment = new ConsumptionFragment();
+                    break;
+                case R.id.nav_cost_statistic:
+                    fragment = new ConsumptionFragment();
+                    break;
+                case R.id.nav_settings:
+                    fragment = new SettingsFragment();
+                    break;
+                default:
+                    fragment = new ConsumptionFragment();
+                    break;
+            }
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.flMainContentContainer, fragment).commit();
+
+            // Update selected item and title, then close the drawer
+            menuItem.setChecked(true);
+            setTitle(menuItem.getTitle());
+            mDrawerLayout.closeDrawer(mDrawerNavView);
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
-
-
-        // update selected item and title, then close the drawer
-        menuItem.setChecked(true);
-        setTitle(menuItem.getTitle());
-        mDrawerLayout.closeDrawer(mDrawerNavView);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -129,5 +138,11 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UPDATED = false;
     }
 }

@@ -32,7 +32,7 @@ public class SplashFragment extends Fragment {
         Bundle extras = getActivity().getIntent().getExtras();
         if(extras != null) {
             TextView loadingMsg = (TextView) view.findViewById(R.id.textLoadingMessage);
-            loadingMsg.setText(extras.getString("settings_changed", getString(R.string.text_splash_info)));
+            loadingMsg.setText(extras.getString("settings_changed"));
         }
 
         PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();

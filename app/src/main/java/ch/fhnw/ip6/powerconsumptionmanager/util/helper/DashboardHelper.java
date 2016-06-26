@@ -113,7 +113,7 @@ public class DashboardHelper {
         WaveLoadingView wlv = mSummaryViews.get(key);
 
         // TODO: make dynamic
-        if(OverviewFragment.OCCUPATION.equals(key)) {
+        if(mOverviewContext.getString(R.string.text_occupation).equals(key)) {
             if(ratio > 3) {
                 wlv.setWaveColor(ContextCompat.getColor(mOverviewContext, R.color.colorProgressPositive));
             } else if (ratio < -3) {
@@ -262,7 +262,7 @@ public class DashboardHelper {
         llValueLabelContainer.addView(tvValue);
 
         TextView tvValueUnit = new TextView(mCurrentValuesContext);
-        tvValueUnit.setText("kW");
+        tvValueUnit.setText(mAppContext.UNIT_KW);
         tvValueUnit.setTextSize(10);
         tvValueUnit.setTextColor(ContextCompat.getColor(mCurrentValuesContext, R.color.colorTextPrimary));
         tvValueUnit.setLayoutParams(tvValueLabelLayoutParams);

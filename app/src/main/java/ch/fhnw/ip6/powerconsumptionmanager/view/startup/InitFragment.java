@@ -75,7 +75,7 @@ public class InitFragment extends Fragment {
                     // Change to loading fragment
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     SplashFragment fragment = new SplashFragment();
-                    transaction.replace(R.id.startup_fragment, fragment);
+                    transaction.replace(R.id.flStartupContentContainer, fragment);
                     transaction.commit();
                 }
             }

@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:wlv_borderColor="@color/colorProgressDefault"
+            app:wlv_borderColor="@color/colorProgressBorder"
             app:wlv_borderWidth="10dp"
             app:wlv_shapeType="circle"
             app:wlv_titleTopColor="@color/colorTextPrimary"
@@ -62,7 +62,7 @@
             android:layout_weight="1"
             android:layout_marginRight="@dimen/double_space_horizontal_margin"
             android:layout_marginEnd="@dimen/double_space_horizontal_margin"
-            app:wlv_borderColor="@color/colorProgressAutarchy"
+            app:wlv_borderColor="@color/colorProgressBorder"
             app:wlv_borderWidth="10dp"
             app:wlv_shapeType="circle"
             app:wlv_titleTopColor="@color/colorTextPrimary"
@@ -75,13 +75,13 @@
             app:wlv_waveColor="@color/colorProgressAutarchy"/>
 
         <me.itangqi.waveloadingview.WaveLoadingView
-            android:id="@+id/wlvSelfConsumption"
+            android:id="@+id/wlvSelfsupply"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginLeft="@dimen/double_space_horizontal_margin"
             android:layout_marginStart="@dimen/double_space_horizontal_margin"
-            app:wlv_borderColor="@color/colorProgressPowerConsumption"
+            app:wlv_borderColor="@color/colorProgressBorder"
             app:wlv_borderWidth="10dp"
             app:wlv_shapeType="circle"
             app:wlv_titleTopColor="@color/colorTextPrimary"

@@ -1,26 +1,19 @@
 package ch.fhnw.ip6.powerconsumptionmanager.util;
 
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.StringTokenizer;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.activity.SettingsActivity;
+import ch.fhnw.ip6.powerconsumptionmanager.activity.MainActivity;
 
-/**
- * Created by Patrik on 04.05.2016.
- */
 public class IPSettingDialogFragment extends PreferenceDialogFragmentCompat {
     private SharedPreferences mSettings;
     private EditText mIP1;
@@ -73,7 +66,7 @@ public class IPSettingDialogFragment extends PreferenceDialogFragmentCompat {
                 context.setIPAdress(mSettings.getString("IP", "192.168.0.1"));
 
                 // Settings have changed
-                SettingsActivity.UPDATED = true;
+                MainActivity.UPDATED = true;
                 Toast.makeText(getContext(), getContext().getString(R.string.toast_ip_updated), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), getContext().getString(R.string.toast_ip_invalid), Toast.LENGTH_SHORT).show();

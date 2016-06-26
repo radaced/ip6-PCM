@@ -4,7 +4,7 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
 
-    <ImageView android:id="@+id/splashscreen_icon"
+    <ImageView android:id="@+id/icSplashscreen"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:src="@mipmap/ic_app"
@@ -13,7 +13,7 @@
                android:contentDescription="@string/image_content_description"/>
 
     <FrameLayout
-        android:id="@+id/startup_fragment"
+        android:id="@+id/flStartupContentContainer"
         android:layout_weight="2"
         android:layout_width="match_parent"
         android:layout_height="0dp" />

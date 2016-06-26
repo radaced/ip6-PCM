@@ -17,10 +17,6 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 public class OverviewFragment extends Fragment {
-    public final static String AUTARCHY = "Autarchy";
-    public final static String SELF_CONSUMPTION = "Self consumption";
-    public final static String OCCUPATION = "Occupation";
-
     private enum Mode { DAILY, NOW }
 
     private PowerConsumptionManagerAppContext mAppContext;
@@ -48,13 +44,25 @@ public class OverviewFragment extends Fragment {
         mDashBoardHelper = DashboardHelper.getInstance();
         mDashBoardHelper.initOverviewContext(getContext());
 
-        mDashBoardHelper.addSummaryView(AUTARCHY, (WaveLoadingView) getView().findViewById(R.id.wlvAutarchy), mAppContext.UNIT_PERCENTAGE);
-        mDashBoardHelper.addSummaryView(SELF_CONSUMPTION, (WaveLoadingView) getView().findViewById(R.id.wlvSelfConsumption), mAppContext.UNIT_PERCENTAGE);
-        mDashBoardHelper.addSummaryView(OCCUPATION, (WaveLoadingView) getView().findViewById(R.id.wlvOccupation), mAppContext.UNIT_KW);
+        mDashBoardHelper.addSummaryView(
+            getString(R.string.text_autarchy),
+            (WaveLoadingView) getView().findViewById(R.id.wlvAutarchy),
+            mAppContext.UNIT_PERCENTAGE
+        );
+        mDashBoardHelper.addSummaryView(
+            getString(R.string.text_selfsupply),
+            (WaveLoadingView) getView().findViewById(R.id.wlvSelfsupply),
+            mAppContext.UNIT_PERCENTAGE
+        );
+        mDashBoardHelper.addSummaryView(
+            getString(R.string.text_occupation),
+            (WaveLoadingView) getView().findViewById(R.id.wlvOccupation),
+            mAppContext.UNIT_KW
+        );
 
-        mDashBoardHelper.setSummaryRatio(AUTARCHY, 50);
-        mDashBoardHelper.setSummaryRatio(SELF_CONSUMPTION, 20);
-        mDashBoardHelper.setSummaryRatio(OCCUPATION, -10);
+        mDashBoardHelper.setSummaryRatio(getString(R.string.text_autarchy), 50);
+        mDashBoardHelper.setSummaryRatio(getString(R.string.text_selfsupply), 20);
+        mDashBoardHelper.setSummaryRatio(getString(R.string.text_occupation), -10);
 
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.dynamic_content_fragment, CurrentValuesFragment.newInstance());

@@ -1,5 +1,6 @@
 package ch.fhnw.ip6.powerconsumptionmanager.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
@@ -13,6 +14,9 @@ import java.text.ChoiceFormat;
 import java.util.ArrayList;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.activity.ComponentSettingsActivity;
+import ch.fhnw.ip6.powerconsumptionmanager.activity.MainActivity;
+import ch.fhnw.ip6.powerconsumptionmanager.activity.SplashScreenActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.adapter.ConnectedDeviceListAdapter;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
@@ -59,7 +63,8 @@ public class ConnectedDevicesFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-
-        Toast.makeText(getContext(), mAppContext.getComponents().get(position), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), ComponentSettingsActivity.class);
+        intent.putExtra("component_position", position);
+        getActivity().startActivity(intent);
     }
 }

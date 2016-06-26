@@ -114,7 +114,7 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
             fragment = InitFragment.newInstance();
         }
 
-        transaction.replace(R.id.startup_fragment, fragment);
+        transaction.replace(R.id.flStartupContentContainer, fragment);
         transaction.commitAllowingStateLoss();
     }
 }
