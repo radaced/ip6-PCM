@@ -72,6 +72,6 @@
 
     <!-- Activity component settings -->
     <string name="title_activity_component_settings">Component settings</string>
-    <string name="title_activity_actionbar">Settings for </string>
+    <string name="title_activity_actionbar">Settings for</string>
 
 </resources>

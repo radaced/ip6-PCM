@@ -28,7 +28,7 @@ public class ComponentSettingsActivity extends AppCompatActivity {
         Bundle extras = this.getIntent().getExtras();
         if(extras != null) {
             int index = extras.getInt("component_position");
-            getSupportActionBar().setTitle(getString(R.string.title_activity_actionbar) + mAppContext.getComponents().get(index));
+            getSupportActionBar().setTitle(getString(R.string.title_activity_actionbar) + " " + mAppContext.getComponents().get(index));
         }
     }
 

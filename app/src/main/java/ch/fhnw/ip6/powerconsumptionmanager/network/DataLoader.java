@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionDataModel;
+import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionChartDataModel;
 import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformationModel;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
@@ -65,7 +65,7 @@ public class DataLoader {
                 }
 
                 // Lists to hold the loaded consumption data and component names
-                ArrayList<ConsumptionDataModel> consumptionData = new ArrayList<>();
+                ArrayList<ConsumptionChartDataModel> consumptionData = new ArrayList<>();
                 ArrayList<String> components = new ArrayList<>();
 
                 try {
@@ -73,7 +73,7 @@ public class DataLoader {
 
                     // Fill model containers with each device and add the data to the list
                     for(int i = 0; i < dataJson.length(); i++) {
-                        ConsumptionDataModel usageData = new ConsumptionDataModel((JSONObject) dataJson.get(i));
+                        ConsumptionChartDataModel usageData = new ConsumptionChartDataModel((JSONObject) dataJson.get(i));
                         consumptionData.add(usageData);
                         components.add(usageData.getComponentName());
                     }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionDataModel;
+import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionChartDataModel;
 import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.XAxisDateFormatter;
 import ch.fhnw.ip6.powerconsumptionmanager.view.ConsumptionFragment;
 
@@ -106,7 +106,7 @@ public class ChartHelper {
      * Generates the x values of the chart (amount of x and y values need to be equal)
      * @param data Loaded consumption data of a single device
      */
-    public void generateXValues(ConsumptionDataModel data) {
+    public void generateXValues(ConsumptionChartDataModel data) {
         if(!mXValues.isEmpty()) {
             mXValues.clear();
         }
@@ -122,7 +122,7 @@ public class ChartHelper {
      * @param colorCode Array index to set color for the graph (data set)
      */
     // Generates a single data set and adds it to the hash map that holds all data sets
-    public void generateDataSet(ConsumptionDataModel data, int colorCode) {
+    public void generateDataSet(ConsumptionChartDataModel data, int colorCode) {
         ArrayList<Entry> values = new ArrayList<>();
 
         for (int i = 0; i < data.getComponentData().size(); i++) {
