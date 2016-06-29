@@ -35,4 +35,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.github.gigamole.arcprogressstackview:library:1.0.3'
     compile 'me.itangqi.waveloadingview:library:0.2.3'
+    compile 'com.appyvet:materialrangebar:1.3'
 }
