@@ -1,9 +1,9 @@
 <resources>
-    <!-- App -->
+    <!--****** App ******-->
     <string name="app_name">PowerConsumptionManager</string>
     <string name="title_activity_main">Power Consumption Manager</string>
 
-    <!-- Activity main activity -->
+    <!--****** Activity main activity ******-->
     <string name="drawer_header">Power Consumption Manager</string>
     <string name="drawer_menu1">Overview</string>
     <string name="drawer_menu2">Connected devices</string>
@@ -13,15 +13,17 @@
     <string name="drawer_open">Opened navigation drawer</string>
     <string name="drawer_close">Closed navigation drawer</string>
 
-    <!-- Fragment overview -->
+    <!--****** Fragment overview ******-->
     <string name="title_frag_overview">Overview</string>
     <string name="text_autarchy">Autarchy</string>
     <string name="text_selfsupply">"Selfsupply"</string>
-    <string name="text_occupation">Occupation</string>
+    <string name="text_consumption">Consumption</string>
+    <string name="text_consumer">VerbrauchTot</string>
+    <string name="text_producer">Photovoltaik</string>
     <string name="menu_daily">Daily</string>
     <string name="menu_now">Now</string>
 
-    <!-- Fragment consumption data -->
+    <!--****** Fragment consumption data ******-->
     <string name="title_frag_consumption">Consumption</string>
     <string name="chart_connection_error_title">Connection error.</string>
     <string name="chart_connection_error_description">Check your entered IP address.</string>
@@ -29,7 +31,7 @@
     <string name="list_device_error">No devices found.</string>
     <string name="toast_chart_update_error">Error while updating chart data</string>
 
-    <!-- Fragment charge plan -->
+    <!--****** Fragment charge plan ******-->
     <string name="title_frag_plan">Charge plan</string>
     <string name="instance_title">Tesla Trip</string>
     <string name="text_route_information_route_to">to</string>
@@ -42,7 +44,7 @@
     <string name="format_caldroid_info_title">MMMM dd yyyy</string>
     <string name="format_caldroid_info_timerange">hh:mm a.</string>
 
-    <!-- Fragment settings -->
+    <!--****** Fragment settings ******-->
     <string name="category_network">Network configuration</string>
     <string name="category_charge_plan">Charge plan</string>
     <string name="category_help">Help</string>
@@ -58,7 +60,7 @@
     <string name="toast_sync_ended_error_interrupted">Synchronisation interrupted</string>
     <string name="toast_sync_ended_error_loading">Synchronisation failed (error building data to synchronize)</string>
 
-    <!-- Activity splash screen -->
+    <!--****** Activity splash screen ******-->
     <string name="title_activity_splash">Power Consumption Manager</string>
     <string name="text_splash_info">Power Consumption Manager loading…</string>
     <string name="text_splash_settings_changed">Power Consumption Manager loading with new settings…</string>
@@ -70,7 +72,7 @@
     <string name="button_continue">Continue</string>
     <string name="image_content_description">Progressbar</string>
 
-    <!-- Activity component settings -->
+    <!--****** Activity component settings ******-->
     <string name="title_activity_component_settings">Component settings</string>
     <string name="title_activity_actionbar">Settings for</string>
 

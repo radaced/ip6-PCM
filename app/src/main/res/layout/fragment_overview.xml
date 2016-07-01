@@ -24,7 +24,7 @@
         android:orientation="horizontal">
 
         <me.itangqi.waveloadingview.WaveLoadingView
-            android:id="@+id/wlvOccupation"
+            android:id="@+id/wlvConsumption"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

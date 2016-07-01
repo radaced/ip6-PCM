@@ -13,7 +13,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.util.helper.DashboardHelper;
 
 public class DailyValuesFragment extends Fragment {
-    private DashboardHelper mDashBoardHelper;
+    private DashboardHelper mDashboardHelper;
 
     public static DailyValuesFragment newInstance() {
         return new DailyValuesFragment();
@@ -23,9 +23,9 @@ public class DailyValuesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_daily, container, false);
 
-        mDashBoardHelper = DashboardHelper.getInstance();
-        mDashBoardHelper.initDailyValuesContext(getContext());
-        mDashBoardHelper.setDailyDataBarChart((BarChart) view.findViewById(R.id.dailyDataBarChart));
+        mDashboardHelper = DashboardHelper.getInstance();
+        mDashboardHelper.initDailyValuesContext(getContext());
+        mDashboardHelper.setDailyDataBarChart((BarChart) view.findViewById(R.id.dailyDataBarChart));
 
         return view;
     }
@@ -34,7 +34,7 @@ public class DailyValuesFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mDashBoardHelper.setupDailyBarChartStyle();
-        mDashBoardHelper.setupDailyBarChartData();
+        mDashboardHelper.setupDailyBarChartStyle();
+        mDashboardHelper.setupDailyBarChartData();
     }
 }

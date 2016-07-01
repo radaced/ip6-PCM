@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--****** PowerConsumptionManager Software ******-->
     <string name="webservice_getData">8002/EM/App/getData</string>
     <string name="webservice_getComponents">8002/EM/App/getComponents</string>
     <string name="webservice_putChargePlan">8002/EM/App/putLadePlan</string>
+    <string name="webservice_getCurrentStatistics">8002/EM/App/getCurrentStatistics</string>
+    <string name="webservice_getCurrentData">8002/EM/App/getCurrentData</string>
+
+    <!--****** Google ******-->
     <string name="googleMaps_Api1">http://maps.googleapis.com/maps/api/directions/json?</string>
     <string name="googleMaps_Api2">&amp;mode=driving&amp;sensor=false</string>
 </resources>

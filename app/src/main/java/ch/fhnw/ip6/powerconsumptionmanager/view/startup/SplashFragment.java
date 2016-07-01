@@ -2,18 +2,25 @@ package ch.fhnw.ip6.powerconsumptionmanager.view.startup;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.concurrent.ExecutionException;
+
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoader;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoaderCallback;
+import ch.fhnw.ip6.powerconsumptionmanager.network.GetConnectedComponentsAsyncTask;
+import ch.fhnw.ip6.powerconsumptionmanager.network.GetCurrentPCMDataAsyncTask;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 
 public class SplashFragment extends Fragment {
+    private static final String TAG = "SplashFragment";
 
     public static SplashFragment newInstance() {
         return new SplashFragment();
@@ -38,8 +45,19 @@ public class SplashFragment extends Fragment {
         PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
         DataLoader loader = new DataLoader(appContext, (DataLoaderCallback) getActivity());
 
+        new GetCurrentPCMDataAsyncTask(
+            appContext,
+            (AsyncTaskCallback) getActivity(),
+            "http://" + appContext.getIPAdress() + ":"
+        ).execute();
+
+        new GetConnectedComponentsAsyncTask(
+            appContext,
+            (AsyncTaskCallback) getActivity(),
+            "http://" + appContext.getIPAdress() + ":" + getString(R.string.webservice_getComponents)
+        ).execute();
+
         // Web request to load the consumption and component data (load consumption data includes reading components)
-        loader.loadConsumptionData("http://" + appContext.getIPAdress() + ":" + getString(R.string.webservice_getData));
-        //loader.loadComponents("http://" + appContext.getIPAdress() + ":" + appContext.getString(R.string.webservice_getComponents));
+        //loader.loadConsumptionData("http://" + appContext.getIPAdress() + ":" + getString(R.string.webservice_getData));
     }
 }

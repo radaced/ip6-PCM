@@ -1,32 +1,32 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!--****** Default screen margins, per the Android Design guidelines ******-->
     <dimen name="activity_horizontal_margin">8dp</dimen>
     <dimen name="activity_vertical_margin">8dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
     <dimen name="nav_drawer_width">240dp</dimen>
 
-    <!-- General margins for UI margins and paddings -->
+    <!--****** General margins and paddings for UI ******-->
     <dimen name="space_vertical_margin">4dp</dimen>
     <dimen name="space_horizontal_margin">4dp</dimen>
     <dimen name="double_space_vertical_margin">8dp</dimen>
     <dimen name="double_space_horizontal_margin">8dp</dimen>
 
-    <!-- Splashscreen -->
+    <!--****** Splashscreen ******-->
     <dimen name="text_ip_margin">4dp</dimen>
     <dimen name="text_ip_width">60dp</dimen>
     <dimen name="button_continue_top_margin">8dp</dimen>
     <dimen name="button_continue_space">10dp</dimen>
 
-    <!-- Charge plan fragment-->
+    <!--****** Charge plan fragment ******-->
     <dimen name="scroll_info_description">3dp</dimen>
 
-    <!-- Overview fragment -->
+    <!--****** Overview fragment ******-->
     <dimen name="scroll_components_container">3dp</dimen>
     <dimen name="scroll_components_container_padding">10dp</dimen>
     <dimen name="wlv_main_value_size">40sp</dimen>
     <dimen name="wlv_desc_value_size">12sp</dimen>
 
-    <!-- Connected devices fragment -->
+    <!--****** Connected devices fragment ******-->
     <dimen name="list_item_connected_devices_text_margin">16dp</dimen>
 
 </resources>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gigamole.library.ArcProgressStackView;
 import com.gigamole.library.ArcProgressStackView.IndicatorOrientation;
@@ -23,15 +24,21 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.CurrentPCMComponentData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.CurrentPCMData;
 import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.CostValueFormatter;
 import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.EnergyValueFormatter;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
-import ch.fhnw.ip6.powerconsumptionmanager.view.dashboard.OverviewFragment;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 public class DashboardHelper {
@@ -50,6 +57,7 @@ public class DashboardHelper {
     private HashMap<String, ArcProgressStackView> mComponentViews = new HashMap<>();;
     private HashMap<String, WaveLoadingView> mSummaryViews = new HashMap<>();
     private float mDensity;
+    private DecimalFormat mDecimalFormat = new DecimalFormat("#.#");
 
     private LinearLayout mDynamicLayoutContainer;
     private int mDynamicLayoutContainerWidth = 0;
@@ -89,6 +97,7 @@ public class DashboardHelper {
         mOverviewContext = c;
         mAppContext = (PowerConsumptionManagerAppContext) mOverviewContext.getApplicationContext();
         mDensity = mOverviewContext.getResources().getDisplayMetrics().density;
+        mDecimalFormat.setRoundingMode(RoundingMode.HALF_UP);
     }
 
     public void initCurrentValuesContext(Context c) {
@@ -112,17 +121,11 @@ public class DashboardHelper {
     public void setSummaryRatio(String key, int ratio) {
         WaveLoadingView wlv = mSummaryViews.get(key);
 
-        // TODO: make dynamic
-        if(mOverviewContext.getString(R.string.text_occupation).equals(key)) {
-            if(ratio > 3) {
-                wlv.setWaveColor(ContextCompat.getColor(mOverviewContext, R.color.colorProgressPositive));
-            } else if (ratio < -3) {
-                wlv.setWaveColor(ContextCompat.getColor(mOverviewContext, R.color.colorProgressNegative));
-            } else {
-                wlv.setWaveColor(ContextCompat.getColor(mOverviewContext, R.color.colorProgressNeutral));
-            }
+        if(mOverviewContext.getString(R.string.text_consumption).equals(key)) {
+            wlv.setWaveColor(mAppContext.getCurrentPCMData().getConsumptionColor());
+            // TODO: Make dynamic (currently fixed scale with +15 to -15 --> 3.3)
             int absRatio = Math.abs(ratio);
-            int progress = (Math.signum((double) ratio) >= 0) ? (int) (50 + absRatio * 2.5) : (int) (50 - absRatio * 2.5);
+            int progress = (Math.signum((double) ratio) >= 0) ? (int) (50 + absRatio * 3.3) : (int) (50 - absRatio * 2.5);
             wlv.setProgressValue(progress);
         } else {
             wlv.setProgressValue(ratio);
@@ -132,6 +135,10 @@ public class DashboardHelper {
 
     public void updateSummaryRatio(String key, int ratio, String unit) {
         this.setSummaryRatio(key, ratio);
+    }
+
+    public void updateDashboard() {
+        Toast.makeText(mOverviewContext, "Update Dashboard", Toast.LENGTH_LONG).show();
     }
 
 
@@ -166,6 +173,8 @@ public class DashboardHelper {
     }
 
     public void generateComponentUIElement(String componentId, int color) {
+        CurrentPCMComponentData componentData = mAppContext.getCurrentPCMData().getCurrentComponentData().get(componentId);
+
         // RelativeLayout container
         RelativeLayout rlContainer = new RelativeLayout(mCurrentValuesContext);
         LinearLayout.LayoutParams rlContainerLayoutParams = new LinearLayout.LayoutParams(
@@ -196,7 +205,8 @@ public class DashboardHelper {
             componentId,
             this.generateModelForComponent(
                 "",
-                30, // TODO Progress
+                /* TODO: Make dynamic (currently fixed scale with 0 to 10 kW) */
+                (int) componentData.getPower() * 10,
                 ContextCompat.getColor(mCurrentValuesContext, R.color.colorArcBackground),
                 color
             )
@@ -255,7 +265,7 @@ public class DashboardHelper {
 
         TextView tvValue = new TextView(mCurrentValuesContext);
         tvValue.setId(handleNewId(componentId + "powerId", GENERATED_POWER_IDS));
-        tvValue.setText("5.6");
+        tvValue.setText(mDecimalFormat.format(componentData.getPower()));
         tvValue.setTextSize(40);
         tvValue.setTextColor(ContextCompat.getColor(mCurrentValuesContext, R.color.colorTextPrimary));
         tvValue.setLayoutParams(tvValueLabelLayoutParams);
@@ -334,13 +344,15 @@ public class DashboardHelper {
     }
 
     public void setupDailyBarChartData() {
-        ArrayList<String> xValues = mAppContext.getComponents();
+        LinkedHashMap<String, CurrentPCMComponentData> dataMap = mAppContext.getCurrentPCMData().getCurrentComponentData();
+        ArrayList<String> xValues = new ArrayList<>(dataMap.keySet());
         ArrayList<BarEntry> yValuesCost = new ArrayList<>();
         ArrayList<BarEntry> yValuesEnergy = new ArrayList<>();
 
-        for(int i = 0; i < mAppContext.getComponents().size(); i++) {
-            yValuesCost.add(new BarEntry((float) (Math.random() * 100), i));
-            yValuesEnergy.add(new BarEntry((float) (Math.random() * 100), i));
+        int i = 0;
+        for (Map.Entry<String, CurrentPCMComponentData> entry : dataMap.entrySet()) {
+            yValuesCost.add(new BarEntry((float) entry.getValue().getCost(), i));
+            yValuesEnergy.add(new BarEntry((float) entry.getValue().getEnergy(), i++));
         }
 
         BarDataSet energySet, costSet;

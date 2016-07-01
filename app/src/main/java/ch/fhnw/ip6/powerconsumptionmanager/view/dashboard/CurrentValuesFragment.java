@@ -14,11 +14,16 @@ import android.widget.RelativeLayout;
 
 import com.gigamole.library.ArcProgressStackView;
 
+import java.util.LinkedHashMap;
+import java.util.TreeMap;
+
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.CurrentPCMComponentData;
+import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.util.helper.DashboardHelper;
 
 public class CurrentValuesFragment extends Fragment {
-    private DashboardHelper mDashBoardHelper;
+    private DashboardHelper mDashboardHelper;
 
     public static CurrentValuesFragment newInstance() {
         return new CurrentValuesFragment();
@@ -28,11 +33,12 @@ public class CurrentValuesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_now, container, false);
 
-        mDashBoardHelper = DashboardHelper.getInstance();
-        mDashBoardHelper.initCurrentValuesContext(getContext());
-        mDashBoardHelper.setDynamicLayoutContainer((LinearLayout) view.findViewById(R.id.dynamic_components_container));
+        mDashboardHelper = DashboardHelper.getInstance();
+        mDashboardHelper.initCurrentValuesContext(getContext());
+        mDashboardHelper.setDynamicLayoutContainer((LinearLayout) view.findViewById(R.id.dynamic_components_container));
+        mDashboardHelper.getArcsvIdsMap().clear();
 
-        if(mDashBoardHelper.getDynamicLayoutContainerWidth() == 0 && mDashBoardHelper.getDynamicLayoutContainerHeight() == 0) {
+        if(mDashboardHelper.getDynamicLayoutContainerWidth() == 0 && mDashboardHelper.getDynamicLayoutContainerHeight() == 0) {
             setupViewTreeObserver(view);
         }
         return view;
@@ -42,13 +48,17 @@ public class CurrentValuesFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mDashBoardHelper.getArcsvIdsMap().clear();
+        PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
+        LinkedHashMap<String, CurrentPCMComponentData> dataMap = appContext.getCurrentPCMData().getCurrentComponentData();
 
-        mDashBoardHelper.generateComponentUIElement("Boiler", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer1));
-        mDashBoardHelper.generateComponentUIElement("Wärmepumpe", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer2));
-        mDashBoardHelper.generateComponentUIElement("Emobil", ContextCompat.getColor(getContext(), R.color.colorDynamicConsumer3));
+        for (String key : dataMap.keySet()) {
+            mDashboardHelper.generateComponentUIElement(
+                key,
+                ContextCompat.getColor(getContext(), R.color.colorArcProgress)
+            );
+        }
 
-        mDashBoardHelper.displayAnimated();
+        mDashboardHelper.displayAnimated();
     }
 
     private void setupViewTreeObserver(View view) {
@@ -63,18 +73,18 @@ public class CurrentValuesFragment extends Fragment {
                     dynamicContentContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
 
-                mDashBoardHelper.setDynamicLayoutContainerWidth(dynamicContentContainer.getWidth());
-                mDashBoardHelper.setDynamicLayoutContainerHeight(dynamicContentContainer.getWidth());
+                mDashboardHelper.setDynamicLayoutContainerWidth(dynamicContentContainer.getWidth());
+                mDashboardHelper.setDynamicLayoutContainerHeight(dynamicContentContainer.getWidth());
 
                 RelativeLayout.LayoutParams arcsvLayoutParams = new RelativeLayout.LayoutParams(
                         dynamicContentContainer.getWidth(),
                         dynamicContentContainer.getHeight()
                 );
                 arcsvLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-                int margins = (int) mDashBoardHelper.getDensity() * 8;
+                int margins = (int) mDashboardHelper.getDensity() * 8;
                 arcsvLayoutParams.setMargins(margins, margins, margins, margins);
 
-                for (int id : mDashBoardHelper.getArcsvIdsMap().values()) {
+                for (int id : mDashboardHelper.getArcsvIdsMap().values()) {
                     ArcProgressStackView arcsv = (ArcProgressStackView) getView().findViewById(id);
                     arcsv.setLayoutParams(arcsvLayoutParams);
                 }

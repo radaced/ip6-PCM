@@ -1,6 +1,7 @@
 package ch.fhnw.ip6.powerconsumptionmanager.view.dashboard;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -10,17 +11,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
+import ch.fhnw.ip6.powerconsumptionmanager.network.GetCurrentPCMDataAsyncTask;
 import ch.fhnw.ip6.powerconsumptionmanager.util.helper.DashboardHelper;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
-public class OverviewFragment extends Fragment {
+public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     private enum Mode { DAILY, NOW }
 
     private PowerConsumptionManagerAppContext mAppContext;
-    private DashboardHelper mDashBoardHelper;
+    private DashboardHelper mDashboardHelper;
+    private Handler mUpdateHandler;
     private Mode mMode;
 
     public static OverviewFragment newInstance() {
@@ -41,32 +46,35 @@ public class OverviewFragment extends Fragment {
         mAppContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
         mMode = Mode.NOW;
 
-        mDashBoardHelper = DashboardHelper.getInstance();
-        mDashBoardHelper.initOverviewContext(getContext());
+        mDashboardHelper = DashboardHelper.getInstance();
+        mDashboardHelper.initOverviewContext(getContext());
 
-        mDashBoardHelper.addSummaryView(
+        mDashboardHelper.addSummaryView(
             getString(R.string.text_autarchy),
             (WaveLoadingView) getView().findViewById(R.id.wlvAutarchy),
             mAppContext.UNIT_PERCENTAGE
         );
-        mDashBoardHelper.addSummaryView(
+        mDashboardHelper.addSummaryView(
             getString(R.string.text_selfsupply),
             (WaveLoadingView) getView().findViewById(R.id.wlvSelfsupply),
             mAppContext.UNIT_PERCENTAGE
         );
-        mDashBoardHelper.addSummaryView(
-            getString(R.string.text_occupation),
-            (WaveLoadingView) getView().findViewById(R.id.wlvOccupation),
+        mDashboardHelper.addSummaryView(
+            getString(R.string.text_consumption),
+            (WaveLoadingView) getView().findViewById(R.id.wlvConsumption),
             mAppContext.UNIT_KW
         );
 
-        mDashBoardHelper.setSummaryRatio(getString(R.string.text_autarchy), 50);
-        mDashBoardHelper.setSummaryRatio(getString(R.string.text_selfsupply), 20);
-        mDashBoardHelper.setSummaryRatio(getString(R.string.text_occupation), -10);
+        mDashboardHelper.setSummaryRatio(getString(R.string.text_autarchy), (int) mAppContext.getCurrentPCMData().getAutarchy());
+        mDashboardHelper.setSummaryRatio(getString(R.string.text_selfsupply), (int) mAppContext.getCurrentPCMData().getSelfsupply());
+        mDashboardHelper.setSummaryRatio(getString(R.string.text_consumption), (int) mAppContext.getCurrentPCMData().getConsumption());
 
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.dynamic_content_fragment, CurrentValuesFragment.newInstance());
         transaction.commit();
+
+        // Instantiate the update handler
+        mUpdateHandler = new Handler();
     }
 
     @Override
@@ -105,4 +113,40 @@ public class OverviewFragment extends Fragment {
 
         return true;
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(mUpdateHandler != null) {
+            Toast.makeText(getContext(), "onStop", Toast.LENGTH_LONG).show();
+            mUpdateHandler.removeCallbacks(updateCurrentPCMData);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mUpdateHandler != null) {
+            Toast.makeText(getContext(), "onResume", Toast.LENGTH_LONG).show();
+            mUpdateHandler.postDelayed(updateCurrentPCMData, 10000);
+        }
+    }
+
+    @Override
+    public void asyncTaskFinished(boolean success) {
+        mDashboardHelper.updateDashboard();
+    }
+
+    private final Runnable updateCurrentPCMData = new Runnable() {
+        public void run() {
+        new GetCurrentPCMDataAsyncTask(
+                mAppContext,
+                getInstance(),
+                "http://" + mAppContext.getIPAdress() + ":"
+        ).execute();
+        mUpdateHandler.postDelayed(this, 10000);
+        }
+    };
+
+    private OverviewFragment getInstance() { return this; }
 }

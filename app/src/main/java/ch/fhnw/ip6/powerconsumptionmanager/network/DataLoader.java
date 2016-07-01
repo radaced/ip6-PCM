@@ -44,7 +44,6 @@ public class DataLoader {
      * getData call to get consumption data (24h) and names of all connected devices
      * @param url Address that needs to be called
      */
-    //
     public void loadConsumptionData(String url) {
         Request request = new Request.Builder()
                 .url(url)
@@ -140,7 +139,6 @@ public class DataLoader {
         });
     }
 
-
     /**
      * Get distance and duration to reach it between origin and destination
      * @param url Address that needs to be called
@@ -179,9 +177,9 @@ public class DataLoader {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    //
     public void synchronizeChargePlan(String url) throws ExecutionException, InterruptedException {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        /* TODO: not really async */
         String data = new PlanAsyncStringBuilderTask(mAppContext).execute().get();
 
         if(!data.equals("")) {
@@ -220,7 +218,7 @@ public class DataLoader {
      * @return true when no successful, false when errors occured
      * @throws IOException
      */
-    //
+    /* TODO: Move to PlanAsyncStringBuilderTask */
     public boolean processRoutes(Response response) throws IOException {
         boolean success = true;
         try {

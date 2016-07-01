@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.model;
+package ch.fhnw.ip6.powerconsumptionmanager.model.settings;
 
 import java.util.ArrayList;
 

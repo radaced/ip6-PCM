@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.model;
+package ch.fhnw.ip6.powerconsumptionmanager.model.settings;
 
 public abstract class PCMSetting {
     private String mName;

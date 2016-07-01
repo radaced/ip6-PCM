@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- App Scheme -->
+    <!--****** App Scheme ******-->
     <color name="colorPrimary">#859aa4</color>
     <color name="colorPrimaryDark">#263238</color>
     <color name="colorPrimaryLight">#ffffff</color>
@@ -13,19 +13,19 @@
     <color name="colorTextPrimary">#ffffff</color>
     <color name="colorTextPrimaryInverse">#000000</color>
 
-    <!-- Navigation drawer -->
+    <!--****** Navigation drawer ******-->
     <color name="colorNavDrawerHeader">#7f96a1</color>
     <color name="colorNavDrawerBackground">#b0bec5</color>
     <color name="colorNavDrawerItemSelected">#ffffff</color>
     <color name="colorNavDrawerDivider">#7f96a1</color>
 
-    <!-- Caldroid/Chart -->
+    <!--****** Caldroid/Chart ******-->
     <color name="colorChartBackground">#eceff1</color>
     <color name="colorCaldroidBackground">#eceff1</color>
     <color name="colorCaldroidDateDisabled">#294c5d</color>
     <color name="colorCaldroidInfoView">#b0bec5</color>
 
-    <!-- Graph Colors -->
+    <!--****** Graph Colors ******-->
     <array name="colorsGraph">
         <item>#008040</item>
         <item>#f35d5d</item>
@@ -37,21 +37,12 @@
         <item>#fa9c47</item>
     </array>
 
-    <!-- Dashboard -->
+    <!--****** Dashboard ******-->
     <color name="colorArcBackground">#bcc8ce</color>
-    <color name="colorProducer">#008040</color>
-    <color name="colorConsumer">#f35d5d</color>
-    <color name="colorDynamicConsumer1">#0041dc</color>
-    <color name="colorDynamicConsumer2">#3399ff</color>
-    <color name="colorDynamicConsumer3">#ff00ff</color>
-    <color name="colorDynamicConsumer4">#000000</color>
-    <color name="colorDynamicConsumer5">#64ff00</color>
-    <color name="colorDynamicConsumer6">#fa9c47</color>
+    <color name="colorArcProgress">#1B4559</color>
 
+    <!-- Wave loading views -->
     <color name="colorProgressBorder">#bcc8ce</color>
-    <color name="colorProgressNeutral">#e4db15</color>
-    <color name="colorProgressPositive">#008040</color>
-    <color name="colorProgressNegative">#f35d5d</color>
     <color name="colorProgressAutarchy">#008040</color>
     <color name="colorProgressPowerConsumption">#0041dc</color>
 </resources>

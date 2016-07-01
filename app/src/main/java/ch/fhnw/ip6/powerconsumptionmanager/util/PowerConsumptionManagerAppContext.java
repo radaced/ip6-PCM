@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionChartDataModel;
 import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformationModel;
+import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.CurrentPCMData;
 
 /**
  * Application context (storage of global app data and data received from web requests)
@@ -16,7 +17,13 @@ public class PowerConsumptionManagerAppContext extends Application {
     public final String UNIT_PERCENTAGE = "%";
 
     private String mIPAdress;
-    private boolean isOnline;
+    private boolean isOnline = true;
+
+    /* Dashboard data */
+    private CurrentPCMData mCurrentPCMData;
+
+
+
     private ArrayList<ConsumptionChartDataModel> mConsumptionData = new ArrayList<>();
     private ArrayList<String> mComponents = new ArrayList<>();
     private RouteInformationModel mRouteInformation;
@@ -35,6 +42,14 @@ public class PowerConsumptionManagerAppContext extends Application {
 
     public void setIsOnline(boolean isOnline) {
         this.isOnline = isOnline;
+    }
+
+    public CurrentPCMData getCurrentPCMData() {
+        return mCurrentPCMData;
+    }
+
+    public void setCurrentPCMData(CurrentPCMData mCurrentPCMData) {
+        this.mCurrentPCMData = mCurrentPCMData;
     }
 
     public void setConsumptionData(ArrayList<ConsumptionChartDataModel> mConsumptionData) {

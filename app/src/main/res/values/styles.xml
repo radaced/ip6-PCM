@@ -1,5 +1,5 @@
 <resources>
-    <!-- Base application theme -->
+    <!--****** Base application theme ******-->
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -13,12 +13,12 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <!-- Nav drawer list divider -->
+    <!--****** Nav drawer list divider ******-->
     <style name="CustomNavDrawerDivider">
         <item name="android:listDivider">@color/colorNavDrawerDivider</item>
     </style>
 
-    <!-- Custom caldroid theme -->
+    <!--****** Custom caldroid theme ******-->
     <style name="CustomCaldroidTheme" parent="CaldroidDefault">
         <item name="styleCaldroidViewLayout">@style/CustomCaldroidViewLayout</item>
         <item name="styleCaldroidMonthName">@style/CustomCaldroidMonthName</item>
@@ -51,7 +51,7 @@
     <style name="CustomCaldroidSquareCell" parent="CustomCaldroidCell" />
 
     <!-- TODO: Dialog-Theming -->
-    <!-- Custom dialog theme
+    <!--****** Custom dialog theme ******
     <style name="CustomDialogTheme">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowTitleStyle">@style/CustomDialogTitle</item>
