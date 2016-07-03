@@ -47,48 +47,10 @@
 
     <style name="CustomCaldroidSquareCell" parent="CustomCaldroidCell" />
 
-    <!-- TODO: Dialog-Theming -->
-    <!--****** Custom dialog theme ******
-    <style name="CustomDialogTheme">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowTitleStyle">@style/CustomDialogTitle</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
-        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:textAppearanceMedium">@style/CustomDialogTextAppearance</item>
-        <item name="android:buttonBarStyle">@style/CustomDialogButtonBar</item>
-        <item name="android:buttonBarButtonStyle">@style/CustomDialogBorderlessButton</item>
+    <!--****** Custom dialog theme ******-->
+    <style name="CustomDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorPrimaryAccent</item>
+        <item name="android:textColorPrimary">@color/colorTextPrimary</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
-
-    <style name="CustomDialogBorderlessButton">
-        <item name="android:background">@color/colorListView</item>
-        <item name="android:textColor">@color/colorTextPrimaryInverse</item>
-        <item name="android:padding">10dp</item>
-    </style>
-
-    <style name="CustomDialogButtonBar">
-        <item name="android:dividerPadding">3dp</item>
-        <item name="android:showDividers">end</item>
-        <item name="android:background">@color/colorListView</item>
-    </style>
-
-    <style name="CustomDialogTitle">
-        <item name="android:maxLines">1</item>
-        <item name="android:scrollHorizontally">false</item>
-        <item name="android:dividerHeight">10dp</item>
-    </style>
-
-    <style name="CustomDialogTextAppearance">
-        <item name="android:textSize">10sp</item>
-        <item name="android:textColor">@color/colorTextPrimaryInverse</item>
-    </style>
-
-    <style name="CustomDialogStyle">
-        <item name="android:topDark">@color/colorPrimary</item>
-        <item name="android:centerDark">@color/colorChartBackground</item>
-        <item name="android:bottomDark">@color/colorListView</item>
-        <item name="android:bottomMedium">@color/colorPrimary</item>
-    </style>
-    -->
 </resources>

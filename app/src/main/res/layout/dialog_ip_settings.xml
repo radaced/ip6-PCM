@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:paddingTop="@dimen/double_space_vertical_margin">
+    android:paddingTop="20dp">
 
     <EditText
         android:layout_width="@dimen/text_ip_width"
@@ -26,7 +26,7 @@
         android:textColor="@color/colorTextPrimaryInverse"/>
 
     <EditText
-        android:layout_width="40dp"
+        android:layout_width="@dimen/text_ip_width"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/text_ip_margin"
         android:layout_marginRight="@dimen/text_ip_margin"
@@ -45,7 +45,7 @@
         android:textColor="@color/colorTextPrimaryInverse"/>
 
     <EditText
-        android:layout_width="40dp"
+        android:layout_width="@dimen/text_ip_width"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/text_ip_margin"
         android:layout_marginRight="@dimen/text_ip_margin"

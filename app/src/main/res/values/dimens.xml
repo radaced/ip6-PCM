@@ -13,7 +13,7 @@
 
     <!--****** Splashscreen ******-->
     <dimen name="text_ip_margin">4dp</dimen>
-    <dimen name="text_ip_width">60dp</dimen>
+    <dimen name="text_ip_width">40dp</dimen>
     <dimen name="button_continue_top_margin">8dp</dimen>
     <dimen name="button_continue_space">10dp</dimen>
 
