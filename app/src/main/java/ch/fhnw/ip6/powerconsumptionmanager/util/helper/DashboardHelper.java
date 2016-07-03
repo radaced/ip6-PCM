@@ -1,5 +1,6 @@
 package ch.fhnw.ip6.powerconsumptionmanager.util.helper;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gigamole.library.ArcProgressStackView;
 import com.gigamole.library.ArcProgressStackView.IndicatorOrientation;
@@ -23,6 +23,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
@@ -44,20 +44,16 @@ import me.itangqi.waveloadingview.WaveLoadingView;
 public class DashboardHelper {
     private static DashboardHelper mInstance;
 
-    private static final AtomicInteger GENERATED_ID = new AtomicInteger(1);
-    private static final HashMap<String, Integer> GENERATED_ARCSV_IDS = new HashMap<>();
-    private static final HashMap<String, Integer> GENERATED_POWER_IDS = new HashMap<>();
-    private static final HashMap<String, Integer> GENERATED_LABELCONTAINER_IDS = new HashMap<>();
-
     private PowerConsumptionManagerAppContext mAppContext;
     private Context mOverviewContext;
     private Context mCurrentValuesContext;
     private Context mDailyValuesContext;
 
-    private HashMap<String, ArcProgressStackView> mComponentViews = new HashMap<>();;
+    private HashMap<String, ArcProgressStackView> mComponentViews = new HashMap<>();
+    private HashMap<String, TextView> mComponentPowerLabels = new HashMap<>();
     private HashMap<String, WaveLoadingView> mSummaryViews = new HashMap<>();
     private float mDensity;
-    private DecimalFormat mDecimalFormat = new DecimalFormat("#.#");
+    private DecimalFormat mOneDigitAfterCommaFormat = new DecimalFormat("#.#");
 
     private LinearLayout mDynamicLayoutContainer;
     private int mDynamicLayoutContainerWidth = 0;
@@ -76,18 +72,6 @@ public class DashboardHelper {
         return mInstance;
     }
 
-    // Implementation from google
-    public static int generateViewId() {
-        for (;;) {
-            final int result = GENERATED_ID.get();
-            // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
-            int newValue = result + 1;
-            if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
-            if (GENERATED_ID.compareAndSet(result, newValue)) {
-                return result;
-            }
-        }
-    }
 
 
     /**
@@ -97,7 +81,7 @@ public class DashboardHelper {
         mOverviewContext = c;
         mAppContext = (PowerConsumptionManagerAppContext) mOverviewContext.getApplicationContext();
         mDensity = mOverviewContext.getResources().getDisplayMetrics().density;
-        mDecimalFormat.setRoundingMode(RoundingMode.HALF_UP);
+        mOneDigitAfterCommaFormat.setRoundingMode(RoundingMode.HALF_UP);
     }
 
     public void initCurrentValuesContext(Context c) {
@@ -109,6 +93,7 @@ public class DashboardHelper {
     }
 
 
+
     /**
      * OVERVIEW FRAGMENT
      */
@@ -118,28 +103,36 @@ public class DashboardHelper {
         mSummaryViews.put(key, wlv);
     }
 
-    public void setSummaryRatio(String key, int ratio) {
+    public void setSummaryRatio(String key, double ratio) {
         WaveLoadingView wlv = mSummaryViews.get(key);
 
+        double progress;
         if(mOverviewContext.getString(R.string.text_consumption).equals(key)) {
             wlv.setWaveColor(mAppContext.getCurrentPCMData().getConsumptionColor());
             // TODO: Make dynamic (currently fixed scale with +15 to -15 --> 3.3)
-            int absRatio = Math.abs(ratio);
-            int progress = (Math.signum((double) ratio) >= 0) ? (int) (50 + absRatio * 3.3) : (int) (50 - absRatio * 2.5);
-            wlv.setProgressValue(progress);
+            int absRatio = (int) Math.abs(ratio);
+            progress = (Math.signum(ratio) >= 0) ? (int) (50 + absRatio * 3.3) : (int) (50 - absRatio * 2.5);
+            progress = Math.round(progress);
         } else {
-            wlv.setProgressValue(ratio);
+            progress = Math.round(ratio);
         }
-        wlv.setCenterTitle(String.valueOf(ratio));
+
+        wlv.setProgressValue((int) progress);
+        wlv.setCenterTitle(String.valueOf((int) Math.round(ratio)));
     }
 
-    public void updateSummaryRatio(String key, int ratio, String unit) {
+    public void updateSummaryRatio(String key, double ratio) {
         this.setSummaryRatio(key, ratio);
     }
 
-    public void updateDashboard() {
-        Toast.makeText(mOverviewContext, "Update Dashboard", Toast.LENGTH_LONG).show();
+    public void updateOverview() {
+        CurrentPCMData currentData = mAppContext.getCurrentPCMData();
+
+        updateSummaryRatio(mOverviewContext.getString(R.string.text_autarchy), currentData.getAutarchy());
+        updateSummaryRatio(mOverviewContext.getString(R.string.text_selfsupply), currentData.getSelfsupply());
+        updateSummaryRatio(mOverviewContext.getString(R.string.text_consumption), currentData.getConsumption());
     }
+
 
 
     /**
@@ -149,14 +142,45 @@ public class DashboardHelper {
         mComponentViews.put(key, apsv);
     }
 
+    public void addComponentPowerLabel(String key, TextView tv) {
+        mComponentPowerLabels.put(key, tv);
+    }
+
     public void setPowerForComponent(String key, ArrayList<Model> apsvModels) {
         mComponentViews.get(key).setModels(apsvModels);
     }
 
-    public void updatePowerForComponent(String key, int power) {
+    public void updatePowerForComponent(String key, double power) {
         for(ArcProgressStackView.Model model : mComponentViews.get(key).getModels()) {
-            model.setProgress(power);
+            model.setProgress((int) power);
         }
+    }
+
+    public void updatePowerLabel(final String key, double power) {
+        TextView powerLabel = mComponentPowerLabels.get(key);
+
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(Float.parseFloat(powerLabel.getText().toString()), (float) power);
+        valueAnimator.setDuration(2000);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                mComponentPowerLabels.get(key).setText(mOneDigitAfterCommaFormat.format(valueAnimator.getAnimatedValue()));
+            }
+        });
+
+        valueAnimator.start();
+    }
+
+    public void updateCurrentValues() {
+        LinkedHashMap<String, CurrentPCMComponentData> dataMap = mAppContext.getCurrentPCMData().getCurrentComponentData();
+
+        for(Map.Entry<String, CurrentPCMComponentData> entry : dataMap.entrySet()) {
+            /* TODO: Make dynamic (currently fixed scale with 0 to 10 kW) */
+            updatePowerForComponent(entry.getKey(), entry.getValue().getPower() * 10);
+            updatePowerLabel(entry.getKey(), entry.getValue().getPower());
+        }
+
+        displayAnimated();
     }
 
     public ArrayList<Model> generateModelForComponent(String description, int progress, int bgProgressColor, int progressColor) {
@@ -187,8 +211,7 @@ public class DashboardHelper {
 
         // ArcProgressStackView
         ArcProgressStackView arcsv = new ArcProgressStackView(mCurrentValuesContext);
-        arcsv.setId(handleNewId(componentId + "arcsvId", GENERATED_ARCSV_IDS));
-        arcsv.setIsShadowed(true);
+        arcsv.setIsShadowed(false);
         arcsv.setShadowDistance(1);
         arcsv.setShadowRadius(2);
         arcsv.setIsAnimated(true);
@@ -199,7 +222,6 @@ public class DashboardHelper {
         arcsv.setModelBgEnabled(true);
         arcsv.setStartAngle(135);
         arcsv.setSweepAngle(270);
-        arcsv.setIndicatorOrientation(IndicatorOrientation.HORIZONTAL);
         this.addComponentView(componentId, arcsv);
         this.setPowerForComponent(
             componentId,
@@ -237,7 +259,6 @@ public class DashboardHelper {
         llLabelContainerLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 
         LinearLayout llLabelContainer = new LinearLayout(mCurrentValuesContext);
-        llLabelContainer.setId(handleNewId(componentId + "llLabelContainerId", GENERATED_LABELCONTAINER_IDS));
         llLabelContainer.setOrientation(LinearLayout.VERTICAL);
         llLabelContainer.setGravity(Gravity.CENTER);
         llLabelContainer.setLayoutParams(llLabelContainerLayoutParams);
@@ -264,11 +285,12 @@ public class DashboardHelper {
         tvValueLabelLayoutParams.gravity = Gravity.BOTTOM;
 
         TextView tvValue = new TextView(mCurrentValuesContext);
-        tvValue.setId(handleNewId(componentId + "powerId", GENERATED_POWER_IDS));
-        tvValue.setText(mDecimalFormat.format(componentData.getPower()));
+        tvValue.setText(mOneDigitAfterCommaFormat.format(componentData.getPower()));
         tvValue.setTextSize(40);
         tvValue.setTextColor(ContextCompat.getColor(mCurrentValuesContext, R.color.colorTextPrimary));
         tvValue.setLayoutParams(tvValueLabelLayoutParams);
+        this.addComponentPowerLabel(componentId, tvValue);
+
         llValueLabelContainer.addView(tvValue);
 
         TextView tvValueUnit = new TextView(mCurrentValuesContext);
@@ -276,6 +298,7 @@ public class DashboardHelper {
         tvValueUnit.setTextSize(10);
         tvValueUnit.setTextColor(ContextCompat.getColor(mCurrentValuesContext, R.color.colorTextPrimary));
         tvValueUnit.setLayoutParams(tvValueLabelLayoutParams);
+
         llValueLabelContainer.addView(tvValueUnit);
 
         // Textview for component description
@@ -292,8 +315,6 @@ public class DashboardHelper {
         tvComponent.setLayoutParams(tvComponentDescLayoutParams);
         llLabelContainer.addView(tvComponent);
     }
-
-
 
 
 
@@ -346,14 +367,10 @@ public class DashboardHelper {
     public void setupDailyBarChartData() {
         LinkedHashMap<String, CurrentPCMComponentData> dataMap = mAppContext.getCurrentPCMData().getCurrentComponentData();
         ArrayList<String> xValues = new ArrayList<>(dataMap.keySet());
-        ArrayList<BarEntry> yValuesCost = new ArrayList<>();
         ArrayList<BarEntry> yValuesEnergy = new ArrayList<>();
+        ArrayList<BarEntry> yValuesCost = new ArrayList<>();
 
-        int i = 0;
-        for (Map.Entry<String, CurrentPCMComponentData> entry : dataMap.entrySet()) {
-            yValuesCost.add(new BarEntry((float) entry.getValue().getCost(), i));
-            yValuesEnergy.add(new BarEntry((float) entry.getValue().getEnergy(), i++));
-        }
+        fillDataSets(dataMap, yValuesEnergy, yValuesCost);
 
         BarDataSet energySet, costSet;
         energySet = new BarDataSet(yValuesEnergy, "Energy");
@@ -367,7 +384,7 @@ public class DashboardHelper {
         costSet.setValueTextColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
         costSet.setValueTextSize(10f);
 
-        ArrayList<BarDataSet> dataSets = new ArrayList<>();
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(energySet);
         dataSets.add(costSet);
 
@@ -377,16 +394,41 @@ public class DashboardHelper {
         mDailyDataBarChart.setData(data);
     }
 
+    public void updateDailyValues() {
+        if(mDailyDataBarChart.getData() != null && mDailyDataBarChart.getData().getDataSetCount() > 0) {
+            LinkedHashMap<String, CurrentPCMComponentData> dataMap = mAppContext.getCurrentPCMData().getCurrentComponentData();
+            ArrayList<BarEntry> yValuesEnergy = new ArrayList<>();
+            ArrayList<BarEntry> yValuesCost = new ArrayList<>();
+
+            fillDataSets(dataMap, yValuesEnergy, yValuesCost);
+
+            BarDataSet energySet, costSet;
+            energySet = (BarDataSet) mDailyDataBarChart.getData().getDataSetByIndex(0);
+            costSet = (BarDataSet) mDailyDataBarChart.getData().getDataSetByIndex(1);
+            energySet.setYVals(yValuesEnergy);
+            costSet.setYVals(yValuesCost);
+
+            mDailyDataBarChart.getData().notifyDataChanged();
+            mDailyDataBarChart.notifyDataSetChanged();
+            mDailyDataBarChart.invalidate();
+        } else {
+            setupDailyBarChartData();
+        }
+    }
+
+    private void fillDataSets(LinkedHashMap<String, CurrentPCMComponentData> dataMap, ArrayList<BarEntry> yValuesEnergy, ArrayList<BarEntry> yValuesCost) {
+        int i = 0;
+        for (Map.Entry<String, CurrentPCMComponentData> entry : dataMap.entrySet()) {
+            yValuesEnergy.add(new BarEntry((float) entry.getValue().getEnergy(), i));
+            yValuesCost.add(new BarEntry((float) entry.getValue().getCost(), i++));
+        }
+    }
 
 
 
     /**
      * HELPER FUNCTIONS
      */
-    public HashMap<String, Integer> getArcsvIdsMap() {
-        return GENERATED_ARCSV_IDS;
-    }
-
     public void setDynamicLayoutContainer(LinearLayout ll) {
         this.mDynamicLayoutContainer = ll;
     }
@@ -412,16 +454,11 @@ public class DashboardHelper {
         this.mDynamicLayoutContainerHeight = mDynamicLayoutContainerHeight;
     }
 
-    public float getDensity() {
-        return mDensity;
+    public HashMap<String, ArcProgressStackView> getComponentViews() {
+        return mComponentViews;
     }
 
-    private int handleNewId(String key, HashMap<String, Integer> map) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            map.put(key, generateViewId());
-        } else {
-            map.put(key, View.generateViewId());
-        }
-        return map.get(key);
+    public float getDensity() {
+        return mDensity;
     }
 }

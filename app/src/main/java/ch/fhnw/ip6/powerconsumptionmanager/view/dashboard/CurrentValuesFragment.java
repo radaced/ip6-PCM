@@ -36,7 +36,7 @@ public class CurrentValuesFragment extends Fragment {
         mDashboardHelper = DashboardHelper.getInstance();
         mDashboardHelper.initCurrentValuesContext(getContext());
         mDashboardHelper.setDynamicLayoutContainer((LinearLayout) view.findViewById(R.id.dynamic_components_container));
-        mDashboardHelper.getArcsvIdsMap().clear();
+        mDashboardHelper.getComponentViews().clear();
 
         if(mDashboardHelper.getDynamicLayoutContainerWidth() == 0 && mDashboardHelper.getDynamicLayoutContainerHeight() == 0) {
             setupViewTreeObserver(view);
@@ -84,8 +84,7 @@ public class CurrentValuesFragment extends Fragment {
                 int margins = (int) mDashboardHelper.getDensity() * 8;
                 arcsvLayoutParams.setMargins(margins, margins, margins, margins);
 
-                for (int id : mDashboardHelper.getArcsvIdsMap().values()) {
-                    ArcProgressStackView arcsv = (ArcProgressStackView) getView().findViewById(id);
+                for (ArcProgressStackView arcsv : mDashboardHelper.getComponentViews().values()) {
                     arcsv.setLayoutParams(arcsvLayoutParams);
                 }
             }

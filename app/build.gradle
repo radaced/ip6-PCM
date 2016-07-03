@@ -30,7 +30,7 @@ dependencies {
     compile 'com.android.support:preference-v14:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support:design:23.4.0'
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
     compile 'com.roomorama:caldroid:2.3.1'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.github.gigamole.arcprogressstackview:library:1.0.3'

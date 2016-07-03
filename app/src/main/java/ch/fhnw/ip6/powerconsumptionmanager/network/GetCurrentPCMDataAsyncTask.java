@@ -86,10 +86,10 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
             mCurrentPCMData.setConsumption(dataJson.getDouble("Bezug(kW)"));
 
             int occupationColorCode = dataJson.getInt("Bezug(Farbe)");
-            int red = Color.red(occupationColorCode);
-            int blue = Color.blue(occupationColorCode);
-            int green = Color.green(occupationColorCode);
-            mCurrentPCMData.setConsumptionColor(Color.rgb(red, blue, green));
+            int red = occupationColorCode >> 16 & 0xff;
+            int green = occupationColorCode >> 8 & 0xff;
+            int blue = occupationColorCode & 0xff;
+            mCurrentPCMData.setConsumptionColor(Color.rgb(red, green, blue));
         } catch (JSONException e) {
             Log.e(TAG, "JSON exception while processing current statistics data.");
             success = false;

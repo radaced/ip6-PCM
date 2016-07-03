@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
@@ -34,6 +33,7 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mAppContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
         setHasOptionsMenu(true);
 
@@ -43,9 +43,8 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mAppContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
-        mMode = Mode.NOW;
 
+        mMode = Mode.NOW;
         mDashboardHelper = DashboardHelper.getInstance();
         mDashboardHelper.initOverviewContext(getContext());
 
@@ -118,7 +117,6 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     public void onStop() {
         super.onStop();
         if(mUpdateHandler != null) {
-            Toast.makeText(getContext(), "onStop", Toast.LENGTH_LONG).show();
             mUpdateHandler.removeCallbacks(updateCurrentPCMData);
         }
     }
@@ -127,14 +125,18 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     public void onResume() {
         super.onResume();
         if(mUpdateHandler != null) {
-            Toast.makeText(getContext(), "onResume", Toast.LENGTH_LONG).show();
             mUpdateHandler.postDelayed(updateCurrentPCMData, 10000);
         }
     }
 
     @Override
     public void asyncTaskFinished(boolean success) {
-        mDashboardHelper.updateDashboard();
+        mDashboardHelper.updateOverview();
+        if(mMode == Mode.NOW) {
+            mDashboardHelper.updateCurrentValues();
+        } else {
+            mDashboardHelper.updateDailyValues();
+        }
     }
 
     private final Runnable updateCurrentPCMData = new Runnable() {

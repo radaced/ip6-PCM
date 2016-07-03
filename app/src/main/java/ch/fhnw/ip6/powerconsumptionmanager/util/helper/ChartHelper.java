@@ -148,8 +148,9 @@ public class ChartHelper {
             list.add(mConsumptionDataSet.get(i));
         }
 
-        LineData data = new LineData(this.getXValues(), list);
-        mConsumptionChart.setData(data);
+        /* TODO: doens't work after update of library */
+//        LineData data = new LineData(this.getXValues(), list);
+//        mConsumptionChart.setData(data);
     }
 
     /**
@@ -165,8 +166,9 @@ public class ChartHelper {
             list.add(mConsumptionDataSet.get(i));
         }
 
-        LineData data = new LineData(this.getXValues(), list);
-        mConsumptionChart.setData(data);
+        /* TODO: doens't work after update of library */
+//        LineData data = new LineData(this.getXValues(), list);
+//        mConsumptionChart.setData(data);
     }
 
 
