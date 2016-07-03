@@ -38,8 +38,13 @@
     </array>
 
     <!--****** Dashboard ******-->
+    <!-- Arc progress views -->
     <color name="colorArcBackground">#bcc8ce</color>
     <color name="colorArcProgress">#1B4559</color>
+
+    <!-- Daily values chart -->
+    <color name="colorChartEnergyBar">#0a2e3f</color>
+    <color name="colorChartCostBar">#2f5a6f</color>
 
     <!-- Wave loading views -->
     <color name="colorProgressBorder">#bcc8ce</color>

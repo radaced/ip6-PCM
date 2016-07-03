@@ -219,7 +219,7 @@ public class DashboardHelper {
         arcsv.setAnimationDuration(2000);
         arcsv.setIsDragged(false);
         arcsv.setTextColor(ContextCompat.getColor(mCurrentValuesContext, android.R.color.transparent));
-        arcsv.setDrawWidthFraction((float) 0.15);
+        arcsv.setDrawWidthFraction((float) 0.17);
         arcsv.setModelBgEnabled(true);
         arcsv.setStartAngle(135);
         arcsv.setSweepAngle(270);
@@ -329,18 +329,23 @@ public class DashboardHelper {
         mDailyDataBarChart.setDrawBorders(false);
         mDailyDataBarChart.setDescription(null);
         mDailyDataBarChart.setNoDataText(mDailyValuesContext.getString(R.string.chart_no_data));
-        mDailyDataBarChartDrawer.setColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimaryInverse));
-        mDailyDataBarChart.setMinimumWidth((int) (mAppContext.getComponents().size() * mDensity * 150));
+        mDailyDataBarChartDrawer.setColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
+        mDailyDataBarChart.setMinimumWidth((int) (mAppContext.getComponents().size() * mDensity * 120));
+        mDailyDataBarChart.setHighlightPerTapEnabled(false);
+        mDailyDataBarChart.setHighlightPerDragEnabled(false);
 
         YAxis leftAxis = mDailyDataBarChart.getAxisLeft();
         leftAxis.setDrawAxisLine(false);
         leftAxis.setDrawGridLines(false);
+        leftAxis.setDrawZeroLine(true);
+        leftAxis.setZeroLineColor(Color.WHITE);
         leftAxis.setTextColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
-        leftAxis.setSpaceTop(30);
+        leftAxis.setSpaceTop(40);
 
         mDailyDataBarChart.getAxisRight().setEnabled(false);
 
         XAxis xAxis = mDailyDataBarChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.TOP_INSIDE);
         xAxis.setLabelsToSkip(0);
         xAxis.setDrawAxisLine(false);
         xAxis.setDrawGridLines(true);
@@ -349,7 +354,7 @@ public class DashboardHelper {
         xAxis.setTextSize(12f);
 
         Legend l = mDailyDataBarChart.getLegend();
-        l.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
+        l.setPosition(Legend.LegendPosition.ABOVE_CHART_LEFT);
         l.setForm(Legend.LegendForm.CIRCLE);
         l.setTextColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
 
@@ -375,12 +380,12 @@ public class DashboardHelper {
 
         BarDataSet energySet, costSet;
         energySet = new BarDataSet(yValuesEnergy, "Energy");
-        energySet.setColor(Color.BLUE);
+        energySet.setColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorChartEnergyBar));
         energySet.setValueFormatter(new EnergyValueFormatter());
         energySet.setValueTextColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
         energySet.setValueTextSize(10f);
         costSet = new BarDataSet(yValuesCost, "Costs");
-        costSet.setColor(Color.RED);
+        costSet.setColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorChartCostBar));
         costSet.setValueFormatter(new CostValueFormatter());
         costSet.setValueTextColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
         costSet.setValueTextSize(10f);
@@ -393,6 +398,7 @@ public class DashboardHelper {
         data.setGroupSpace(50f);
 
         mDailyDataBarChart.setData(data);
+        mDailyDataBarChart.animateY(3000);
     }
 
     public void updateDailyValues() {

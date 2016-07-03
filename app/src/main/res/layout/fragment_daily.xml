@@ -5,11 +5,6 @@
     tools:context=".view.dashboard.DailyValuesFragment"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/space_vertical_margin"
-        android:background="@color/colorBackground"/>
-
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/dailyDataBarChart"
         android:layout_width="match_parent"

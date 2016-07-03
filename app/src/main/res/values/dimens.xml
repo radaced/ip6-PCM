@@ -25,6 +25,7 @@
     <dimen name="scroll_components_container_padding">10dp</dimen>
     <dimen name="wlv_main_value_size">40sp</dimen>
     <dimen name="wlv_desc_value_size">12sp</dimen>
+    <dimen name="wlv_border_width">8dp</dimen>
 
     <!--****** Connected devices fragment ******-->
     <dimen name="list_item_connected_devices_text_margin">16dp</dimen>
