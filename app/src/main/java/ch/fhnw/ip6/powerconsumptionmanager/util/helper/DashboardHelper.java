@@ -211,9 +211,10 @@ public class DashboardHelper {
 
         // ArcProgressStackView
         ArcProgressStackView arcsv = new ArcProgressStackView(mCurrentValuesContext);
+        // If shadowing is enabled this can result in nasty performance issues!
         arcsv.setIsShadowed(false);
-        arcsv.setShadowDistance(1);
-        arcsv.setShadowRadius(2);
+        //arcsv.setShadowDistance(1);
+        //arcsv.setShadowRadius(2);
         arcsv.setIsAnimated(true);
         arcsv.setAnimationDuration(2000);
         arcsv.setIsDragged(false);
