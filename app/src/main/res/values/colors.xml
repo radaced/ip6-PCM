@@ -4,8 +4,8 @@
     <color name="colorPrimary">#859aa4</color>
     <color name="colorPrimaryDark">#263238</color>
     <color name="colorPrimaryLight">#ffffff</color>
-    <color name="colorAccentPrimary">#ff9100</color>
-    <color name="colorAccentSecondary">#ffcd89</color>
+    <color name="colorPrimaryAccent">#ff9100</color>
+    <color name="colorSecondaryAccent">#ffcd89</color>
     <color name="colorBackground">#859aa4</color>
     <color name="colorTextViewBackground">#eceff1</color>
     <color name="colorListViewItemBackground">#b0bec5</color>
