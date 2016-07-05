@@ -29,7 +29,7 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
     private static final int PERMISSIONS_REQUEST = 0;
 
     private PowerConsumptionManagerAppContext mAppContext;
-    private final Object mLock = new Object();
+    private final Object mAsyncTaskFinishedLock = new Object();
     private volatile int pendingDataToLoad = 2;
 
     @Override
@@ -61,8 +61,8 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
         boolean permissionsGranted = true;
         switch (requestCode) {
             case PERMISSIONS_REQUEST:
-                for(int i = 0; i < grantResults.length; i++) {
-                    if(grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                for (int grantResult : grantResults) {
+                    if (grantResult != PackageManager.PERMISSION_GRANTED) {
                         permissionsGranted = false;
                     }
                 }
@@ -78,11 +78,9 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
 
     /**** Return point from requests that load the consumption data ****/
     @Override
-    public void asyncTaskFinished(boolean success) {
-        synchronized (mLock) {
-            if(!success) {
-                mAppContext.setIsOnline(false);
-            }
+    public void asyncTaskFinished(boolean result) {
+        synchronized (mAsyncTaskFinishedLock) {
+            mAppContext.setIsOnline(result);
             pendingDataToLoad--;
             if(pendingDataToLoad == 0) {
                 changeToMain();

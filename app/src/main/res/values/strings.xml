@@ -13,6 +13,13 @@
     <string name="drawer_open">Opened navigation drawer</string>
     <string name="drawer_close">Closed navigation drawer</string>
 
+    <!--****** Fragment offline ******-->
+    <string name="text_offline">
+        The Power Consumption Manager seems to be unreachable. Please check if you are in the same network and if
+        the IP address is set correctly.
+    </string>
+    <string name="menu_refresh">Refresh</string>
+
     <!--****** Fragment overview ******-->
     <string name="title_frag_overview">Overview</string>
     <string name="text_autarchy">Autarchy</string>

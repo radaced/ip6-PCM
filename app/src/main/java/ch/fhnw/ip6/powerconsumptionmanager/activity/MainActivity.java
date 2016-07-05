@@ -13,8 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.view.ConnectedDevicesFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.ConsumptionFragment;
+import ch.fhnw.ip6.powerconsumptionmanager.view.OfflineFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.dashboard.OverviewFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.SettingsFragment;
 
@@ -26,6 +28,8 @@ import ch.fhnw.ip6.powerconsumptionmanager.view.SettingsFragment;
 public class MainActivity extends AppCompatActivity {
     // Flag if settings have changed
     public static boolean UPDATED = false;
+
+    PowerConsumptionManagerAppContext mAppContext;
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mDrawerNavView;
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAppContext = (PowerConsumptionManagerAppContext) getApplicationContext();
 
         mTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -61,7 +67,11 @@ public class MainActivity extends AppCompatActivity {
 
         if(savedInstanceState == null) {
             setTitle(R.string.title_frag_overview);
-            getSupportFragmentManager().beginTransaction().replace(R.id.flMainContentContainer, new OverviewFragment()).commit();
+            if (mAppContext.isOnline()) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.flMainContentContainer, new OverviewFragment()).commit();
+            } else {
+                getSupportFragmentManager().beginTransaction().replace(R.id.flMainContentContainer, new OfflineFragment()).commit();
+            }
         }
     }
 
@@ -85,25 +95,33 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.this.startActivity(intent);
             MainActivity.this.finish();
         } else {
-            switch (menuItem.getItemId()) {
-                case R.id.nav_home:
-                    fragment = new OverviewFragment();
-                    break;
-                case R.id.nav_connected_devices:
-                    fragment = new ConnectedDevicesFragment();
-                    break;
-                case R.id.nav_consumption_data:
-                    fragment = new ConsumptionFragment();
-                    break;
-                case R.id.nav_cost_statistic:
-                    fragment = new ConsumptionFragment();
-                    break;
-                case R.id.nav_settings:
+            if(mAppContext.isOnline()) {
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_home:
+                        fragment = new OverviewFragment();
+                        break;
+                    case R.id.nav_connected_devices:
+                        fragment = new ConnectedDevicesFragment();
+                        break;
+                    case R.id.nav_consumption_data:
+                        fragment = new ConsumptionFragment();
+                        break;
+                    case R.id.nav_cost_statistic:
+                        fragment = new ConsumptionFragment();
+                        break;
+                    case R.id.nav_settings:
+                        fragment = new SettingsFragment();
+                        break;
+                    default:
+                        fragment = new OverviewFragment();
+                        break;
+                }
+            } else {
+                if(menuItem.getItemId() == R.id.nav_settings) {
                     fragment = new SettingsFragment();
-                    break;
-                default:
-                    fragment = new ConsumptionFragment();
-                    break;
+                } else {
+                    fragment = new OfflineFragment();
+                }
             }
 
             getSupportFragmentManager().beginTransaction().replace(R.id.flMainContentContainer, fragment).commit();

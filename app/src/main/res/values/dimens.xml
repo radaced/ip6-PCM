@@ -11,23 +11,26 @@
     <dimen name="double_space_vertical_margin">8dp</dimen>
     <dimen name="double_space_horizontal_margin">8dp</dimen>
 
-    <!--****** Splashscreen ******-->
+    <!--****** Activity splash screen ******-->
     <dimen name="text_ip_margin">4dp</dimen>
     <dimen name="text_ip_width">40dp</dimen>
     <dimen name="button_continue_top_margin">8dp</dimen>
     <dimen name="button_continue_space">10dp</dimen>
 
-    <!--****** Charge plan fragment ******-->
+    <!--****** Fragment harge plan ******-->
     <dimen name="scroll_info_description">3dp</dimen>
 
-    <!--****** Overview fragment ******-->
+    <!--****** Fragment overview ******-->
     <dimen name="scroll_components_container">3dp</dimen>
     <dimen name="scroll_components_container_padding">10dp</dimen>
     <dimen name="wlv_main_value_size">40sp</dimen>
     <dimen name="wlv_desc_value_size">12sp</dimen>
     <dimen name="wlv_border_width">8dp</dimen>
 
-    <!--****** Connected devices fragment ******-->
+    <!--****** Fragment connected devices ******-->
     <dimen name="list_item_connected_devices_text_margin">16dp</dimen>
+
+    <!--****** Fragment offline *****-->
+    <dimen name="icon_bottom_margin">20dp</dimen>
 
 </resources>

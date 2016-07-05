@@ -130,7 +130,7 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     }
 
     @Override
-    public void asyncTaskFinished(boolean success) {
+    public void asyncTaskFinished(boolean result) {
         mDashboardHelper.updateOverview();
         if(mMode == Mode.NOW) {
             mDashboardHelper.updateCurrentValues();

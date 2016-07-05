@@ -43,7 +43,6 @@ public class SplashFragment extends Fragment {
         }
 
         PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
-        DataLoader loader = new DataLoader(appContext, (DataLoaderCallback) getActivity());
 
         new GetCurrentPCMDataAsyncTask(
             appContext,

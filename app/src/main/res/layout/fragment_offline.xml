@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical"
+              android:gravity="center"
+             tools:context="ch.fhnw.ip6.powerconsumptionmanager.view.OfflineFragment">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/icon_bottom_margin"
+        android:src="@mipmap/ic_problem"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/double_space_horizontal_margin"
+        android:layout_marginStart="@dimen/double_space_horizontal_margin"
+        android:layout_marginRight="@dimen/double_space_horizontal_margin"
+        android:layout_marginEnd="@dimen/double_space_horizontal_margin"
+        android:padding="@dimen/double_space_horizontal_margin"
+        android:gravity="center"
+        android:text="@string/text_offline"
+        android:textAppearance="@android:style/TextAppearance.Medium"/>
+
+</LinearLayout>
