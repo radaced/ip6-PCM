@@ -1,7 +1,9 @@
 package ch.fhnw.ip6.powerconsumptionmanager.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.activity.MainActivity;
+import ch.fhnw.ip6.powerconsumptionmanager.activity.SplashScreenActivity;
+import ch.fhnw.ip6.powerconsumptionmanager.view.dashboard.CurrentValuesFragment;
+import ch.fhnw.ip6.powerconsumptionmanager.view.dashboard.DailyValuesFragment;
 
 public class OfflineFragment extends Fragment {
 
@@ -19,7 +25,10 @@ public class OfflineFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_offline, container, false);
+        View view = inflater.inflate(R.layout.fragment_offline, container, false);
+        setHasOptionsMenu(true);
+
+        return view;
     }
 
     @Override
@@ -30,6 +39,17 @@ public class OfflineFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_retry:
+                Intent intent = new Intent(getActivity(), SplashScreenActivity.class);
+                intent.putExtra("status_info", getString(R.string.text_splash_retry_connecting));
+                getActivity().startActivity(intent);
+                getActivity().finish();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        return true;
     }
 }

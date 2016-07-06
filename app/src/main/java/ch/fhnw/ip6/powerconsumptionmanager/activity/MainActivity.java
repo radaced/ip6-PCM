@@ -91,36 +91,36 @@ public class MainActivity extends AppCompatActivity {
         if(UPDATED) {
             // Navigate to splash screen activity to reload data with new settings
             Intent intent = new Intent(MainActivity.this, SplashScreenActivity.class);
-            intent.putExtra("settings_changed", getString(R.string.text_splash_settings_changed));
+            intent.putExtra("status_info", getString(R.string.text_splash_settings_changed));
             MainActivity.this.startActivity(intent);
             MainActivity.this.finish();
         } else {
             if(mAppContext.isOnline()) {
                 switch (menuItem.getItemId()) {
                     case R.id.nav_home:
-                        fragment = new OverviewFragment();
+                        fragment = OverviewFragment.newInstance();
                         break;
                     case R.id.nav_connected_devices:
-                        fragment = new ConnectedDevicesFragment();
+                        fragment = ConnectedDevicesFragment.newInstance();
                         break;
                     case R.id.nav_consumption_data:
-                        fragment = new ConsumptionFragment();
+                        fragment = ConsumptionFragment.newInstance();
                         break;
                     case R.id.nav_cost_statistic:
-                        fragment = new ConsumptionFragment();
+                        fragment = ConsumptionFragment.newInstance();
                         break;
                     case R.id.nav_settings:
-                        fragment = new SettingsFragment();
+                        fragment = SettingsFragment.newInstance();
                         break;
                     default:
-                        fragment = new OverviewFragment();
+                        fragment = OverviewFragment.newInstance();
                         break;
                 }
             } else {
                 if(menuItem.getItemId() == R.id.nav_settings) {
-                    fragment = new SettingsFragment();
+                    fragment = SettingsFragment.newInstance();
                 } else {
-                    fragment = new OfflineFragment();
+                    fragment = OfflineFragment.newInstance();
                 }
             }
 
@@ -162,5 +162,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         UPDATED = false;
+        mAppContext.setOnline(true);
     }
 }

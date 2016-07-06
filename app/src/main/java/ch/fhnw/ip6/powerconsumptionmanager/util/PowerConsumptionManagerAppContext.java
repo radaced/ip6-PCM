@@ -40,7 +40,7 @@ public class PowerConsumptionManagerAppContext extends Application {
         return isOnline;
     }
 
-    public void setIsOnline(boolean isOnline) {
+    public void setOnline(boolean isOnline) {
         this.isOnline = isOnline;
     }
 

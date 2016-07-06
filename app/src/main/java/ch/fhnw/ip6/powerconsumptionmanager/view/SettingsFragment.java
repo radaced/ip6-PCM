@@ -35,6 +35,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private EditText mIP3;
     private EditText mIP4;
 
+    public static SettingsFragment newInstance() {
+        return new SettingsFragment();
+    }
+
     @Override
     public void onCreate(final Bundle savedInstanceState)
     {
@@ -59,10 +63,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 // Get the previously stored ip
                 String ip = mSettings.getString("IP", "192.168.0.1");
 
-                mIP1 = (EditText) ipDialogView.findViewById(R.id.editIP1);
-                mIP2 = (EditText) ipDialogView.findViewById(R.id.editIP2);
-                mIP3 = (EditText) ipDialogView.findViewById(R.id.editIP3);
-                mIP4 = (EditText) ipDialogView.findViewById(R.id.editIP4);
+                mIP1 = (EditText) ipDialogView.findViewById(R.id.etIP1);
+                mIP2 = (EditText) ipDialogView.findViewById(R.id.etIP2);
+                mIP3 = (EditText) ipDialogView.findViewById(R.id.etIP3);
+                mIP4 = (EditText) ipDialogView.findViewById(R.id.etIP4);
 
                 // Fill in the text boxes with the current values so the user can adapt them
                 StringTokenizer token = new StringTokenizer(ip, ".");

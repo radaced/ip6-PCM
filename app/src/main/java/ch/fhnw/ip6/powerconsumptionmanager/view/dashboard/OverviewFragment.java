@@ -94,6 +94,7 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+
         switch (item.getItemId()) {
             case R.id.action_daily:
                 mMode = Mode.NOW;

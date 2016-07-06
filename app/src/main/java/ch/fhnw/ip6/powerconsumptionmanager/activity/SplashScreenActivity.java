@@ -80,8 +80,12 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
     @Override
     public void asyncTaskFinished(boolean result) {
         synchronized (mAsyncTaskFinishedLock) {
-            mAppContext.setIsOnline(result);
+            if(mAppContext.isOnline()) {
+                mAppContext.setOnline(result);
+            }
+
             pendingDataToLoad--;
+
             if(pendingDataToLoad == 0) {
                 changeToMain();
             }
@@ -90,13 +94,13 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
 
     @Override
     public void DataLoaderDidFinish() {
-        mAppContext.setIsOnline(true);
+        mAppContext.setOnline(true);
         changeToMain();
     }
 
     @Override
     public void DataLoaderDidFail() {
-        mAppContext.setIsOnline(false);
+        mAppContext.setOnline(false);
         changeToMain();
     }
     /********/

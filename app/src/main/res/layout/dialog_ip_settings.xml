@@ -4,7 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:paddingTop="20dp">
+    android:paddingTop="@dimen/padding_ip_dialog"
+    android:paddingLeft="@dimen/padding_screen_border"
+    android:paddingStart="@dimen/padding_screen_border"
+    android:paddingRight="@dimen/padding_screen_border"
+    android:paddingEnd="@dimen/padding_screen_border">
 
     <EditText
         android:layout_width="@dimen/text_ip_width"
@@ -17,7 +21,7 @@
         android:gravity="center"
         android:inputType="number"
         android:maxLength="3"
-        android:id="@+id/editIP1"/>
+        android:id="@+id/etIP1"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -36,7 +40,7 @@
         android:gravity="center"
         android:inputType="number"
         android:maxLength="3"
-        android:id="@+id/editIP2"/>
+        android:id="@+id/etIP2"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -55,7 +59,7 @@
         android:gravity="center"
         android:inputType="number"
         android:maxLength="3"
-        android:id="@+id/editIP3"/>
+        android:id="@+id/etIP3"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -74,6 +78,6 @@
         android:gravity="center"
         android:inputType="number"
         android:maxLength="3"
-        android:id="@+id/editIP4"/>
+        android:id="@+id/etIP4"/>
 
 </LinearLayout>

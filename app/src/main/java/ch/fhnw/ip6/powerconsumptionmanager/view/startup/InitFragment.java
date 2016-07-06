@@ -37,10 +37,10 @@ public class InitFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 boolean correct = true;
-                EditText ip1 = (EditText) getActivity().findViewById(R.id.editIP1);
-                EditText ip2 = (EditText) getActivity().findViewById(R.id.editIP2);
-                EditText ip3 = (EditText) getActivity().findViewById(R.id.editIP3);
-                EditText ip4 = (EditText) getActivity().findViewById(R.id.editIP4);
+                EditText ip1 = (EditText) getActivity().findViewById(R.id.etIP1);
+                EditText ip2 = (EditText) getActivity().findViewById(R.id.etIP2);
+                EditText ip3 = (EditText) getActivity().findViewById(R.id.etIP3);
+                EditText ip4 = (EditText) getActivity().findViewById(R.id.etIP4);
 
                 // Error detection in case IP is invalid
                 if (!isValidIPNumber(ip1)) {
