@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.CostStatisticsFragment"
+    android:orientation="vertical">
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/sbcStatisticsOverview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/sbcStatisticsComponent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+</LinearLayout>

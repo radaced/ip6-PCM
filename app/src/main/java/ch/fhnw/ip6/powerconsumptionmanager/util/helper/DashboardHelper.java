@@ -3,17 +3,13 @@ package ch.fhnw.ip6.powerconsumptionmanager.util.helper;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gigamole.library.ArcProgressStackView;
-import com.gigamole.library.ArcProgressStackView.IndicatorOrientation;
 import com.gigamole.library.ArcProgressStackView.Model;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.Chart;
@@ -31,7 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.CurrentPCMComponentData;
@@ -59,11 +54,14 @@ public class DashboardHelper {
     private int mDynamicLayoutContainerWidth = 0;
     private int mDynamicLayoutContainerHeight = 0;
 
-    private BarChart mDailyDataBarChart;
-    private Paint mDailyDataBarChartDrawer;
+    private BarChart mBCDailyData;
 
     public DashboardHelper() {}
 
+
+    /**
+     * SINGLETON
+     */
     public static synchronized DashboardHelper getInstance() {
         if(mInstance == null) {
             mInstance = new DashboardHelper();
@@ -324,17 +322,17 @@ public class DashboardHelper {
      */
     public void setupDailyBarChartStyle() {
         // Set looks
-        mDailyDataBarChart.setBackgroundColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorBackground));
-        mDailyDataBarChart.setDrawGridBackground(false);
-        mDailyDataBarChart.setDrawBorders(false);
-        mDailyDataBarChart.setDescription(null);
-        mDailyDataBarChart.setNoDataText(mDailyValuesContext.getString(R.string.chart_no_data));
-        mDailyDataBarChartDrawer.setColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
-        mDailyDataBarChart.setMinimumWidth((int) (mAppContext.getComponents().size() * mDensity * 120));
-        mDailyDataBarChart.setHighlightPerTapEnabled(false);
-        mDailyDataBarChart.setHighlightPerDragEnabled(false);
+        mBCDailyData.setBackgroundColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorBackground));
+        mBCDailyData.setDrawGridBackground(false);
+        mBCDailyData.setDrawBorders(false);
+        mBCDailyData.setDescription(null);
+        mBCDailyData.setNoDataText(mDailyValuesContext.getString(R.string.chart_no_data));
+        mBCDailyData.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
+        mBCDailyData.setMinimumWidth((int) (mAppContext.getComponents().size() * mDensity * 120));
+        mBCDailyData.setHighlightPerTapEnabled(false);
+        mBCDailyData.setHighlightPerDragEnabled(false);
 
-        YAxis leftAxis = mDailyDataBarChart.getAxisLeft();
+        YAxis leftAxis = mBCDailyData.getAxisLeft();
         leftAxis.setDrawAxisLine(false);
         leftAxis.setDrawGridLines(false);
         leftAxis.setDrawZeroLine(true);
@@ -342,9 +340,9 @@ public class DashboardHelper {
         leftAxis.setTextColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
         leftAxis.setSpaceTop(40);
 
-        mDailyDataBarChart.getAxisRight().setEnabled(false);
+        mBCDailyData.getAxisRight().setEnabled(false);
 
-        XAxis xAxis = mDailyDataBarChart.getXAxis();
+        XAxis xAxis = mBCDailyData.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.TOP_INSIDE);
         xAxis.setLabelsToSkip(0);
         xAxis.setDrawAxisLine(false);
@@ -353,21 +351,21 @@ public class DashboardHelper {
         xAxis.setTextColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
         xAxis.setTextSize(12f);
 
-        Legend l = mDailyDataBarChart.getLegend();
+        Legend l = mBCDailyData.getLegend();
         l.setPosition(Legend.LegendPosition.ABOVE_CHART_LEFT);
         l.setForm(Legend.LegendForm.CIRCLE);
         l.setTextColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
 
         // Set functionality
-        mDailyDataBarChart.setDoubleTapToZoomEnabled(true);
-        mDailyDataBarChart.setTouchEnabled(true);
-        mDailyDataBarChart.setDragEnabled(true);
-        mDailyDataBarChart.setScaleEnabled(true);
-        mDailyDataBarChart.setPinchZoom(true);
+        mBCDailyData.setDoubleTapToZoomEnabled(true);
+        mBCDailyData.setTouchEnabled(true);
+        mBCDailyData.setDragEnabled(true);
+        mBCDailyData.setScaleEnabled(true);
+        mBCDailyData.setPinchZoom(true);
 
         // Set marker view
         //MarkerView mv = new BarChartMarkerView(mDailyValuesContext, R.layout.barchart_markerview);
-        //mDailyDataBarChart.setMarkerView(mv);
+        //mBCDailyData.setMarkerView(mv);
     }
 
     public void setupDailyBarChartData() {
@@ -397,12 +395,12 @@ public class DashboardHelper {
         BarData data = new BarData(xValues, dataSets);
         data.setGroupSpace(50f);
 
-        mDailyDataBarChart.setData(data);
-        mDailyDataBarChart.animateY(3000);
+        mBCDailyData.setData(data);
+        mBCDailyData.animateY(3000);
     }
 
     public void updateDailyValues() {
-        if(mDailyDataBarChart.getData() != null && mDailyDataBarChart.getData().getDataSetCount() > 0) {
+        if(mBCDailyData.getData() != null && mBCDailyData.getData().getDataSetCount() > 0) {
             LinkedHashMap<String, CurrentPCMComponentData> dataMap = mAppContext.getCurrentPCMData().getCurrentComponentData();
             ArrayList<BarEntry> yValuesEnergy = new ArrayList<>();
             ArrayList<BarEntry> yValuesCost = new ArrayList<>();
@@ -410,14 +408,14 @@ public class DashboardHelper {
             fillDataSets(dataMap, yValuesEnergy, yValuesCost);
 
             BarDataSet energySet, costSet;
-            energySet = (BarDataSet) mDailyDataBarChart.getData().getDataSetByIndex(0);
-            costSet = (BarDataSet) mDailyDataBarChart.getData().getDataSetByIndex(1);
+            energySet = (BarDataSet) mBCDailyData.getData().getDataSetByIndex(0);
+            costSet = (BarDataSet) mBCDailyData.getData().getDataSetByIndex(1);
             energySet.setYVals(yValuesEnergy);
             costSet.setYVals(yValuesCost);
 
-            mDailyDataBarChart.getData().notifyDataChanged();
-            mDailyDataBarChart.notifyDataSetChanged();
-            mDailyDataBarChart.invalidate();
+            mBCDailyData.getData().notifyDataChanged();
+            mBCDailyData.notifyDataSetChanged();
+            mBCDailyData.invalidate();
         } else {
             setupDailyBarChartData();
         }
@@ -441,8 +439,7 @@ public class DashboardHelper {
     }
 
     public void setDailyDataBarChart(BarChart bc) {
-        this.mDailyDataBarChart = bc;
-        this.mDailyDataBarChartDrawer = bc.getPaint(Chart.PAINT_INFO);
+        mBCDailyData = bc;
     }
 
     public int getDynamicLayoutContainerWidth() {

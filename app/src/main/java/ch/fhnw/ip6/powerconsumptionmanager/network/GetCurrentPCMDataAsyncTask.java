@@ -37,7 +37,9 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        boolean success = true;
+        boolean successStatistics;
+        boolean successComponentData;
+
         Request currentStatistics = new Request.Builder()
                 .url(mURL + mAppContext.getString(R.string.webservice_getCurrentStatistics))
                 .build();
@@ -47,28 +49,34 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
         Response response;
         OkHttpClient client = new OkHttpClient();
+
         try {
             response = client.newCall(currentStatistics).execute();
-            if(!handleCurrentStatisticsResponse(response)) {
-                success = false;
+            if(!response.isSuccessful()) {
+                Log.e(TAG, "Response for current statistics data not successful.");
+                return false;
             }
+            successStatistics = handleCurrentStatisticsResponse(response);
         } catch (IOException e) {
             Log.e(TAG, "Exception while loading current statistics data for dashboard.");
-            success = false;
+            successStatistics = false;
         }
+
         try {
             response = client.newCall(currentComponentData).execute();
-            if(!handleCurrentComponentDataResponse(response)) {
-                success = false;
+            if(!response.isSuccessful()) {
+                Log.e(TAG, "Response for current component data not successful.");
+                return false;
             }
+            successComponentData = handleCurrentComponentDataResponse(response);
         } catch (IOException e) {
             Log.e(TAG, "Exception while loading current component data for dashboard.");
-            success = false;
+            successComponentData = false;
         }
 
         mAppContext.setCurrentPCMData(mCurrentPCMData);
 
-        return success;
+        return successStatistics && successComponentData;
     }
 
     @Override

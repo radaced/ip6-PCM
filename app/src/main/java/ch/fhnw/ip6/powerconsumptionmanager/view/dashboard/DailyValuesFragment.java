@@ -25,7 +25,7 @@ public class DailyValuesFragment extends Fragment {
 
         mDashboardHelper = DashboardHelper.getInstance();
         mDashboardHelper.initDailyValuesContext(getContext());
-        mDashboardHelper.setDailyDataBarChart((BarChart) view.findViewById(R.id.dailyDataBarChart));
+        mDashboardHelper.setDailyDataBarChart((BarChart) view.findViewById(R.id.bcDailyData));
 
         return view;
     }

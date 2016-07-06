@@ -31,7 +31,7 @@ public class GetConnectedComponentsAsyncTask extends AsyncTask<Void, Void, Boole
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        boolean success = true;
+        boolean success;
 
         Request request = new Request.Builder()
                 .url(mURL)
@@ -40,11 +40,14 @@ public class GetConnectedComponentsAsyncTask extends AsyncTask<Void, Void, Boole
         OkHttpClient client = new OkHttpClient();
         try {
             Response response = client.newCall(request).execute();
-            if(!handleResponse(response)) {
-                success = false;
+            if(!response.isSuccessful()) {
+                Log.e(TAG, "Response for connected components not successful.");
+                return false;
             }
+            success = handleResponse(response);
         } catch (IOException e) {
             Log.e(TAG, "Exception while loading connected components.");
+            success = false;
         }
 
         return success;
