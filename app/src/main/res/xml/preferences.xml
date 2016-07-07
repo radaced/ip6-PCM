@@ -10,9 +10,17 @@
             android:title="@string/text_pref_calendar_title"
             android:summary="Use google calendar to manage charge plan"/>
 
+        <CheckBoxPreference
+            android:key="updateAutomatically"
+            android:title="@string/text_pref_update_automatically_title"/>
+
         <Preference
             android:key="updateInterval"
             android:title="@string/text_pref_update_interval_title"/>
+
+        <Preference
+            android:key="costStatisticsPeriod"
+            android:title="@string/text_pref_cost_statistics_period_title"/>
 
         <Preference
             android:key="syncPlan"

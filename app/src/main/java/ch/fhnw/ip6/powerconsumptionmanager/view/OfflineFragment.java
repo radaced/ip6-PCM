@@ -3,7 +3,6 @@ package ch.fhnw.ip6.powerconsumptionmanager.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,10 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.activity.MainActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.activity.SplashScreenActivity;
-import ch.fhnw.ip6.powerconsumptionmanager.view.dashboard.CurrentValuesFragment;
-import ch.fhnw.ip6.powerconsumptionmanager.view.dashboard.DailyValuesFragment;
 
 public class OfflineFragment extends Fragment {
 

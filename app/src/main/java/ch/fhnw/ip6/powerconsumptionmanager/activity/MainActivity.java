@@ -27,7 +27,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.view.SettingsFragment;
  */
 public class MainActivity extends AppCompatActivity {
     // Flag if settings have changed
-    public static boolean UPDATED = false;
+    public static boolean SETTINGS_UPDATED = false;
 
     PowerConsumptionManagerAppContext mAppContext;
 
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     private void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment;
 
-        if(UPDATED) {
+        if(SETTINGS_UPDATED) {
             // Navigate to splash screen activity to reload data with new settings
             Intent intent = new Intent(MainActivity.this, SplashScreenActivity.class);
             intent.putExtra("status_info", getString(R.string.text_splash_settings_changed));
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        UPDATED = false;
+        SETTINGS_UPDATED = false;
         mAppContext.setOnline(true);
     }
 }

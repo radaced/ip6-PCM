@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="center"
+      android:paddingTop="@dimen/padding_dialog_top"
+      android:paddingBottom="@dimen/padding_dialog_bottom"
+      android:paddingLeft="@dimen/padding_screen_border"
+      android:paddingStart="@dimen/padding_screen_border"
+      android:paddingRight="@dimen/padding_screen_border"
+      android:paddingEnd="@dimen/padding_screen_border">
+    
+    <SeekBar
+        android:id="@+id/sbUpdateInterval"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="8"
+        android:max="600"/>
+
+    <TextView
+        android:id="@+id/tvUpdateIntervalLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:maxLength="4"/>
+
+</LinearLayout>

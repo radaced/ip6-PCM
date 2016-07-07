@@ -8,15 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.text.ChoiceFormat;
 import java.util.ArrayList;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.activity.ComponentSettingsActivity;
-import ch.fhnw.ip6.powerconsumptionmanager.activity.MainActivity;
-import ch.fhnw.ip6.powerconsumptionmanager.activity.SplashScreenActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.adapter.ConnectedDeviceListAdapter;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 

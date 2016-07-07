@@ -25,11 +25,16 @@ public class PowerConsumptionManagerAppContext extends Application {
             .build();
 
 
+    /* Preferences */
+    private boolean mUseGoogleCalendar;
+    private boolean mIsUpdatingAutomatically;
+    private int mUpdateInterval;
+    private int mCostStatisticsPeriod;
     private String mIPAdress;
 
 
 
-    private boolean isOnline = true;
+    private boolean mIsOnline = true;
 
     /* Dashboard data */
     private CurrentPCMData mCurrentPCMData;
@@ -45,6 +50,38 @@ public class PowerConsumptionManagerAppContext extends Application {
         return mOkHTTPClient;
     }
 
+    public boolean usesGoogleCalendar() {
+        return mUseGoogleCalendar;
+    }
+
+    public void setGoogleCalendar(boolean mUseGoogleCalendar) {
+        this.mUseGoogleCalendar = mUseGoogleCalendar;
+    }
+
+    public boolean isUpdatingAutomatically() {
+        return mIsUpdatingAutomatically;
+    }
+
+    public void setUpdatingAutomatically(boolean mIsUpdatingAutomatically) {
+        this.mIsUpdatingAutomatically = mIsUpdatingAutomatically;
+    }
+
+    public int getUpdateInterval() {
+        return mUpdateInterval;
+    }
+
+    public void setUpdateInterval(int mUpdateInterval) {
+        this.mUpdateInterval = mUpdateInterval;
+    }
+
+    public int getCostStatisticsPeriod() {
+        return mCostStatisticsPeriod;
+    }
+
+    public void setCostStatisticsPeriod(int mCostStatisticsPeriod) {
+        this.mCostStatisticsPeriod = mCostStatisticsPeriod;
+    }
+
     public String getIPAdress() {
         return mIPAdress;
     }
@@ -54,11 +91,11 @@ public class PowerConsumptionManagerAppContext extends Application {
     }
 
     public boolean isOnline() {
-        return isOnline;
+        return mIsOnline;
     }
 
     public void setOnline(boolean isOnline) {
-        this.isOnline = isOnline;
+        this.mIsOnline = isOnline;
     }
 
     public CurrentPCMData getCurrentPCMData() {

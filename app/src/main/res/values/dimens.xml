@@ -35,6 +35,7 @@
     <dimen name="icon_bottom_margin">20dp</dimen>
 
     <!--***** IP dialog ******-->
-    <dimen name="padding_ip_dialog">20dp</dimen>
+    <dimen name="padding_dialog_top">20dp</dimen>
+    <dimen name="padding_dialog_bottom">5dp</dimen>
 
 </resources>
