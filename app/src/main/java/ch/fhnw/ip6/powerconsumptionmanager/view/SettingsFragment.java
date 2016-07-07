@@ -144,9 +144,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         // Update summary of ip preference entry when ip changed
-        Preference pref = findPreference(key);
-        String newSummary = mSettings.getString("IP", "");
-        pref.setSummary(newSummary);
+        switch (key) {
+            case "IP":
+                findPreference(key).setSummary(mSettings.getString("IP", ""));
+                break;
+            default:
+                // Do nothing
+                break;
+        }
     }
 
     /**** Return point from the sync request ****/

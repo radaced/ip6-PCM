@@ -50,9 +50,12 @@
     <string name="format_caldroid_info_timerange">hh:mm a.</string>
 
     <!--****** Fragment settings ******-->
+    <string name="category_general">General</string>
     <string name="category_network">Network configuration</string>
-    <string name="category_charge_plan">Charge plan</string>
     <string name="category_help">Help</string>
+    <string name="text_pref_calendar_title">Google Calendar</string>
+    <string name="text_pref_calendar_summary">Use google calendar to manage charge plan</string>
+    <string name="text_pref_update_interval_title">Update Interval</string>
     <string name="text_pref_ip_title">IP address</string>
     <string name="text_pref_sync_title">Synchronize charging plan</string>
     <string name="text_pref_sync_summary">Tap to synchronize your tesla trips with the server component.</string>

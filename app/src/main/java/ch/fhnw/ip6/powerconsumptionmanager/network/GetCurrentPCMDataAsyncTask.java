@@ -1,13 +1,8 @@
 package ch.fhnw.ip6.powerconsumptionmanager.network;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +14,9 @@ import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.CurrentPCMComponentData;
 import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.CurrentPCMData;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "GetCurrentDataAsyncTask";
@@ -48,10 +46,9 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
                 .build();
 
         Response response;
-        OkHttpClient client = new OkHttpClient();
 
         try {
-            response = client.newCall(currentStatistics).execute();
+            response = mAppContext.getOkHTTPClient().newCall(currentStatistics).execute();
             if(!response.isSuccessful()) {
                 Log.e(TAG, "Response for current statistics data not successful.");
                 return false;
@@ -63,7 +60,7 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
         }
 
         try {
-            response = client.newCall(currentComponentData).execute();
+            response = mAppContext.getOkHTTPClient().newCall(currentComponentData).execute();
             if(!response.isSuccessful()) {
                 Log.e(TAG, "Response for current component data not successful.");
                 return false;

@@ -3,10 +3,6 @@ package ch.fhnw.ip6.powerconsumptionmanager.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -14,6 +10,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class GetConnectedComponentsAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "GetConnCompAsyncTask";
@@ -37,9 +36,8 @@ public class GetConnectedComponentsAsyncTask extends AsyncTask<Void, Void, Boole
                 .url(mURL)
                 .build();
 
-        OkHttpClient client = new OkHttpClient();
         try {
-            Response response = client.newCall(request).execute();
+            Response response = mAppContext.getOkHTTPClient().newCall(request).execute();
             if(!response.isSuccessful()) {
                 Log.e(TAG, "Response for connected components not successful.");
                 return false;

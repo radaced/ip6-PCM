@@ -3,13 +3,6 @@ package ch.fhnw.ip6.powerconsumptionmanager.network;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +15,13 @@ import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionChartDataModel;
 import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformationModel;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Loads the different data from the power consumption manager server component or other APIs
@@ -52,12 +52,12 @@ public class DataLoader {
         // Define call and callback
         mClient.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(Call call, IOException e) {
                 mCallback.DataLoaderDidFail();
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     mCallback.DataLoaderDidFail();
                     return;
@@ -101,12 +101,12 @@ public class DataLoader {
         // Define call and callback
         mClient.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(Call call, IOException e) {
                 mCallback.DataLoaderDidFail();
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     mCallback.DataLoaderDidFail();
                     return;
@@ -151,12 +151,12 @@ public class DataLoader {
         // Define call and callback
         mClient.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(Call call, IOException e) {
                 mCallback.DataLoaderDidFail();
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     mCallback.DataLoaderDidFail();
                     return;
@@ -193,12 +193,12 @@ public class DataLoader {
             // Define call and callback
             mClient.newCall(request).enqueue(new Callback() {
                 @Override
-                public void onFailure(Request request, IOException e) {
+                public void onFailure(Call call, IOException e) {
                     mCallback.DataLoaderDidFail();
                 }
 
                 @Override
-                public void onResponse(Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful()) {
                         mCallback.DataLoaderDidFail();
                         return;

@@ -3,10 +3,6 @@ package ch.fhnw.ip6.powerconsumptionmanager.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -18,6 +14,9 @@ import ch.fhnw.ip6.powerconsumptionmanager.model.PlanEntryModel;
 import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformationModel;
 import ch.fhnw.ip6.powerconsumptionmanager.util.CalendarInstanceReader;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Background task to build the JSON of the charge plan data that needs to be synced

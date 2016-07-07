@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="@string/category_general">
+
+        <CheckBoxPreference
+            android:key="googleCalendar"
+            android:title="@string/text_pref_calendar_title"
+            android:summary="Use google calendar to manage charge plan"/>
+
+        <Preference
+            android:key="updateInterval"
+            android:title="@string/text_pref_update_interval_title"/>
+
+        <Preference
+            android:key="syncPlan"
+            android:title="Synchronize charging plan"
+            android:summary="@string/text_pref_sync_summary"
+            android:icon="@mipmap/ic_settings_synchronized"/>
+
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/category_network">
@@ -7,17 +28,6 @@
         <Preference
             android:key="IP"
             android:title="@string/text_pref_ip_title"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/category_charge_plan">
-
-        <Preference
-            android:key="syncPlan"
-            android:title="Synchronize charging plan"
-            android:summary="@string/text_pref_sync_summary"
-            android:icon="@mipmap/ic_settings_synchronized"/>
 
     </PreferenceCategory>
 
