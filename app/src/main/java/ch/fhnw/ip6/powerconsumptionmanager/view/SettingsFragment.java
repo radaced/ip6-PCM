@@ -216,7 +216,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 mUpdateInterval.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mUpdateIntervalLabel.setText(Integer.toString(progress) + "s");
+                        mUpdateIntervalLabel.setText(Integer.toString((progress * 5) + 5) + "s");
                     }
 
                     @Override
@@ -231,16 +231,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 });
 
                 // Fill layout with stored values
-                mUpdateInterval.setProgress(updateInterval);
+                mUpdateInterval.setProgress((updateInterval / 5) - 1);
                 mUpdateIntervalLabel.setText(Integer.toString(updateInterval) + "s");
 
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         SharedPreferences.Editor editor = mSettings.edit();
-                        editor.putInt("updateInterval", mUpdateInterval.getProgress());
+                        String updateIntervalString = (String) mUpdateIntervalLabel.getText();
+                        int updateInterval = Integer.valueOf(updateIntervalString.substring(0, updateIntervalString.length()-1));
+                        editor.putInt("updateInterval", updateInterval);
                         editor.apply();
-                        mAppContext.setUpdateInterval(mUpdateInterval.getProgress());
+                        mAppContext.setUpdateInterval(updateInterval);
                     }
                 });
                 builder.setNegativeButton("Cancel", null);
