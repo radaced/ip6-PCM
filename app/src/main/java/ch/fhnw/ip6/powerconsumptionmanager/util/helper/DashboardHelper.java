@@ -47,8 +47,8 @@ public class DashboardHelper {
     private HashMap<String, ArcProgressStackView> mComponentViews = new HashMap<>();
     private HashMap<String, TextView> mComponentPowerLabels = new HashMap<>();
     private HashMap<String, WaveLoadingView> mSummaryViews = new HashMap<>();
-    private float mDensity;
     private DecimalFormat mOneDigitAfterCommaFormat = new DecimalFormat("#.#");
+    private float mDensity;
 
     private LinearLayout mDynamicLayoutContainer;
     private int mDynamicLayoutContainerWidth = 0;

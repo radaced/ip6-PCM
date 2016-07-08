@@ -9,8 +9,16 @@ import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+
+import java.util.ArrayList;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.CostValueFormatter;
+import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.EnergyValueFormatter;
 
 public class StatisticsHelper {
 
@@ -23,6 +31,8 @@ public class StatisticsHelper {
         mContext = c;
         mSBCStatisticsOverview = statisticsOverview;
         mSBCStatisticsComponent = statisticsComponent;
+        setupStackedBarChartStyle(mSBCStatisticsOverview);
+        setupStackedBarChartStyle(mSBCStatisticsComponent);
     }
 
     public void setupStackedBarChartStyle(BarChart chart) {
@@ -70,5 +80,36 @@ public class StatisticsHelper {
         // Set marker view
         //MarkerView mv = new BarChartMarkerView(mDailyValuesContext, R.layout.barchart_markerview);
         //mDailyDataBarChart.setMarkerView(mv);
+    }
+
+    public void setupStackedBarChartData() {
+        ArrayList<BarEntry> yValues = new ArrayList<>();
+
+        for(int i = 0; i < 10; i ++) {
+            float val1 = (float) (((Math.random() * 10) + 10) * (-1));
+            float val2 = (float) ((Math.random() * 10) + 10);
+            float val3 = (float) ((Math.random() * 10) + 10);
+            yValues.add(new BarEntry(new float[]{val1, val2, val3}, i));
+        }
+
+        BarDataSet statisticsSet;
+        statisticsSet = new BarDataSet(yValues, "Cost Statistics PCM");
+        statisticsSet.setColors(getColors(3));
+        statisticsSet.setStackLabels(new String[]{"Test1", "Test2", "Test3"});
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(statisticsSet);
+
+        BarData data = new BarData(new String[]{"Test1", "Test2", "Test3"}, dataSets);
+
+        mSBCStatisticsOverview.setData(data);
+        mSBCStatisticsOverview.animateY(3000);
+    }
+
+    private int[] getColors(int size) {
+        int[] colorResources = mContext.getResources().getIntArray(R.array.colorsGraph);
+        int[] colors = new int[size];
+        System.arraycopy(colorResources, 0, colors, 0, colors.length);
+        return colors;
     }
 }
