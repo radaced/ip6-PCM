@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
@@ -73,7 +74,9 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
         transaction.commit();
 
         // Instantiate the update handler
-        mUpdateHandler = new Handler();
+        if(mAppContext.isUpdatingAutomatically()) {
+            mUpdateHandler = new Handler();
+        }
     }
 
     @Override
@@ -126,7 +129,7 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     public void onResume() {
         super.onResume();
         if(mUpdateHandler != null) {
-            mUpdateHandler.postDelayed(updateCurrentPCMData, 10000);
+            mUpdateHandler.postDelayed(updateCurrentPCMData, mAppContext.getUpdateInterval() * 1000);
         }
     }
 
@@ -146,7 +149,7 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
                 mAppContext,
                 getInstance()
         ).execute();
-        mUpdateHandler.postDelayed(this, 10000);
+        mUpdateHandler.postDelayed(this, mAppContext.getUpdateInterval() * 1000);
         }
     };
 
