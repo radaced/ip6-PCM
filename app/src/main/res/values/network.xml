@@ -6,6 +6,8 @@
     <string name="webservice_putChargePlan">8002/EM/App/putLadePlan</string>
     <string name="webservice_getCurrentStatistics">8002/EM/App/getCurrentStatistics</string>
     <string name="webservice_getCurrentData">8002/EM/App/getCurrentData</string>
+    <string name="webservice_getCostStatisticsGeneral">8002/EM/App/getCostStatisticsGeneral</string>
+    <string name="webservice_getCostStatisticsComponents">8002/EM/App/getCostStatisticsComponents</string>
 
     <!--****** Google ******-->
     <string name="googleMaps_Api1">http://maps.googleapis.com/maps/api/directions/json?</string>

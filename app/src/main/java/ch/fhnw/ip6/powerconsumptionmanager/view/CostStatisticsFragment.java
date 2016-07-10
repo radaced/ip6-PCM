@@ -10,8 +10,13 @@ import android.view.ViewGroup;
 import com.github.mikephil.charting.charts.BarChart;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
+import ch.fhnw.ip6.powerconsumptionmanager.network.GetStatisticsAsyncTask;
+import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
+import ch.fhnw.ip6.powerconsumptionmanager.util.helper.StatisticsHelper;
 
-public class CostStatisticsFragment extends Fragment {
+public class CostStatisticsFragment extends Fragment implements AsyncTaskCallback {
+    private StatisticsHelper mStatisticsHelper;
 
     public static CostStatisticsFragment newInstance() { return new CostStatisticsFragment(); }
 
@@ -24,7 +29,18 @@ public class CostStatisticsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
+
         BarChart sbcStatisticsOverview = (BarChart) view.findViewById(R.id.sbcStatisticsOverview);
         BarChart sbcComponentOverview = (BarChart) view.findViewById(R.id.sbcStatisticsComponent);
+
+        mStatisticsHelper = new StatisticsHelper(getContext(), sbcStatisticsOverview, sbcComponentOverview);
+
+        new GetStatisticsAsyncTask(appContext, this).execute();
+    }
+
+    @Override
+    public void asyncTaskFinished(boolean result) {
+        mStatisticsHelper.setupStackedBarChartData();
     }
 }

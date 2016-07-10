@@ -9,6 +9,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -22,10 +23,10 @@ public class GetConnectedComponentsAsyncTask extends AsyncTask<Void, Void, Boole
     private String mURL;
     private ArrayList<String> mConnectedComponents = new ArrayList<>();
 
-    public GetConnectedComponentsAsyncTask(PowerConsumptionManagerAppContext context, AsyncTaskCallback callbackContext, String url) {
+    public GetConnectedComponentsAsyncTask(PowerConsumptionManagerAppContext context, AsyncTaskCallback callbackContext) {
         mAppContext = context;
         mCallbackContext = callbackContext;
-        mURL = url;
+        mURL = "http://" + mAppContext.getIPAdress() + ":" + mAppContext.getString(R.string.webservice_getComponents);
     }
 
     @Override

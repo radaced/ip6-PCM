@@ -49,6 +49,13 @@
     <string name="format_caldroid_info_title">MMMM dd yyyy</string>
     <string name="format_caldroid_info_timerange">hh:mm a.</string>
 
+    <!--****** Fragment cost statistics ******-->
+    <array name="general_statistics_labels">
+        <item>Überschuss</item>
+        <item>Eigenverbrauch</item>
+        <item>Netzbezug</item>
+    </array>
+
     <!--****** Fragment settings ******-->
     <string name="category_general">General</string>
     <string name="category_network">Network configuration</string>

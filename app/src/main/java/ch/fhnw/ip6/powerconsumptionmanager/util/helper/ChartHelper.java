@@ -8,7 +8,6 @@ import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import java.util.HashMap;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionChartDataModel;
-import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.XAxisDateFormatter;
+import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.XAxisTimeFormatter;
 import ch.fhnw.ip6.powerconsumptionmanager.view.ConsumptionFragment;
 
 /**
@@ -69,7 +68,7 @@ public class ChartHelper {
         mConsumptionChart.getAxisRight().setEnabled(false);
         mConsumptionChart.getXAxis().setDrawAxisLine(false);
         mConsumptionChart.getXAxis().setDrawGridLines(false);
-        mConsumptionChart.getXAxis().setValueFormatter(new XAxisDateFormatter());
+        mConsumptionChart.getXAxis().setValueFormatter(new XAxisTimeFormatter());
 
         // Set functionality
         mConsumptionChart.setDoubleTapToZoomEnabled(true);

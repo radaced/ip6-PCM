@@ -29,8 +29,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.CurrentPCMComponentData;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.CurrentPCMData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMComponentData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMData;
 import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.CostValueFormatter;
 import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.EnergyValueFormatter;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
@@ -106,7 +106,7 @@ public class DashboardHelper {
 
         double progress;
         if(mOverviewContext.getString(R.string.text_consumption).equals(key)) {
-            wlv.setWaveColor(mAppContext.getCurrentPCMData().getConsumptionColor());
+            wlv.setWaveColor(mAppContext.getPCMData().getConsumptionColor());
             // TODO: Make dynamic (currently fixed scale with +15 to -15 --> 3.3)
             int absRatio = (int) Math.abs(ratio);
             progress = (Math.signum(ratio) >= 0) ? (int) (50 + absRatio * 3.3) : (int) (50 - absRatio * 2.5);
@@ -124,7 +124,7 @@ public class DashboardHelper {
     }
 
     public void updateOverview() {
-        CurrentPCMData currentData = mAppContext.getCurrentPCMData();
+        PCMData currentData = mAppContext.getPCMData();
 
         updateSummaryRatio(mOverviewContext.getString(R.string.text_autarchy), currentData.getAutarchy());
         updateSummaryRatio(mOverviewContext.getString(R.string.text_selfsupply), currentData.getSelfsupply());
@@ -170,9 +170,9 @@ public class DashboardHelper {
     }
 
     public void updateCurrentValues() {
-        LinkedHashMap<String, CurrentPCMComponentData> dataMap = mAppContext.getCurrentPCMData().getCurrentComponentData();
+        LinkedHashMap<String, PCMComponentData> dataMap = mAppContext.getPCMData().getComponentData();
 
-        for(Map.Entry<String, CurrentPCMComponentData> entry : dataMap.entrySet()) {
+        for(Map.Entry<String, PCMComponentData> entry : dataMap.entrySet()) {
             /* TODO: Make dynamic (currently fixed scale with 0 to 10 kW) */
             updatePowerForComponent(entry.getKey(), entry.getValue().getPower() * 10);
             updatePowerLabel(entry.getKey(), entry.getValue().getPower());
@@ -195,7 +195,7 @@ public class DashboardHelper {
     }
 
     public void generateComponentUIElement(String componentId, int color) {
-        CurrentPCMComponentData componentData = mAppContext.getCurrentPCMData().getCurrentComponentData().get(componentId);
+        PCMComponentData componentData = mAppContext.getPCMData().getComponentData().get(componentId);
 
         // RelativeLayout container
         RelativeLayout rlContainer = new RelativeLayout(mCurrentValuesContext);
@@ -369,7 +369,7 @@ public class DashboardHelper {
     }
 
     public void setupDailyBarChartData() {
-        LinkedHashMap<String, CurrentPCMComponentData> dataMap = mAppContext.getCurrentPCMData().getCurrentComponentData();
+        LinkedHashMap<String, PCMComponentData> dataMap = mAppContext.getPCMData().getComponentData();
         ArrayList<String> xValues = new ArrayList<>(dataMap.keySet());
         ArrayList<BarEntry> yValuesEnergy = new ArrayList<>();
         ArrayList<BarEntry> yValuesCost = new ArrayList<>();
@@ -401,7 +401,7 @@ public class DashboardHelper {
 
     public void updateDailyValues() {
         if(mBCDailyData.getData() != null && mBCDailyData.getData().getDataSetCount() > 0) {
-            LinkedHashMap<String, CurrentPCMComponentData> dataMap = mAppContext.getCurrentPCMData().getCurrentComponentData();
+            LinkedHashMap<String, PCMComponentData> dataMap = mAppContext.getPCMData().getComponentData();
             ArrayList<BarEntry> yValuesEnergy = new ArrayList<>();
             ArrayList<BarEntry> yValuesCost = new ArrayList<>();
 
@@ -421,9 +421,9 @@ public class DashboardHelper {
         }
     }
 
-    private void fillDataSets(LinkedHashMap<String, CurrentPCMComponentData> dataMap, ArrayList<BarEntry> yValuesEnergy, ArrayList<BarEntry> yValuesCost) {
+    private void fillDataSets(LinkedHashMap<String, PCMComponentData> dataMap, ArrayList<BarEntry> yValuesEnergy, ArrayList<BarEntry> yValuesCost) {
         int i = 0;
-        for (Map.Entry<String, CurrentPCMComponentData> entry : dataMap.entrySet()) {
+        for (Map.Entry<String, PCMComponentData> entry : dataMap.entrySet()) {
             yValuesEnergy.add(new BarEntry((float) entry.getValue().getEnergy(), i));
             yValuesCost.add(new BarEntry((float) entry.getValue().getCost(), i++));
         }

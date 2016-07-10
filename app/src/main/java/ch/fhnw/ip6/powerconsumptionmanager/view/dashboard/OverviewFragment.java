@@ -64,9 +64,9 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
             mAppContext.UNIT_KW
         );
 
-        mDashboardHelper.setSummaryRatio(getString(R.string.text_autarchy), (int) mAppContext.getCurrentPCMData().getAutarchy());
-        mDashboardHelper.setSummaryRatio(getString(R.string.text_selfsupply), (int) mAppContext.getCurrentPCMData().getSelfsupply());
-        mDashboardHelper.setSummaryRatio(getString(R.string.text_consumption), (int) mAppContext.getCurrentPCMData().getConsumption());
+        mDashboardHelper.setSummaryRatio(getString(R.string.text_autarchy), (int) mAppContext.getPCMData().getAutarchy());
+        mDashboardHelper.setSummaryRatio(getString(R.string.text_selfsupply), (int) mAppContext.getPCMData().getSelfsupply());
+        mDashboardHelper.setSummaryRatio(getString(R.string.text_consumption), (int) mAppContext.getPCMData().getConsumption());
 
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.dynamic_content_fragment, CurrentValuesFragment.newInstance());
@@ -144,8 +144,7 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
         public void run() {
         new GetCurrentPCMDataAsyncTask(
                 mAppContext,
-                getInstance(),
-                "http://" + mAppContext.getIPAdress() + ":"
+                getInstance()
         ).execute();
         mUpdateHandler.postDelayed(this, 10000);
         }

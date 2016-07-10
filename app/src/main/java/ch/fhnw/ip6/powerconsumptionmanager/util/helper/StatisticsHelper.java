@@ -12,16 +12,20 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.CostValueFormatter;
-import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.EnergyValueFormatter;
+import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMComponentData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMData;
+import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
+import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.CostStatisticsFormatter;
+import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.XAxisDateFormatter;
 
 public class StatisticsHelper {
 
+    private PowerConsumptionManagerAppContext mAppContext;
     private Context mContext;
 
     private BarChart mSBCStatisticsOverview;
@@ -29,6 +33,7 @@ public class StatisticsHelper {
 
     public StatisticsHelper(Context c, BarChart statisticsOverview, BarChart statisticsComponent) {
         mContext = c;
+        mAppContext = (PowerConsumptionManagerAppContext) mContext.getApplicationContext();
         mSBCStatisticsOverview = statisticsOverview;
         mSBCStatisticsComponent = statisticsComponent;
         setupStackedBarChartStyle(mSBCStatisticsOverview);
@@ -48,8 +53,9 @@ public class StatisticsHelper {
 
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setDrawAxisLine(false);
-        leftAxis.setDrawGridLines(false);
+        leftAxis.setDrawGridLines(true);
         leftAxis.setDrawZeroLine(true);
+        leftAxis.setGridColor(Color.WHITE);
         leftAxis.setZeroLineColor(Color.WHITE);
         leftAxis.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
         leftAxis.setSpaceTop(40);
@@ -58,15 +64,14 @@ public class StatisticsHelper {
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.TOP_INSIDE);
-        xAxis.setLabelsToSkip(0);
         xAxis.setDrawAxisLine(false);
-        xAxis.setDrawGridLines(true);
-        xAxis.setGridColor(Color.WHITE);
+        xAxis.setDrawGridLines(false);
         xAxis.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
         xAxis.setTextSize(12f);
+        xAxis.setValueFormatter(new XAxisDateFormatter());
 
         Legend l = chart.getLegend();
-        l.setPosition(Legend.LegendPosition.ABOVE_CHART_LEFT);
+        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_CENTER);
         l.setForm(Legend.LegendForm.CIRCLE);
         l.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
 
@@ -76,34 +81,66 @@ public class StatisticsHelper {
         chart.setDragEnabled(true);
         chart.setScaleEnabled(true);
         chart.setPinchZoom(true);
-
-        // Set marker view
-        //MarkerView mv = new BarChartMarkerView(mDailyValuesContext, R.layout.barchart_markerview);
-        //mDailyDataBarChart.setMarkerView(mv);
     }
 
     public void setupStackedBarChartData() {
-        ArrayList<BarEntry> yValues = new ArrayList<>();
+        PCMData pcmData = mAppContext.getPCMData();
+        ArrayList<String> xValues = new ArrayList<>(pcmData.getStatisticsDates());
+        ArrayList<BarEntry> yValuesGeneralStatistics = new ArrayList<>();
+        ArrayList<BarEntry> yValuesComponentsStatistics = new ArrayList<>();
+        int amountOfComponents = pcmData.getComponentData().values().size();
 
-        for(int i = 0; i < 10; i ++) {
-            float val1 = (float) (((Math.random() * 10) + 10) * (-1));
-            float val2 = (float) ((Math.random() * 10) + 10);
-            float val3 = (float) ((Math.random() * 10) + 10);
-            yValues.add(new BarEntry(new float[]{val1, val2, val3}, i));
+        for(int i = 0; i < xValues.size(); i++) {
+            yValuesGeneralStatistics.add(
+                new BarEntry(
+                    new float[]{
+                        pcmData.getSurplusStatisticsValues().get(i).floatValue() * (-1),
+                        pcmData.getConsumptionStatisticsValues().get(i).floatValue(),
+                        pcmData.getSelfSupplyStatisticsValues().get(i).floatValue()
+                    },
+                    i
+                )
+            );
+
+            float[] componentValuesPerDate = new float[amountOfComponents];
+            int j = 0;
+            for (PCMComponentData componentData : pcmData.getComponentData().values()) {
+                // Ignores the components Photovoltaik and VerbrauchTot because they are not listed in the cost statistics
+                if(componentData.getStatistics().size() != 0) {
+                    componentValuesPerDate[j] = componentData.getStatistics().get(i).floatValue();
+                    j++;
+                }
+            }
+
+            yValuesComponentsStatistics.add(
+                    new BarEntry(componentValuesPerDate, i)
+            );
         }
 
-        BarDataSet statisticsSet;
-        statisticsSet = new BarDataSet(yValues, "Cost Statistics PCM");
-        statisticsSet.setColors(getColors(3));
-        statisticsSet.setStackLabels(new String[]{"Test1", "Test2", "Test3"});
+        BarDataSet generalStatisticsSet, componentStatisticsSet;
 
-        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-        dataSets.add(statisticsSet);
+        generalStatisticsSet = new BarDataSet(yValuesGeneralStatistics, "");
+        generalStatisticsSet.setColors(getColors(3));
+        generalStatisticsSet.setStackLabels(mContext.getResources().getStringArray(R.array.general_statistics_labels));
+        generalStatisticsSet.setValueFormatter(new CostStatisticsFormatter(true, " CHF", 2));
+        generalStatisticsSet.setValueTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
 
-        BarData data = new BarData(new String[]{"Test1", "Test2", "Test3"}, dataSets);
+        componentStatisticsSet = new BarDataSet(yValuesComponentsStatistics, "");
+        componentStatisticsSet.setColors(getColors(amountOfComponents));
+        Set<String> stackLabels = pcmData.getComponentData().keySet();
+        stackLabels.remove("Photovoltaik");
+        stackLabels.remove("VerbrauchTot");
+        componentStatisticsSet.setStackLabels(stackLabels.toArray(new String[amountOfComponents-2]));
+        componentStatisticsSet.setValueFormatter(new CostStatisticsFormatter(false, " CHF", 2));
+        componentStatisticsSet.setValueTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
 
-        mSBCStatisticsOverview.setData(data);
+        BarData generalStatisticsData = new BarData(xValues, generalStatisticsSet);
+        BarData componentStatisticsData = new BarData(xValues, componentStatisticsSet);
+
+        mSBCStatisticsOverview.setData(generalStatisticsData);
         mSBCStatisticsOverview.animateY(3000);
+        mSBCStatisticsComponent.setData(componentStatisticsData);
+        mSBCStatisticsComponent.animateY(3000);
     }
 
     private int[] getColors(int size) {

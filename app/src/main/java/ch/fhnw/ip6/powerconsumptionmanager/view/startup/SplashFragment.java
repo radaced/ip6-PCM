@@ -39,17 +39,9 @@ public class SplashFragment extends Fragment {
 
         PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
 
-        new GetCurrentPCMDataAsyncTask(
-            appContext,
-            (AsyncTaskCallback) getActivity(),
-            "http://" + appContext.getIPAdress() + ":"
-        ).execute();
+        new GetCurrentPCMDataAsyncTask(appContext, (AsyncTaskCallback) getActivity()).execute();
 
-        new GetConnectedComponentsAsyncTask(
-            appContext,
-            (AsyncTaskCallback) getActivity(),
-            "http://" + appContext.getIPAdress() + ":" + getString(R.string.webservice_getComponents)
-        ).execute();
+        new GetConnectedComponentsAsyncTask(appContext, (AsyncTaskCallback) getActivity()).execute();
 
         // Web request to load the consumption and component data (load consumption data includes reading components)
         //loader.loadConsumptionData("http://" + appContext.getIPAdress() + ":" + getString(R.string.webservice_getData));

@@ -34,7 +34,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private PowerConsumptionManagerAppContext mAppContext;
     private SettingsFragment mContext;
 
-    private SharedPreferences mSettings;
+    private SharedPreferences mSharedPreferences;
 
     private SeekBar mUpdateInterval;
     private TextView mUpdateIntervalLabel;
@@ -61,7 +61,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         mAppContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
         mContext = this;
-        mSettings = getPreferenceScreen().getSharedPreferences();
+        mSharedPreferences = getPreferenceScreen().getSharedPreferences();
 
         // Setup google calendar checkbox preference
         final CheckBoxPreference googleCalendar = (CheckBoxPreference) findPreference("googleCalendar");
@@ -105,13 +105,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         // Update summaries of preferences
         switch (key) {
             case "updateAutomatically":
-                findPreference("updateInterval").setEnabled(mSettings.getBoolean("updateAutomatically", false));
+                findPreference("updateInterval").setEnabled(mSharedPreferences.getBoolean("updateAutomatically", false));
                 break;
             case "updateInterval":
                 findPreference(key).setSummary(
                     getString(R.string.text_pref_update_interval_summary) +
                     " " +
-                    mSettings.getInt("updateInterval", 10) +
+                    mSharedPreferences.getInt("updateInterval", 10) +
                     " seconds"
                 );
                 break;
@@ -119,12 +119,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 findPreference(key).setSummary(
                     getString(R.string.text_pref_cost_statistics_period_summary) +
                     " " +
-                    mSettings.getInt("costStatisticsPeriod", 10) +
+                    mSharedPreferences.getInt("costStatisticsPeriod", 10) +
                     " days"
                 );
                 break;
             case "IP":
-                findPreference(key).setSummary(mSettings.getString("IP", ""));
+                findPreference(key).setSummary(mSharedPreferences.getString("IP", ""));
                 break;
             default:
                 // Do nothing
@@ -155,12 +155,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     /********/
 
     private void setupGoogleCalendarPreference(CheckBoxPreference googleCalendarPreference) {
-        googleCalendarPreference.setChecked(mSettings.getBoolean("googleCalendar", false));
+        googleCalendarPreference.setChecked(mSharedPreferences.getBoolean("googleCalendar", false));
         googleCalendarPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object value) {
                 if(value instanceof Boolean) {
-                    SharedPreferences.Editor editor = mSettings.edit();
+                    SharedPreferences.Editor editor = mSharedPreferences.edit();
                     editor.putBoolean("googleCalendar", (Boolean) value);
                     editor.apply();
                     mAppContext.setGoogleCalendar((Boolean) value);
@@ -172,12 +172,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void setupUpdateAutomaticallyPreference(CheckBoxPreference updateAutomaticallyPreference) {
-        updateAutomaticallyPreference.setChecked(mSettings.getBoolean("updateAutomatically", false));
+        updateAutomaticallyPreference.setChecked(mSharedPreferences.getBoolean("updateAutomatically", false));
         updateAutomaticallyPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object value) {
                 if(value instanceof Boolean) {
-                    SharedPreferences.Editor editor = mSettings.edit();
+                    SharedPreferences.Editor editor = mSharedPreferences.edit();
                     editor.putBoolean("updateAutomatically", (Boolean) value);
                     editor.apply();
                     mAppContext.setUpdatingAutomatically((Boolean) value);
@@ -192,10 +192,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         updateIntervalDialog.setSummary(
             getString(R.string.text_pref_update_interval_summary) +
             " " +
-            mSettings.getInt("updateInterval", 10) +
+            mSharedPreferences.getInt("updateInterval", 10) +
             " seconds"
         );
-        updateIntervalDialog.setEnabled(mSettings.getBoolean("updateAutomatically", true));
+        updateIntervalDialog.setEnabled(mSharedPreferences.getBoolean("updateAutomatically", true));
 
         updateIntervalDialog.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -208,7 +208,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 builder.setView(updateIntervalDialogView);
 
                 // Get the previously stored update interval
-                int updateInterval = mSettings.getInt("updateInterval", 10);
+                int updateInterval = mSharedPreferences.getInt("updateInterval", 10);
 
                 mUpdateInterval = (SeekBar) updateIntervalDialogView.findViewById(R.id.sbUpdateInterval);
                 mUpdateIntervalLabel = (TextView) updateIntervalDialogView.findViewById(R.id.tvUpdateIntervalLabel);
@@ -237,7 +237,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences.Editor editor = mSettings.edit();
+                        SharedPreferences.Editor editor = mSharedPreferences.edit();
                         String updateIntervalString = (String) mUpdateIntervalLabel.getText();
                         int updateInterval = Integer.valueOf(updateIntervalString.substring(0, updateIntervalString.length()-1));
                         editor.putInt("updateInterval", updateInterval);
@@ -257,7 +257,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         costStatisticsPeriodDialog.setSummary(
             getString(R.string.text_pref_cost_statistics_period_summary) +
             " " +
-            mSettings.getInt("costStatisticsPeriod", 10) +
+            mSharedPreferences.getInt("costStatisticsPeriod", 10) +
             " days"
         );
 
@@ -272,7 +272,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 builder.setView(costStatisticsPeriodDialogView);
 
                 // Get the previously stored update interval
-                int costStatisticsPeriod = mSettings.getInt("costStatisticsPeriod", 10);
+                int costStatisticsPeriod = mSharedPreferences.getInt("costStatisticsPeriod", 10);
 
                 mCostStatisticsPeriod = (NumberPicker) costStatisticsPeriodDialogView.findViewById(R.id.npCostStatistics);
                 mCostStatisticsPeriod.setMinValue(7);
@@ -284,7 +284,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences.Editor editor = mSettings.edit();
+                        SharedPreferences.Editor editor = mSharedPreferences.edit();
                         editor.putInt("costStatisticsPeriod", mCostStatisticsPeriod.getValue());
                         editor.apply();
                         mAppContext.setCostStatisticsPeriod(mCostStatisticsPeriod.getValue());
@@ -299,7 +299,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void setupIPDialog(Preference ipDialog) {
-        ipDialog.setSummary(mSettings.getString("IP", "192.168.0.1"));
+        ipDialog.setSummary(mSharedPreferences.getString("IP", "192.168.0.1"));
 
         ipDialog.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -312,7 +312,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 builder.setView(ipDialogView);
 
                 // Get the previously stored ip
-                String ip = mSettings.getString("IP", "192.168.0.1");
+                String ip = mSharedPreferences.getString("IP", "192.168.0.1");
 
                 mIP1 = (EditText) ipDialogView.findViewById(R.id.etIP1);
                 mIP2 = (EditText) ipDialogView.findViewById(R.id.etIP2);
@@ -336,11 +336,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                                     mIP3.getText().toString() + "." +
                                     mIP4.getText().toString();
 
-                            if(!ip.equals(mSettings.getString("IP", "192.168.0.1"))) {
-                                SharedPreferences.Editor editor = mSettings.edit();
+                            if(!ip.equals(mSharedPreferences.getString("IP", "192.168.0.1"))) {
+                                SharedPreferences.Editor editor = mSharedPreferences.edit();
                                 editor.putString("IP", ip);
                                 editor.apply();
-                                mAppContext.setIPAdress(mSettings.getString("IP", "192.168.0.1"));
+                                mAppContext.setIPAdress(mSharedPreferences.getString("IP", "192.168.0.1"));
 
                                 // Settings have changed
                                 MainActivity.SETTINGS_UPDATED = true;

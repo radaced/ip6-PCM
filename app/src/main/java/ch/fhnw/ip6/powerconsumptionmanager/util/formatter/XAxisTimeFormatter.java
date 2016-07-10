@@ -9,14 +9,13 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * Created by Patrik on 09.07.2016.
+ * Formats all x value time stamps into a readable date
  */
-public class XAxisDateFormatter implements XAxisValueFormatter {
-
+public class XAxisTimeFormatter implements XAxisValueFormatter {
     @Override
     public String getXValue(String original, int index, ViewPortHandler viewPortHandler) {
         Calendar cal = Calendar.getInstance(Locale.GERMAN);
         cal.setTimeInMillis(Long.parseLong(original) * 1000);
-        return DateFormat.format("dd.MM.yy", cal).toString();
+        return DateFormat.format("HH:mm", cal).toString();
     }
 }

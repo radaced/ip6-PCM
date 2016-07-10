@@ -11,10 +11,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.CurrentPCMComponentData;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.CurrentPCMData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMComponentData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMData;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -24,13 +23,13 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private PowerConsumptionManagerAppContext mAppContext;
     private AsyncTaskCallback mCallbackContext;
     private String mURL;
-    private CurrentPCMData mCurrentPCMData;
+    private PCMData mPCMData;
 
-    public GetCurrentPCMDataAsyncTask(PowerConsumptionManagerAppContext context, AsyncTaskCallback callbackContext, String url) {
+    public GetCurrentPCMDataAsyncTask(PowerConsumptionManagerAppContext context, AsyncTaskCallback callbackContext) {
         mAppContext = context;
         mCallbackContext = callbackContext;
-        mURL = url;
-        mCurrentPCMData = new CurrentPCMData();
+        mURL = "http://" + mAppContext.getIPAdress() + ":";
+        mPCMData = new PCMData();
     }
 
     @Override
@@ -71,7 +70,7 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
             successComponentData = false;
         }
 
-        mAppContext.setCurrentPCMData(mCurrentPCMData);
+        mAppContext.setCurrentPCMData(mPCMData);
 
         return successStatistics && successComponentData;
     }
@@ -86,15 +85,15 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
         boolean success = true;
         try {
             JSONObject dataJson = new JSONObject(response.body().string());
-            mCurrentPCMData.setAutarchy(dataJson.getDouble("Autarkie(%)"));
-            mCurrentPCMData.setSelfsupply(dataJson.getDouble("Eigenverbrauch(%)"));
-            mCurrentPCMData.setConsumption(dataJson.getDouble("Bezug(kW)"));
+            mPCMData.setAutarchy(dataJson.getDouble("Autarkie(%)"));
+            mPCMData.setSelfsupply(dataJson.getDouble("Eigenverbrauch(%)"));
+            mPCMData.setConsumption(dataJson.getDouble("Bezug(kW)"));
 
             int occupationColorCode = dataJson.getInt("Bezug(Farbe)");
             int red = occupationColorCode >> 16 & 0xff;
             int green = occupationColorCode >> 8 & 0xff;
             int blue = occupationColorCode & 0xff;
-            mCurrentPCMData.setConsumptionColor(Color.rgb(red, green, blue));
+            mPCMData.setConsumptionColor(Color.rgb(red, green, blue));
         } catch (JSONException e) {
             Log.e(TAG, "JSON exception while processing current statistics data.");
             success = false;
@@ -110,8 +109,8 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
             for(int i = 0; i < dataJson.length(); i++) {
                 JSONObject dataJsonEntry = (JSONObject) dataJson.get(i);
-                CurrentPCMComponentData ccdm = new CurrentPCMComponentData(dataJsonEntry.getJSONObject("Data"));
-                mCurrentPCMData.getCurrentComponentData().put(dataJsonEntry.getString("Name"), ccdm);
+                PCMComponentData ccdm = new PCMComponentData(dataJsonEntry.getJSONObject("Data"));
+                mPCMData.getComponentData().put(dataJsonEntry.getString("Name"), ccdm);
             }
         } catch (JSONException e) {
             Log.e(TAG, "JSON exception while processing current component data.");

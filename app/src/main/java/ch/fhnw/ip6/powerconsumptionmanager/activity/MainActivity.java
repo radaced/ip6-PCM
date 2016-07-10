@@ -16,6 +16,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.view.ConnectedDevicesFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.ConsumptionFragment;
+import ch.fhnw.ip6.powerconsumptionmanager.view.CostStatisticsFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.OfflineFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.dashboard.OverviewFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.SettingsFragment;
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                         fragment = ConsumptionFragment.newInstance();
                         break;
                     case R.id.nav_cost_statistic:
-                        fragment = ConsumptionFragment.newInstance();
+                        fragment = CostStatisticsFragment.newInstance();
                         break;
                     case R.id.nav_settings:
                         fragment = SettingsFragment.newInstance();

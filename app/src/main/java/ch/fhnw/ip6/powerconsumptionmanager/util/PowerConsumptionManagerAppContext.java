@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionChartDataModel;
 import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformationModel;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.CurrentPCMData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMData;
 import okhttp3.OkHttpClient;
 
 /**
@@ -25,6 +25,9 @@ public class PowerConsumptionManagerAppContext extends Application {
             .build();
 
 
+    /* Status */
+    private boolean mIsOnline = true;
+
     /* Preferences */
     private boolean mUseGoogleCalendar;
     private boolean mIsUpdatingAutomatically;
@@ -32,14 +35,8 @@ public class PowerConsumptionManagerAppContext extends Application {
     private int mCostStatisticsPeriod;
     private String mIPAdress;
 
-
-
-    private boolean mIsOnline = true;
-
-    /* Dashboard data */
-    private CurrentPCMData mCurrentPCMData;
-
-
+    /* Data */
+    private PCMData mPCMData;
 
     private ArrayList<ConsumptionChartDataModel> mConsumptionData = new ArrayList<>();
     private ArrayList<String> mComponents = new ArrayList<>();
@@ -98,12 +95,12 @@ public class PowerConsumptionManagerAppContext extends Application {
         this.mIsOnline = isOnline;
     }
 
-    public CurrentPCMData getCurrentPCMData() {
-        return mCurrentPCMData;
+    public PCMData getPCMData() {
+        return mPCMData;
     }
 
-    public void setCurrentPCMData(CurrentPCMData mCurrentPCMData) {
-        this.mCurrentPCMData = mCurrentPCMData;
+    public void setCurrentPCMData(PCMData mPCMData) {
+        this.mPCMData = mPCMData;
     }
 
     public void setConsumptionData(ArrayList<ConsumptionChartDataModel> mConsumptionData) {
