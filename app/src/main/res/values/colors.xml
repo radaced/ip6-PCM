@@ -50,4 +50,20 @@
     <color name="colorProgressBorder">#bcc8ce</color>
     <color name="colorProgressAutarchy">#008040</color>
     <color name="colorProgressPowerConsumption">#0041dc</color>
+
+    <!--****** Cost statistics ******-->
+    <array name="colorsGeneralStatistics">
+        <item>#008040</item>
+        <item>#0041dc</item>
+        <item>#f35d5d</item>
+    </array>
+    <array name="colorsComponentStatistics">
+        <item>#0041dc</item>
+        <item>#3399ff</item>
+        <item>#ff00ff</item>
+        <item>#000000</item>
+        <item>#64ff00</item>
+        <item>#fa9c47</item>
+    </array>
+
 </resources>

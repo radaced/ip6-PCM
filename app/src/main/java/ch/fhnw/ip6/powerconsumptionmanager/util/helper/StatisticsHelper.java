@@ -88,15 +88,15 @@ public class StatisticsHelper {
         ArrayList<String> xValues = new ArrayList<>(pcmData.getStatisticsDates());
         ArrayList<BarEntry> yValuesGeneralStatistics = new ArrayList<>();
         ArrayList<BarEntry> yValuesComponentsStatistics = new ArrayList<>();
-        int amountOfComponents = pcmData.getComponentData().values().size();
+        int amountOfComponents = pcmData.getComponentData().size() - 2;
 
         for(int i = 0; i < xValues.size(); i++) {
             yValuesGeneralStatistics.add(
                 new BarEntry(
                     new float[]{
                         pcmData.getSurplusStatisticsValues().get(i).floatValue() * (-1),
-                        pcmData.getConsumptionStatisticsValues().get(i).floatValue(),
-                        pcmData.getSelfSupplyStatisticsValues().get(i).floatValue()
+                        pcmData.getSelfSupplyStatisticsValues().get(i).floatValue(),
+                        pcmData.getConsumptionStatisticsValues().get(i).floatValue()
                     },
                     i
                 )
@@ -112,25 +112,28 @@ public class StatisticsHelper {
                 }
             }
 
-            yValuesComponentsStatistics.add(
-                    new BarEntry(componentValuesPerDate, i)
-            );
+            yValuesComponentsStatistics.add(new BarEntry(componentValuesPerDate, i));
         }
 
         BarDataSet generalStatisticsSet, componentStatisticsSet;
 
         generalStatisticsSet = new BarDataSet(yValuesGeneralStatistics, "");
-        generalStatisticsSet.setColors(getColors(3));
+        generalStatisticsSet.setColors(mContext.getResources().getIntArray(R.array.colorsGeneralStatistics));
         generalStatisticsSet.setStackLabels(mContext.getResources().getStringArray(R.array.general_statistics_labels));
         generalStatisticsSet.setValueFormatter(new CostStatisticsFormatter(true, " CHF", 2));
         generalStatisticsSet.setValueTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
 
         componentStatisticsSet = new BarDataSet(yValuesComponentsStatistics, "");
         componentStatisticsSet.setColors(getColors(amountOfComponents));
-        Set<String> stackLabels = pcmData.getComponentData().keySet();
-        stackLabels.remove("Photovoltaik");
-        stackLabels.remove("VerbrauchTot");
-        componentStatisticsSet.setStackLabels(stackLabels.toArray(new String[amountOfComponents-2]));
+        String[] components = new String[amountOfComponents];
+        int i = 0;
+        for (String component : pcmData.getComponentData().keySet()) {
+            if(!(component.equals("Photovoltaik") || component.equals("VerbrauchTot"))) {
+                components[i] = component;
+                i++;
+            }
+        }
+        componentStatisticsSet.setStackLabels(components);
         componentStatisticsSet.setValueFormatter(new CostStatisticsFormatter(false, " CHF", 2));
         componentStatisticsSet.setValueTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
 
@@ -144,7 +147,7 @@ public class StatisticsHelper {
     }
 
     private int[] getColors(int size) {
-        int[] colorResources = mContext.getResources().getIntArray(R.array.colorsGraph);
+        int[] colorResources = mContext.getResources().getIntArray(R.array.colorsComponentStatistics);
         int[] colors = new int[size];
         System.arraycopy(colorResources, 0, colors, 0, colors.length);
         return colors;
