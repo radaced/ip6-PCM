@@ -5,16 +5,48 @@
     tools:context=".view.CostStatisticsFragment"
     android:orientation="vertical">
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/sbcStatisticsOverview"
+    <LinearLayout
+        android:id="@+id/llLoading"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/sbcStatisticsComponent"
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:indeterminateDrawable="@drawable/progressbar_loading"
+            style="?android:attr/progressBarStyleLarge"/>
+
+        <TextView
+            android:id="@+id/tvLoadingInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_loading_cost_statistics"
+            android:textColor="@color/colorTextPrimary"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llCostStatistics"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/sbcStatisticsOverview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/sbcStatisticsComponent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
 </LinearLayout>

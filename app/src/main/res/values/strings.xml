@@ -55,6 +55,9 @@
         <item>Eigenverbrauch</item>
         <item>Netzbezug</item>
     </array>
+    <string name="menu_refresh">Refresh</string>
+    <string name="text_loading_cost_statistics">Loading cost statistics…</string>
+    <string name="text_refreshing_cost_statistics">Refreshing cost statistics…</string>
 
     <!--****** Fragment settings ******-->
     <string name="category_general">General</string>

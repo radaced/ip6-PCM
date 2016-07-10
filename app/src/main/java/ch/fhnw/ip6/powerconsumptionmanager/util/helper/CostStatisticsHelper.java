@@ -14,7 +14,6 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMComponentData;
@@ -23,7 +22,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.CostStatisticsFormatter;
 import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.XAxisDateFormatter;
 
-public class StatisticsHelper {
+public class CostStatisticsHelper {
 
     private PowerConsumptionManagerAppContext mAppContext;
     private Context mContext;
@@ -31,7 +30,7 @@ public class StatisticsHelper {
     private BarChart mSBCStatisticsOverview;
     private BarChart mSBCStatisticsComponent;
 
-    public StatisticsHelper(Context c, BarChart statisticsOverview, BarChart statisticsComponent) {
+    public CostStatisticsHelper(Context c, BarChart statisticsOverview, BarChart statisticsComponent) {
         mContext = c;
         mAppContext = (PowerConsumptionManagerAppContext) mContext.getApplicationContext();
         mSBCStatisticsOverview = statisticsOverview;
