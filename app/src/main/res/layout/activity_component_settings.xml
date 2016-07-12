@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ch.fhnw.ip6.powerconsumptionmanager.activity.ComponentSettingsActivity">
@@ -14,4 +15,51 @@
         android:background="@color/colorPrimaryDark"
         android:elevation="@dimen/toolbar_elevation"
         android:fitsSystemWindows="true"/>
+
+    <LinearLayout
+        android:id="@+id/llLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:indeterminateDrawable="@drawable/progressbar_loading"
+            style="?android:attr/progressBarStyleLarge"/>
+
+        <TextView
+            android:id="@+id/tvLoadingInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_loading_component_settings"
+            android:textColor="@color/colorTextPrimary"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llComponentSettings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarSize="@dimen/scroll_components_container">
+
+            <LinearLayout
+                android:id="@+id/llSettingsContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/double_space_vertical_margin"
+                android:orientation="horizontal"/>
+
+        </ScrollView>
+
+
+    </LinearLayout>
 </LinearLayout>

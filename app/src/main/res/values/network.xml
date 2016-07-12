@@ -8,6 +8,8 @@
     <string name="webservice_getCurrentData">8002/EM/App/getCurrentData</string>
     <string name="webservice_getCostStatisticsGeneral">8002/EM/App/getCostStatisticsGeneral</string>
     <string name="webservice_getCostStatisticsComponents">8002/EM/App/getCostStatisticsComponents</string>
+    <string name="webservice_getComfortSettings">8002/EM/App/getComfortSettings?Name=</string>
+    <string name="webservice_getProgramSettings">8002/EM/App/getProgramSettings?Name=</string>
 
     <!--****** Google ******-->
     <string name="googleMaps_Api1">http://maps.googleapis.com/maps/api/directions/json?</string>

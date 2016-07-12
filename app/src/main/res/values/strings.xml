@@ -96,5 +96,6 @@
     <!--****** Activity component settings ******-->
     <string name="title_activity_component_settings">Component settings</string>
     <string name="title_activity_actionbar">Settings for</string>
+    <string name="text_loading_component_settings">Loading settings for component…</string>
 
 </resources>

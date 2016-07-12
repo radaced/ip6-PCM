@@ -7,11 +7,14 @@ import org.json.JSONObject;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
+import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSetting;
+
 public class PCMComponentData {
     private String mName;
     private double mPower;
     private double mEnergy;
     private double mCost;
+    private LinkedList<PCMSetting> mSettings = new LinkedList<>();
     private LinkedList<Double> mStatistics = new LinkedList<>();
 
     public PCMComponentData(String name, JSONObject componentData) throws JSONException {
@@ -32,6 +35,10 @@ public class PCMComponentData {
 
 
 
+    public String getName() {
+        return mName;
+    }
+
     public double getPower() {
         return mPower;
     }
@@ -42,6 +49,10 @@ public class PCMComponentData {
 
     public double getCost() {
         return mCost;
+    }
+
+    public LinkedList<PCMSetting> getSettings() {
+        return mSettings;
     }
 
     public LinkedList<Double> getStatistics() {
