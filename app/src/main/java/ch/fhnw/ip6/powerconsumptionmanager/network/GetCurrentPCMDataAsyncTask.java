@@ -70,14 +70,15 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
             successComponentData = false;
         }
 
-        mAppContext.setCurrentPCMData(mPCMData);
-
         return successStatistics && successComponentData;
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
+        if(result) {
+            mAppContext.setCurrentPCMData(mPCMData);
+        }
         mCallbackContext.asyncTaskFinished(result);
     }
 
@@ -109,7 +110,7 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
             for(int i = 0; i < dataJson.length(); i++) {
                 JSONObject dataJsonEntry = (JSONObject) dataJson.get(i);
-                PCMComponentData ccdm = new PCMComponentData(dataJsonEntry.getJSONObject("Data"));
+                PCMComponentData ccdm = new PCMComponentData(dataJsonEntry.getString("Name"), dataJsonEntry.getJSONObject("Data"));
                 mPCMData.getComponentData().put(dataJsonEntry.getString("Name"), ccdm);
             }
         } catch (JSONException e) {

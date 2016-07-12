@@ -8,12 +8,14 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class PCMComponentData {
+    private String mName;
     private double mPower;
     private double mEnergy;
     private double mCost;
     private LinkedList<Double> mStatistics = new LinkedList<>();
 
-    public PCMComponentData(JSONObject componentData) throws JSONException {
+    public PCMComponentData(String name, JSONObject componentData) throws JSONException {
+        mName = name;
         mPower = componentData.getDouble("Leistung");
         mEnergy = componentData.getDouble("Energie");
         mCost = componentData.getDouble("Kosten");

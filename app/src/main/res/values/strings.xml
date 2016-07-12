@@ -23,10 +23,9 @@
     <string name="text_autarchy">Autarchy</string>
     <string name="text_selfsupply">"Selfsupply"</string>
     <string name="text_consumption">Consumption</string>
-    <string name="text_consumer">VerbrauchTot</string>
-    <string name="text_producer">Photovoltaik</string>
     <string name="menu_daily">Daily</string>
     <string name="menu_now">Now</string>
+    <string name="toast_dashboard_update_error">Error while updating dashboard data</string>
 
     <!--****** Fragment consumption data ******-->
     <string name="title_frag_consumption">Consumption</string>

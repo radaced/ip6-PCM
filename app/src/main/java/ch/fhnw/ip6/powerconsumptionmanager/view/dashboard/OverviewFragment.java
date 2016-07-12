@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +22,8 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 public class OverviewFragment extends Fragment implements AsyncTaskCallback {
+    private static final String TAG = "OverviewFragment";
+
     private enum Mode { DAILY, NOW }
 
     private PowerConsumptionManagerAppContext mAppContext;
@@ -135,11 +138,28 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
 
     @Override
     public void asyncTaskFinished(boolean result) {
-        mDashboardHelper.updateOverview();
-        if(mMode == Mode.NOW) {
-            mDashboardHelper.updateCurrentValues();
+        if(result) {
+            mDashboardHelper.updateOverview();
+            if(mMode == Mode.NOW) {
+                mDashboardHelper.updateCurrentValues();
+            } else {
+                mDashboardHelper.updateDailyValues();
+            }
         } else {
-            mDashboardHelper.updateDailyValues();
+            try {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(
+                            getActivity(),
+                            mAppContext.getString(R.string.toast_dashboard_update_error),
+                            Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
+            } catch (NullPointerException e) {
+                Log.e(TAG, "Activity/Fragment destroyed or changed while updating.");
+            }
         }
     }
 
