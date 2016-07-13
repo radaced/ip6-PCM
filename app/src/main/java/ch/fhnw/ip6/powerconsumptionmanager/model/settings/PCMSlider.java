@@ -55,7 +55,7 @@ public class PCMSlider extends PCMSetting {
 
         container.addView(tvSettingDescription);
 
-        mRangebar = new RangeBar(super.getContext());
+        mRangebar = new RangeBar(super.getContext(), null);
 
         if(mStartsNegative) {
             mRangebar.setTickStart(0);
