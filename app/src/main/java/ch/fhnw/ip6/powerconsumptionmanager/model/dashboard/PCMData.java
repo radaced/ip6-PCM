@@ -14,6 +14,7 @@ public class PCMData {
     private double mAutarchy;
     private double mSelfsupply;
     private double mConsumption;
+    private int mScaleMinConsumption, mScaleMaxConsumption;
     private int mConsumptionColor;
 
     private LinkedList<String> mStatisticsDates = new LinkedList<>();
@@ -90,6 +91,22 @@ public class PCMData {
 
     public void setConsumption(double mConsumption) {
         this.mConsumption = mConsumption;
+    }
+
+    public int getMinScaleConsumption() {
+        return mScaleMinConsumption;
+    }
+
+    public void setMinScaleConsumption(int mScaleMinConsumption) {
+        this.mScaleMinConsumption = mScaleMinConsumption;
+    }
+
+    public int getMaxScaleConsumption() {
+        return mScaleMaxConsumption;
+    }
+
+    public void setMaxScaleConsumption(int mScaleMaxConsumption) {
+        this.mScaleMaxConsumption = mScaleMaxConsumption;
     }
 
     public int getConsumptionColor() {

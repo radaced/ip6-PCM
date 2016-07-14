@@ -70,7 +70,12 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
 
         mDashboardHelper.setSummaryRatio(getString(R.string.text_autarchy), (int) mAppContext.getPCMData().getAutarchy());
         mDashboardHelper.setSummaryRatio(getString(R.string.text_selfsupply), (int) mAppContext.getPCMData().getSelfsupply());
-        mDashboardHelper.setSummaryRatio(getString(R.string.text_consumption), (int) mAppContext.getPCMData().getConsumption());
+        mDashboardHelper.setSummaryRatio(
+            getString(R.string.text_consumption),
+            (int) mAppContext.getPCMData().getConsumption(),
+            mAppContext.getPCMData().getMinScaleConsumption(),
+            mAppContext.getPCMData().getMaxScaleConsumption()
+        );
 
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.dynamic_content_fragment, CurrentValuesFragment.newInstance());

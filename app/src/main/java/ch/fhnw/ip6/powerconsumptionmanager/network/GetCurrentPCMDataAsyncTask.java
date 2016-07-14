@@ -90,11 +90,13 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
             mPCMData.setSelfsupply(dataJson.getDouble("Eigenverbrauch(%)"));
             mPCMData.setConsumption(dataJson.getDouble("Bezug(kW)"));
 
-            int occupationColorCode = dataJson.getInt("Bezug(Farbe)");
-            int red = occupationColorCode >> 16 & 0xff;
-            int green = occupationColorCode >> 8 & 0xff;
-            int blue = occupationColorCode & 0xff;
+            int red = dataJson.getInt("SaeulenFarbe(R)");
+            int green = dataJson.getInt("SaeulenFarbe(G)");
+            int blue = dataJson.getInt("SaeulenFarbe(B)");
             mPCMData.setConsumptionColor(Color.rgb(red, green, blue));
+
+            mPCMData.setMinScaleConsumption(dataJson.getInt("Grenze_unten(kW)"));
+            mPCMData.setMaxScaleConsumption(dataJson.getInt("Grenze_oben(kW)"));
         } catch (JSONException e) {
             Log.e(TAG, "JSON exception while processing current statistics data.");
             success = false;
@@ -110,7 +112,12 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
             for(int i = 0; i < dataJson.length(); i++) {
                 JSONObject dataJsonEntry = (JSONObject) dataJson.get(i);
-                PCMComponentData ccdm = new PCMComponentData(dataJsonEntry.getString("Name"), dataJsonEntry.getJSONObject("Data"));
+                PCMComponentData ccdm = new PCMComponentData(
+                    dataJsonEntry.getString("Name"),
+                    dataJsonEntry.getJSONObject("Data"),
+                    dataJsonEntry.getInt("Grenze_unten(kW)"),
+                    dataJsonEntry.getInt("Grenze_oben(kW)")
+                );
                 mPCMData.getComponentData().put(dataJsonEntry.getString("Name"), ccdm);
             }
         } catch (JSONException e) {

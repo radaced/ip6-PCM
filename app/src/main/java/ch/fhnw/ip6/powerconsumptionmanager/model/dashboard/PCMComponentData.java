@@ -4,7 +4,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSetting;
@@ -14,14 +13,17 @@ public class PCMComponentData {
     private double mPower;
     private double mEnergy;
     private double mCost;
+    private int mScaleMinArc, mScaleMaxArc;
     private LinkedList<PCMSetting> mSettings = new LinkedList<>();
     private LinkedList<Double> mStatistics = new LinkedList<>();
 
-    public PCMComponentData(String name, JSONObject componentData) throws JSONException {
+    public PCMComponentData(String name, JSONObject componentData, int minScaleArc, int scaleMaxArc) throws JSONException {
         mName = name;
         mPower = componentData.getDouble("Leistung");
         mEnergy = componentData.getDouble("Energie");
         mCost = componentData.getDouble("Kosten");
+        mScaleMinArc = minScaleArc;
+        mScaleMaxArc = scaleMaxArc;
     }
 
 
@@ -49,6 +51,14 @@ public class PCMComponentData {
 
     public double getCost() {
         return mCost;
+    }
+
+    public int getMinArcScale() {
+        return mScaleMinArc;
+    }
+
+    public int getMaxArcScale() {
+        return mScaleMaxArc;
     }
 
     public LinkedList<PCMSetting> getSettings() {

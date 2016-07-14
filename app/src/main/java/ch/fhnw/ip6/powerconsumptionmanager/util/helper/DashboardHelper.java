@@ -103,17 +103,29 @@ public class DashboardHelper {
 
     public void setSummaryRatio(String key, double ratio) {
         WaveLoadingView wlv = mSummaryViews.get(key);
+        double progress = Math.round(ratio);
+        wlv.setProgressValue((int) progress);
+        wlv.setCenterTitle(String.valueOf((int) Math.round(ratio)));
+    }
 
-        double progress;
-        if(mOverviewContext.getString(R.string.text_consumption).equals(key)) {
-            wlv.setWaveColor(mAppContext.getPCMData().getConsumptionColor());
-            // TODO: Make dynamic (currently fixed scale with +15 to -15 --> 3.3)
-            int absRatio = (int) Math.abs(ratio);
-            progress = (Math.signum(ratio) >= 0) ? (int) (50 + absRatio * 3.3) : (int) (50 - absRatio * 2.5);
-            progress = Math.round(progress);
+    public void setSummaryRatio(String key, double ratio, int scaleMin, int scaleMax) {
+        WaveLoadingView wlv = mSummaryViews.get(key);
+        wlv.setWaveColor(mAppContext.getPCMData().getConsumptionColor());
+        int absScale;
+        if(scaleMin < 0) {
+            if(scaleMax < 0) {
+                absScale = scaleMax - scaleMin;
+            } else {
+                absScale = Math.abs(scaleMin) + scaleMax;
+            }
         } else {
-            progress = Math.round(ratio);
+            absScale = scaleMax - scaleMin;
         }
+        int absRatio = (int) Math.abs(ratio);
+        double progress = (ratio >= scaleMin + (absScale / 2)) ?
+                          (50 + absRatio * (100 / absScale)) :
+                          (50 - absRatio * (100 / absScale));
+        progress = Math.round(progress);
 
         wlv.setProgressValue((int) progress);
         wlv.setCenterTitle(String.valueOf((int) Math.round(ratio)));
@@ -123,12 +135,21 @@ public class DashboardHelper {
         this.setSummaryRatio(key, ratio);
     }
 
+    public void updateSummaryRatio(String key, double ratio, int scaleMin, int scaleMax) {
+        this.setSummaryRatio(key, ratio, scaleMin, scaleMax);
+    }
+
     public void updateOverview() {
         PCMData currentData = mAppContext.getPCMData();
 
         updateSummaryRatio(mOverviewContext.getString(R.string.text_autarchy), currentData.getAutarchy());
         updateSummaryRatio(mOverviewContext.getString(R.string.text_selfsupply), currentData.getSelfsupply());
-        updateSummaryRatio(mOverviewContext.getString(R.string.text_consumption), currentData.getConsumption());
+        updateSummaryRatio(
+            mOverviewContext.getString(R.string.text_consumption),
+            currentData.getConsumption(),
+            currentData.getMinScaleConsumption(),
+            currentData.getMaxScaleConsumption()
+        );
     }
 
 
@@ -173,8 +194,10 @@ public class DashboardHelper {
         LinkedHashMap<String, PCMComponentData> dataMap = mAppContext.getPCMData().getComponentData();
 
         for(Map.Entry<String, PCMComponentData> entry : dataMap.entrySet()) {
-            /* TODO: Make dynamic (currently fixed scale with 0 to 10 kW) */
-            updatePowerForComponent(entry.getKey(), entry.getValue().getPower() * 10);
+            int scaleMin = entry.getValue().getMinArcScale();
+            int scaleMax = entry.getValue().getMaxArcScale();
+
+            updatePowerForComponent(entry.getKey(), entry.getValue().getPower() * (100 / (scaleMax - scaleMin)));
             updatePowerLabel(entry.getKey(), entry.getValue().getPower());
         }
 
@@ -222,12 +245,13 @@ public class DashboardHelper {
         arcsv.setStartAngle(135);
         arcsv.setSweepAngle(270);
         this.addComponentView(componentId, arcsv);
+        int scaleMin = componentData.getMinArcScale();
+        int scaleMax = componentData.getMaxArcScale();
         this.setPowerForComponent(
             componentId,
             this.generateModelForComponent(
                 "",
-                /* TODO: Make dynamic (currently fixed scale with 0 to 10 kW) */
-                (int) componentData.getPower() * 10,
+                (int) componentData.getPower() * (100 / (scaleMax - scaleMin)),
                 ContextCompat.getColor(mCurrentValuesContext, R.color.colorArcBackground),
                 color
             )
