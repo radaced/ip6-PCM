@@ -17,7 +17,7 @@ import com.gigamole.library.ArcProgressStackView;
 import java.util.LinkedHashMap;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMComponentData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.PCMComponent;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.util.helper.DashboardHelper;
 
@@ -48,7 +48,7 @@ public class CurrentValuesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
-        LinkedHashMap<String, PCMComponentData> dataMap = appContext.getPCMData().getComponentData();
+        LinkedHashMap<String, PCMComponent> dataMap = appContext.getPCMData().getComponentData();
 
         for (String key : dataMap.keySet()) {
             mDashboardHelper.generateComponentUIElement(

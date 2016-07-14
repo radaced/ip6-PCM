@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.model.dashboard;
+package ch.fhnw.ip6.powerconsumptionmanager.model;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSetting;
 
-public class PCMComponentData {
+public class PCMComponent {
     private String mName;
     private double mPower;
     private double mEnergy;
@@ -17,7 +17,7 @@ public class PCMComponentData {
     private LinkedList<PCMSetting> mSettings = new LinkedList<>();
     private LinkedList<Double> mStatistics = new LinkedList<>();
 
-    public PCMComponentData(String name, JSONObject componentData, int minScaleArc, int scaleMaxArc) throws JSONException {
+    public PCMComponent(String name, JSONObject componentData, int minScaleArc, int scaleMaxArc) throws JSONException {
         mName = name;
         mPower = componentData.getDouble("Leistung");
         mEnergy = componentData.getDouble("Energie");

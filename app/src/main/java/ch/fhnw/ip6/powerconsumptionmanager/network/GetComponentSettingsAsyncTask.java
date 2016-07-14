@@ -12,29 +12,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.PCMData;
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSlider;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import okhttp3.Request;
 import okhttp3.Response;
 
-/**
- * Created by Patrik on 12.07.2016.
- */
 public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "GetCompSettAsyncTask";
 
     private PowerConsumptionManagerAppContext mAppContext;
-    private Context mContext;
     private AsyncTaskCallback mCallbackContext;
     private String mComponentName;
     private String mURL;
-    private ArrayList<String> mConnectedComponents = new ArrayList<>();
     private PCMData mPCMData;
 
-    public GetComponentSettingsAsyncTask(Context context, AsyncTaskCallback callbackContext, String componentName) {
-        mAppContext = (PowerConsumptionManagerAppContext) context.getApplicationContext();
-        mContext = context;
+    public GetComponentSettingsAsyncTask(PowerConsumptionManagerAppContext appContext, AsyncTaskCallback callbackContext, String componentName) {
+        mAppContext = appContext;
         mCallbackContext = callbackContext;
         mComponentName = componentName;
         mURL = "http://" + mAppContext.getIPAdress() + ":";
@@ -96,69 +90,25 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
             JSONArray dataJson = new JSONArray(response.body().string());
             for(int i = 0; i < dataJson.length(); i++) {
                 JSONObject dataJsonEntry = (JSONObject) dataJson.get(i);
-                String settingName = dataJsonEntry.getString("Signal");
-                String type = "";
 
-                switch (settingName) {
-                    /* TODO: cases should depend on types (json parameter) not on setting-names */
-                    case "Speichertemperatur1 (°C)":
-                    case "Speichertemperatur2 (°C)":
-                    case "Raumtemperatur (°C)":
-                        type = "positive_slider";
-                        break;
-                    case "Raumtemp. Absenk (°C)":
-                        type = "negative_slider";
-                        break;
-                    case "Stellwert (kW)":
-                        type = "positive_negative_slider";
-                        break;
-                    case "Programmende":
-                        type = "timer";
-                        break;
-                    case "Ladeplan":
-                        type = "plan";
-                        break;
-                    default:
-                        break;
-                }
-
-                switch (type) {
-                    case "positive_slider":
+                switch (dataJsonEntry.getString("Typ")) {
+                    case "slider":
+                    case "numeric":
                         mPCMData.getComponentData().get(mComponentName).getSettings().add(
-                            /* TODO: dynamic min/maxScale and unit */
                             new PCMSlider(
-                                mContext,
-                                settingName,
-                                "°C",
-                                0,
-                                90,
+                                dataJsonEntry.getString("Signal"),
+                                dataJsonEntry.getString("Signal").split("\\(")[1].split("\\)")[0],
+                                (float) dataJsonEntry.getDouble("Grenze_unten"),
+                                (float) dataJsonEntry.getDouble("Grenze_oben"),
                                 (float) dataJsonEntry.getDouble("Min"),
                                 (float) dataJsonEntry.getDouble("Max"),
-                                true,
-                                false
+                                dataJsonEntry.getBoolean("isRange")
                             )
                         );
                         break;
-                    case "negative_slider":
-                    case "positive_negative_slider":
-                        mPCMData.getComponentData().get(mComponentName).getSettings().add(
-                            /* TODO: dynamic min/maxScale and unit */
-                                new PCMSlider(
-                                        mContext,
-                                        settingName,
-                                        "°C",
-                                        0,
-                                        90,
-                                        (float) dataJsonEntry.getDouble("Min"),
-                                        (float) dataJsonEntry.getDouble("Max"),
-                                        true,
-                                        true
-                                )
-                        );
-                        break;
-                    case "timer":
-                        break;
                     case "plan":
+                        break;
+                    case "uhrzeit":
                         break;
                     default:
                         break;
@@ -181,7 +131,7 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
 //
 //            for(int i = 0; i < dataJson.length(); i++) {
 //                JSONObject dataJsonEntry = (JSONObject) dataJson.get(i);
-//                PCMComponentData ccdm = new PCMComponentData(dataJsonEntry.getString("Name"), dataJsonEntry.getJSONObject("Data"));
+//                PCMComponent ccdm = new PCMComponent(dataJsonEntry.getString("Name"), dataJsonEntry.getJSONObject("Data"));
 //                mPCMData.getComponentData().put(dataJsonEntry.getString("Name"), ccdm);
 //            }
 //        } catch (JSONException e) {

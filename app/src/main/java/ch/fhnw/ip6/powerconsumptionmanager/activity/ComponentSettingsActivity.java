@@ -44,7 +44,7 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
             mComponentName = mAppContext.getComponents().get(index);
 
             getSupportActionBar().setTitle(getString(R.string.title_activity_actionbar) + " " + mComponentName);
-            new GetComponentSettingsAsyncTask(this, this, mComponentName).execute();
+            new GetComponentSettingsAsyncTask(mAppContext, this, mComponentName).execute();
         }
     }
 
@@ -62,7 +62,7 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
     @Override
     public void asyncTaskFinished(boolean result) {
         for (PCMSetting setting : mAppContext.getPCMData().getComponentData().get(mComponentName).getSettings()) {
-            setting.inflateLayout(mSettingsContainer);
+            setting.inflateLayout(this, mSettingsContainer);
         }
 
         mLoadingLayout.setVisibility(View.GONE);

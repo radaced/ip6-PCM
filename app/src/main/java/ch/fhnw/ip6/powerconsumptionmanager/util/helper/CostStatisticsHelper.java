@@ -16,8 +16,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import java.util.ArrayList;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMComponentData;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.PCMComponent;
+import ch.fhnw.ip6.powerconsumptionmanager.model.PCMData;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.CostStatisticsFormatter;
 import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.XAxisDateFormatter;
@@ -103,7 +103,7 @@ public class CostStatisticsHelper {
 
             float[] componentValuesPerDate = new float[amountOfComponents];
             int j = 0;
-            for (PCMComponentData componentData : pcmData.getComponentData().values()) {
+            for (PCMComponent componentData : pcmData.getComponentData().values()) {
                 // Ignores the components Photovoltaik and VerbrauchTot because they are not listed in the cost statistics
                 if(componentData.getStatistics().size() != 0) {
                     componentValuesPerDate[j] = componentData.getStatistics().get(i).floatValue();

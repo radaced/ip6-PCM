@@ -1,12 +1,18 @@
 package ch.fhnw.ip6.powerconsumptionmanager.model.settings;
 
 import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.appyvet.rangebar.IRangeBarFormatter;
 import com.appyvet.rangebar.RangeBar;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.HashMap;
+import java.util.zip.DeflaterInputStream;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 
@@ -17,19 +23,12 @@ public class PCMSlider extends PCMSetting {
     private float mMinValue, mMaxValue;
     private boolean mIsRange;
     private boolean mStartsNegative;
+    private HashMap<Float, Float> mScaleMap = new HashMap<>();
 
     private RangeBar mRangebar;
 
-    public PCMSlider(Context c,
-                     String name,
-                     String unit,
-                     float minScale,
-                     float maxScale,
-                     float minValue,
-                     float maxValue,
-                     boolean isRange,
-                     boolean startsNegative) {
-        super(c, name);
+    public PCMSlider(String name, String unit, float minScale, float maxScale, float minValue, float maxValue, boolean isRange) {
+        super(name);
         mUnit = unit;
         mMinScale = minScale;
         mMaxScale = maxScale;
@@ -37,55 +36,68 @@ public class PCMSlider extends PCMSetting {
         if(mIsRange = isRange) {
             mMaxValue = maxValue;
         }
-        mStartsNegative = startsNegative;
+        mStartsNegative = minScale < 0;
     }
 
     @Override
-    public void inflateLayout(LinearLayout container) {
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+    public void inflateLayout(Context context, LinearLayout container) {
+        final NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setMinimumFractionDigits(1);
+        float density = context.getResources().getDisplayMetrics().density;
+
+        LinearLayout.LayoutParams tvLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
+        tvLayoutParams.setMargins((int) (8 * density), 0, (int) (8 * density), 0);
 
-        TextView tvSettingDescription = new TextView(super.getContext());
+        TextView tvSettingDescription = new TextView(context);
         tvSettingDescription.setText(super.getName());
-        tvSettingDescription.setTextSize(12);
-        tvSettingDescription.setTextColor(ContextCompat.getColor(super.getContext(), R.color.colorTextPrimary));
-        tvSettingDescription.setLayoutParams(layoutParams);
+        tvSettingDescription.setTextSize(14);
+        tvSettingDescription.setTextColor(ContextCompat.getColor(context, R.color.colorTextPrimary));
+        tvSettingDescription.setLayoutParams(tvLayoutParams);
 
         container.addView(tvSettingDescription);
 
-        mRangebar = new RangeBar(super.getContext(), null);
+        LinearLayout.LayoutParams rbLayoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (int) (80 * density)
+        );
+        rbLayoutParams.setMargins(0, 0, 0, (int) (15 * density));
+        // Use this constructor new Rangebar(context, attributeset) specifically, otherwise an essential map from the library
+        // gets not instantiated (mTickMap)!
+        mRangebar = new RangeBar(context, null);
+
+        for (int i = 0; i <= mMaxScale - mMinScale; i++) {
+            mScaleMap.put(mMinScale + i, (float) i);
+            mScaleMap.put((float) (mMinScale + i + 0.5), (float) (i + 0.5));
+        }
 
         if(mStartsNegative) {
+            mRangebar.setTickEnd(mMaxScale - mMinScale);
             mRangebar.setTickStart(0);
-            mRangebar.setTickEnd((mMinScale * (-1)) + mMaxScale);
+
         } else {
-            mRangebar.setTickStart(mMinScale);
             mRangebar.setTickEnd(mMaxScale);
+            mRangebar.setTickStart(mMinScale);
         }
         mRangebar.setTickInterval((float) 0.5);
 
         mRangebar.setRangeBarEnabled(mIsRange);
         if(mIsRange) {
-            mRangebar.setRangePinsByValue(mMinValue, mMaxValue);
+            mRangebar.setRangePinsByValue(mScaleMap.get(mMinValue) + mMinScale, mScaleMap.get(mMaxValue) + mMinScale);
         } else {
-            mRangebar.setSeekPinByValue(mMinValue);
+            mRangebar.setSeekPinByValue(mScaleMap.get(mMinValue) + mMinScale);
         }
 
+        mRangebar.setPinRadius(75);
         mRangebar.setFormatter(new IRangeBarFormatter() {
             @Override
             public String format(String value) {
-                if(mStartsNegative) {
-                    if(Double.valueOf(value) < (mMinScale * (-1))) {
-                        value = "-" + (Double.valueOf(value) - (mMinScale * (-1)));
-                    }
-                }
-                return value + " " + mUnit;
+                return numberFormat.format(Double.valueOf(value)) + " " + mUnit;
             }
         });
-        mRangebar.setLayoutParams(layoutParams);
-
+        mRangebar.setLayoutParams(rbLayoutParams);
         container.addView(mRangebar);
     }
 

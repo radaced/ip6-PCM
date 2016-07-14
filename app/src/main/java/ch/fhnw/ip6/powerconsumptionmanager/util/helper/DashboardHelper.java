@@ -29,8 +29,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMComponentData;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.PCMComponent;
+import ch.fhnw.ip6.powerconsumptionmanager.model.PCMData;
 import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.CostValueFormatter;
 import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.EnergyValueFormatter;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
@@ -191,9 +191,9 @@ public class DashboardHelper {
     }
 
     public void updateCurrentValues() {
-        LinkedHashMap<String, PCMComponentData> dataMap = mAppContext.getPCMData().getComponentData();
+        LinkedHashMap<String, PCMComponent> dataMap = mAppContext.getPCMData().getComponentData();
 
-        for(Map.Entry<String, PCMComponentData> entry : dataMap.entrySet()) {
+        for(Map.Entry<String, PCMComponent> entry : dataMap.entrySet()) {
             int scaleMin = entry.getValue().getMinArcScale();
             int scaleMax = entry.getValue().getMaxArcScale();
 
@@ -218,7 +218,7 @@ public class DashboardHelper {
     }
 
     public void generateComponentUIElement(String componentId, int color) {
-        PCMComponentData componentData = mAppContext.getPCMData().getComponentData().get(componentId);
+        PCMComponent componentData = mAppContext.getPCMData().getComponentData().get(componentId);
 
         // RelativeLayout container
         RelativeLayout rlContainer = new RelativeLayout(mCurrentValuesContext);
@@ -393,7 +393,7 @@ public class DashboardHelper {
     }
 
     public void setupDailyBarChartData() {
-        LinkedHashMap<String, PCMComponentData> dataMap = mAppContext.getPCMData().getComponentData();
+        LinkedHashMap<String, PCMComponent> dataMap = mAppContext.getPCMData().getComponentData();
         ArrayList<String> xValues = new ArrayList<>(dataMap.keySet());
         ArrayList<BarEntry> yValuesEnergy = new ArrayList<>();
         ArrayList<BarEntry> yValuesCost = new ArrayList<>();
@@ -425,7 +425,7 @@ public class DashboardHelper {
 
     public void updateDailyValues() {
         if(mBCDailyData.getData() != null && mBCDailyData.getData().getDataSetCount() > 0) {
-            LinkedHashMap<String, PCMComponentData> dataMap = mAppContext.getPCMData().getComponentData();
+            LinkedHashMap<String, PCMComponent> dataMap = mAppContext.getPCMData().getComponentData();
             ArrayList<BarEntry> yValuesEnergy = new ArrayList<>();
             ArrayList<BarEntry> yValuesCost = new ArrayList<>();
 
@@ -445,9 +445,9 @@ public class DashboardHelper {
         }
     }
 
-    private void fillDataSets(LinkedHashMap<String, PCMComponentData> dataMap, ArrayList<BarEntry> yValuesEnergy, ArrayList<BarEntry> yValuesCost) {
+    private void fillDataSets(LinkedHashMap<String, PCMComponent> dataMap, ArrayList<BarEntry> yValuesEnergy, ArrayList<BarEntry> yValuesCost) {
         int i = 0;
-        for (Map.Entry<String, PCMComponentData> entry : dataMap.entrySet()) {
+        for (Map.Entry<String, PCMComponent> entry : dataMap.entrySet()) {
             yValuesEnergy.add(new BarEntry((float) entry.getValue().getEnergy(), i));
             yValuesCost.add(new BarEntry((float) entry.getValue().getCost(), i++));
         }

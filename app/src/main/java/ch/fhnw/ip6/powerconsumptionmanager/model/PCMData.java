@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.model.dashboard;
+package ch.fhnw.ip6.powerconsumptionmanager.model;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,7 +22,7 @@ public class PCMData {
     private LinkedList<Double> mConsumptionStatisticsValues = new LinkedList<>();
     private LinkedList<Double> mSurplusStatisticsValues = new LinkedList<>();
 
-    private LinkedHashMap<String, PCMComponentData> mPCMComponentData = new LinkedHashMap<>();
+    private LinkedHashMap<String, PCMComponent> mPCMComponentData = new LinkedHashMap<>();
 
 
 
@@ -62,7 +62,7 @@ public class PCMData {
         mConsumptionStatisticsValues.clear();
         mSurplusStatisticsValues.clear();
 
-        for (PCMComponentData data : mPCMComponentData.values()) {
+        for (PCMComponent data : mPCMComponentData.values()) {
             data.getStatistics().clear();
         }
     }
@@ -133,7 +133,7 @@ public class PCMData {
         return mStatisticsDates;
     }
 
-    public LinkedHashMap<String, PCMComponentData> getComponentData() {
+    public LinkedHashMap<String, PCMComponent> getComponentData() {
         return mPCMComponentData;
     }
 }

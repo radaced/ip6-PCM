@@ -11,8 +11,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMComponentData;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.PCMComponent;
+import ch.fhnw.ip6.powerconsumptionmanager.model.PCMData;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -112,7 +112,7 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
             for(int i = 0; i < dataJson.length(); i++) {
                 JSONObject dataJsonEntry = (JSONObject) dataJson.get(i);
-                PCMComponentData ccdm = new PCMComponentData(
+                PCMComponent ccdm = new PCMComponent(
                     dataJsonEntry.getString("Name"),
                     dataJsonEntry.getJSONObject("Data"),
                     dataJsonEntry.getInt("Grenze_unten(kW)"),

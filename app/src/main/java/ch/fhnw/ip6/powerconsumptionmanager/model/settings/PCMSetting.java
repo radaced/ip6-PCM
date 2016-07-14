@@ -4,27 +4,18 @@ import android.content.Context;
 import android.widget.LinearLayout;
 
 public abstract class PCMSetting {
-    private Context mContext;
     private String mName;
 
 
 
-    public PCMSetting(Context c, String name) {
-        mContext = c;
+    public PCMSetting(String name) {
         mName = name;
     }
 
-    public abstract void inflateLayout(LinearLayout container);
+    public abstract void inflateLayout(Context context, LinearLayout container);
     public abstract String generateSaveJson();
 
 
-    public Context getContext() {
-        return mContext;
-    }
-
-    public void setContext(Context mContext) {
-        this.mContext = mContext;
-    }
 
     public String getName() {
         return mName;

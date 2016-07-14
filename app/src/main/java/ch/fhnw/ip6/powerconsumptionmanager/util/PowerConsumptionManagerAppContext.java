@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionChartDataModel;
 import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformationModel;
-import ch.fhnw.ip6.powerconsumptionmanager.model.dashboard.PCMData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.PCMData;
 import okhttp3.OkHttpClient;
 
 /**
