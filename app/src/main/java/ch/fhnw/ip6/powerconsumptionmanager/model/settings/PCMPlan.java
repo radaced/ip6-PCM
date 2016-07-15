@@ -8,6 +8,7 @@ import com.roomorama.caldroid.CaldroidFragment;
 
 import java.util.Calendar;
 
+import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.activity.ComponentSettingsActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.util.helper.PlanHelper;
 
@@ -20,6 +21,8 @@ public class PCMPlan extends PCMSetting {
     public PCMPlan(String name) {
         super(name);
         mFragmentContainerId = super.getName().hashCode();
+        // ID must be positive
+        mFragmentContainerId = mFragmentContainerId < 0 ? mFragmentContainerId * (-1) : mFragmentContainerId;
     }
 
     @Override
@@ -54,7 +57,6 @@ public class PCMPlan extends PCMSetting {
         mPlanHelper.generateListener();
 
         transaction.replace(mFragmentContainerId, mPlanHelper.getCaldroid()).commit();
-
         container.addView(llFragmentContainer);
     }
 

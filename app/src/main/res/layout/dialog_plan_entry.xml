@@ -5,16 +5,6 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tvInfoTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_vertical_margin"
-        android:layout_marginLeft="@dimen/space_horizontal_margin"
-        android:layout_marginStart="@dimen/space_horizontal_margin"
-        android:textAppearance="@android:style/TextAppearance.Large"
-        android:textColor="@color/colorTextPrimaryInverse"/>
-
-    <TextView
         android:id="@+id/tvInfoTimerange"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

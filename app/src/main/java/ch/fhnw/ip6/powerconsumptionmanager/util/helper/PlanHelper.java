@@ -152,21 +152,18 @@ public class PlanHelper implements DataLoaderCallback {
                     PlanEntryModel pem = mInstances.get(pressedDay);
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.CustomDialogStyle);
-                    builder.setTitle(mContext.getString(R.string.text_pref_cost_statistics_period_title));
+                    builder.setTitle(titleFormat.format(pem.getBegin()));
 
                     LayoutInflater layoutInflater = mContext.getLayoutInflater();
                     View planEntryView = layoutInflater.inflate(R.layout.dialog_plan_entry, null);
                     builder.setView(planEntryView);
 
-                    mInfoTitle = (TextView) planEntryView.findViewById(R.id.tvInfoTitle);
                     mInfoTimerange = (TextView) planEntryView.findViewById(R.id.tvInfoTimerange);
                     mInfoRoute = (TextView) planEntryView.findViewById(R.id.tvInfoRoute);
                     mInfoRouteInformation = (TextView) planEntryView.findViewById(R.id.tvInfoRouteInformation);
                     mInfoDescription = (TextView) planEntryView.findViewById(R.id.tvInfoDescription);
 
                     // Fill layout with stored values
-                    // Title
-                    mInfoTitle.setText(titleFormat.format(pem.getBegin()));
                     // Description
                     if(!pem.getDescription().equals("")) {
                         mInfoDescription.setText(pem.getDescription());
@@ -202,41 +199,7 @@ public class PlanHelper implements DataLoaderCallback {
                         }
                     });
 
-
-//                    // Title
-//                    TextView title = (TextView) v.findViewById(R.id.tvInfoTitle);
-//                    title.setText(titleFormat.format(pem.getBegin()));
-//                    // Description
-//                    TextView description = (TextView) v.findViewById(R.id.tvInfoDescription);
-//                    if(!pem.getDescription().equals("")) {
-//                        description.setText(pem.getDescription());
-//                    } else {
-//                        description.setText(mContext.getString(R.string.text_information_no_description));
-//                    }
-//                    description.setBackgroundResource(R.color.colorTextViewBackground);
-//                    description.setMovementMethod(ScrollingMovementMethod.getInstance());
-//                    // Time range of instance
-//                    TextView timeRange = (TextView) v.findViewById(R.id.tvInfoTimerange);
-//                    String time = timeRangeFormat.format(pem.getBegin()) + " - " + timeRangeFormat.format(pem.getEnd());
-//                    timeRange.setText(time);
-//                    /*
-//                     * Display route and load distance and duration to reach destination between two given
-//                     * locations from the instance
-//                     */
-//                    TextView routeOrigDest = (TextView) v.findViewById(R.id.tvInfoRoute);
-//                    String[] locations = pem.getEventLocation().split("/");
-//                    String route = "-";
-//                    if(locations.length == 2 && !"".equals(locations[0]) && !"".equals(locations[1])) {
-//                        route = locations[0].trim() +
-//                                       " " +
-//                                       mContext.getString(R.string.text_route_information_route_to) +
-//                                       " " +
-//                                       locations[1].trim();
-//                        calculateDistance(locations[0].trim(), locations[1].trim());
-//                    } else {
-//                        displayRouteInformation(v, mContext.getString(R.string.text_route_information_no_data), "");
-//                    }
-//                    routeOrigDest.setText(route);
+                    builder.show();
                 }
             }
 

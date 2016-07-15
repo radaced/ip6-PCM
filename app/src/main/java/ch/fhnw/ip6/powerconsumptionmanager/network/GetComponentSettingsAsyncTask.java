@@ -95,25 +95,26 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
             JSONArray dataJson = new JSONArray(response.body().string());
             for(int i = 0; i < dataJson.length(); i++) {
                 JSONObject dataJsonEntry = (JSONObject) dataJson.get(i);
-                String name = "", unit = "";
+                String name = "";
                 if (dataJsonEntry.has("Signal")) {
                     name = dataJsonEntry.getString("Signal");
-                    unit = dataJsonEntry.getString("Signal").split("\\(")[1].split("\\)")[0]; // TODO: store in a key-value pair "unit"
                 }
 
                 if(dataJsonEntry.has("Typ") && !"".equals(name)) {
                     switch (dataJsonEntry.getString("Typ")) {
                         case "slider":
+                            // TODO: store in a key-value pair "unit"
+                            //String unit = dataJsonEntry.getString("Signal").split("\\(")[1].split("\\)")[0];
                             settingList.add(
-                                    new PCMSlider(
-                                            name,
-                                            unit,
-                                            (float) dataJsonEntry.getDouble("Grenze_unten"),
-                                            (float) dataJsonEntry.getDouble("Grenze_oben"),
-                                            (float) dataJsonEntry.getDouble("Min"),
-                                            (float) dataJsonEntry.getDouble("Max"),
-                                            dataJsonEntry.getBoolean("isRange")
-                                    )
+                                new PCMSlider(
+                                    name,
+                                    "",
+                                    (float) dataJsonEntry.getDouble("Grenze_unten"),
+                                    (float) dataJsonEntry.getDouble("Grenze_oben"),
+                                    (float) dataJsonEntry.getDouble("Min"),
+                                    (float) dataJsonEntry.getDouble("Max"),
+                                    dataJsonEntry.getBoolean("isRange")
+                                )
                             );
                             break;
 
