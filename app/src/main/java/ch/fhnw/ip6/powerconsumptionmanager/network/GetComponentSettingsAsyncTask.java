@@ -10,10 +10,14 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.PCMData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMPlan;
+import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSetting;
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSlider;
+import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSwitch;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -85,33 +89,54 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
     public boolean handleComfortSettingsResponse(Response response) throws IOException {
         boolean success = true;
         mPCMData.getComponentData().get(mComponentName).getSettings().clear();
+        List<PCMSetting> settingList = mPCMData.getComponentData().get(mComponentName).getSettings();
 
         try {
             JSONArray dataJson = new JSONArray(response.body().string());
             for(int i = 0; i < dataJson.length(); i++) {
                 JSONObject dataJsonEntry = (JSONObject) dataJson.get(i);
+                String name = "", unit = "";
+                if (dataJsonEntry.has("Signal")) {
+                    name = dataJsonEntry.getString("Signal");
+                    unit = dataJsonEntry.getString("Signal").split("\\(")[1].split("\\)")[0]; // TODO: store in a key-value pair "unit"
+                }
 
-                switch (dataJsonEntry.getString("Typ")) {
-                    case "slider":
-                    case "numeric":
-                        mPCMData.getComponentData().get(mComponentName).getSettings().add(
-                            new PCMSlider(
-                                dataJsonEntry.getString("Signal"),
-                                dataJsonEntry.getString("Signal").split("\\(")[1].split("\\)")[0],
-                                (float) dataJsonEntry.getDouble("Grenze_unten"),
-                                (float) dataJsonEntry.getDouble("Grenze_oben"),
-                                (float) dataJsonEntry.getDouble("Min"),
-                                (float) dataJsonEntry.getDouble("Max"),
-                                dataJsonEntry.getBoolean("isRange")
-                            )
-                        );
-                        break;
-                    case "plan":
-                        break;
-                    case "uhrzeit":
-                        break;
-                    default:
-                        break;
+                if(dataJsonEntry.has("Typ") && !"".equals(name)) {
+                    switch (dataJsonEntry.getString("Typ")) {
+                        case "slider":
+                            settingList.add(
+                                    new PCMSlider(
+                                            name,
+                                            unit,
+                                            (float) dataJsonEntry.getDouble("Grenze_unten"),
+                                            (float) dataJsonEntry.getDouble("Grenze_oben"),
+                                            (float) dataJsonEntry.getDouble("Min"),
+                                            (float) dataJsonEntry.getDouble("Max"),
+                                            dataJsonEntry.getBoolean("isRange")
+                                    )
+                            );
+                            break;
+
+                        case "plan":
+                            settingList.add(new PCMPlan(name));
+                            break;
+
+                        case "uhrzeit":
+                            break;
+
+                        case "switch": // TODO: not existing yet (over getProgramSettings-Webservice)
+                            String textOn = "", textOff = ""; boolean isOn = true;
+                            if(dataJsonEntry.has("textOn")) { textOn = dataJsonEntry.getString("textOn"); } // TODO: not existing yet
+                            if(dataJsonEntry.has("textOff")) { textOff = dataJsonEntry.getString("textOff"); } // TODO: not existing yet
+                            if(dataJsonEntry.has("isOn")) { isOn = dataJsonEntry.getBoolean("isOn"); } // TODO: not existing yet
+                            settingList.add(new PCMSwitch(dataJsonEntry.getString("Signal"), textOn, textOff, isOn));
+                            break;
+                        case "numeric":
+                        /* TODO: Receiving faulty data from the webservice (setting "Stellwert (kW)"), should also generate a PCMSlider */
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         } catch (JSONException e) {

@@ -18,7 +18,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/caldroid_info_title"
+            android:id="@+id/tvInfoTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_vertical_margin"
@@ -28,7 +28,7 @@
             android:textColor="@color/colorTextPrimaryInverse"/>
 
         <TextView
-            android:id="@+id/caldroid_info_timerange"
+            android:id="@+id/tvInfoTimerange"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/space_horizontal_margin"
@@ -36,7 +36,7 @@
             android:textColor="@color/colorTextPrimaryInverse"/>
 
         <TextView
-            android:id="@+id/caldroid_info_route"
+            android:id="@+id/tvInfoRoute"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/space_horizontal_margin"
@@ -45,7 +45,7 @@
             android:textColor="@color/colorTextPrimaryInverse"/>
 
         <TextView
-            android:id="@+id/caldroid_info_route_information"
+            android:id="@+id/tvInfoRouteInformation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/space_horizontal_margin"
@@ -53,7 +53,7 @@
             android:textColor="@color/colorTextPrimaryInverse"/>
 
         <TextView
-            android:id="@+id/caldroid_info_description"
+            android:id="@+id/tvInfoDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/double_space_vertical_margin"

@@ -64,6 +64,7 @@ public class PCMSlider extends PCMSetting {
                 (int) (80 * density)
         );
         rbLayoutParams.setMargins(0, 0, 0, (int) (15 * density));
+
         // Use this constructor new Rangebar(context, attributeset) specifically, otherwise an essential map from the library
         // gets not instantiated (mTickMap)!
         mRangebar = new RangeBar(context, null);
