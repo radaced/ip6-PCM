@@ -30,7 +30,7 @@ public class PCMSwitch extends PCMSetting {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        llLayoutParams.setMargins((int) (8 * density), 0, (int) (8 * density), (int) (15 * density));
+        llLayoutParams.setMargins(0, 0, 0, (int) (15 * density));
 
 
         LinearLayout llHorizontal = new LinearLayout(context);

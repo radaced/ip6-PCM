@@ -41,29 +41,18 @@ public class PCMSlider extends PCMSetting {
 
     @Override
     public void inflateLayout(Context context, LinearLayout container) {
+        super.inflateLayout(context, container);
+
         final NumberFormat numberFormat = NumberFormat.getInstance();
         numberFormat.setMinimumFractionDigits(1);
+
         float density = context.getResources().getDisplayMetrics().density;
-
-        LinearLayout.LayoutParams tvLayoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        tvLayoutParams.setMargins((int) (8 * density), 0, (int) (8 * density), 0);
-
-        TextView tvSettingDescription = new TextView(context);
-        tvSettingDescription.setText(super.getName());
-        tvSettingDescription.setTextSize(18);
-        tvSettingDescription.setTextColor(ContextCompat.getColor(context, R.color.colorTextPrimary));
-        tvSettingDescription.setLayoutParams(tvLayoutParams);
-
-        container.addView(tvSettingDescription);
 
         LinearLayout.LayoutParams rbLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 (int) (80 * density)
         );
-        rbLayoutParams.setMargins(0, 0, 0, (int) (15 * density));
+        rbLayoutParams.setMargins(0, 0, 0, (int) (MARGIN_BOTTOM * density));
 
         // Use this constructor new Rangebar(context, attributeset) specifically, otherwise an essential map from the library
         // gets not instantiated (mTickMap)!

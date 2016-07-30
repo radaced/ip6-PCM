@@ -14,9 +14,6 @@ import okhttp3.OkHttpClient;
  * Application context (storage of global app data and data received from web requests)
  */
 public class PowerConsumptionManagerAppContext extends Application {
-    public final String UNIT_KW = "kW";
-    public final String UNIT_KWH = "kWh";
-    public final String UNIT_PERCENTAGE = "%";
 
     private final OkHttpClient mOkHTTPClient = new OkHttpClient().newBuilder()
             .connectTimeout(5, TimeUnit.SECONDS)

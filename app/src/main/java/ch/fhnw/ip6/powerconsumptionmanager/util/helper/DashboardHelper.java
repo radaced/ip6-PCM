@@ -317,7 +317,7 @@ public class DashboardHelper {
         llValueLabelContainer.addView(tvValue);
 
         TextView tvValueUnit = new TextView(mCurrentValuesContext);
-        tvValueUnit.setText(mAppContext.UNIT_KW);
+        tvValueUnit.setText(mAppContext.getString(R.string.unit_kw));
         tvValueUnit.setTextSize(10);
         tvValueUnit.setTextColor(ContextCompat.getColor(mCurrentValuesContext, R.color.colorTextPrimary));
         tvValueUnit.setLayoutParams(tvValueLabelLayoutParams);

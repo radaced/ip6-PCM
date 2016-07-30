@@ -3,6 +3,13 @@
     <string name="app_name">PowerConsumptionManager</string>
     <string name="title_activity_main">Power Consumption Manager</string>
 
+    <!--****** Units ******-->
+    <string name="unit_km">km</string>
+    <string name="unit_kw">kW</string>
+    <string name="unit_percentage">%</string>
+    <string name="unit_kwh">kWh</string>
+
+
     <!--****** Activity main activity ******-->
     <string name="drawer_header">Power Consumption Manager</string>
     <string name="drawer_menu1">Overview</string>
@@ -109,8 +116,13 @@
         <item>Sa</item>
         <item>Su</item>
     </array>
-    <string name="text_km">km</string>
     <string name="text_departure_time">Departure</string>
     <string name="text_arrival_time">Arrival</string>
+    <string name="text_charged_energy">Charged Energy</string>
+    <string name="text_distance_reachable">Distance reachable</string>
+    <string name="text_plugged">Plugged</string>
+    <string name="text_plugged_true">Yes</string>
+    <string name="text_plugged_false">No</string>
+    <string name="text_charge_state_emobil">Charge state of Emobil</string>
 
 </resources>

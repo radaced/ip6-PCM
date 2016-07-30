@@ -44,27 +44,15 @@ public class PCMPlan extends PCMSetting {
 
     @Override
     public void inflateLayout(Context context, LinearLayout container) {
+        super.inflateLayout(context, container);
+
         float density = context.getResources().getDisplayMetrics().density;
-
-        LinearLayout.LayoutParams tvLayoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        tvLayoutParams.setMargins((int) (8 * density), 0, (int) (8 * density), 0);
-
-        TextView tvSettingDescription = new TextView(context);
-        tvSettingDescription.setText(super.getName());
-        tvSettingDescription.setTextSize(18);
-        tvSettingDescription.setTextColor(ContextCompat.getColor(context, R.color.colorTextPrimary));
-        tvSettingDescription.setLayoutParams(tvLayoutParams);
-
-        container.addView(tvSettingDescription);
 
         LinearLayout.LayoutParams llLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        llLayoutParams.setMargins((int) (8 * density), 0, (int) (8 * density), (int) (15 * density));
+        llLayoutParams.setMargins(0, 0, 0, (int) (MARGIN_BOTTOM * density));
 
         if(mUsesGoogleCalendar) {
             loadCalendarView(context, container, llLayoutParams);
@@ -217,7 +205,7 @@ public class PCMPlan extends PCMSetting {
         );
 
         TextView tvKm = new TextView(context);
-        tvKm.setText(context.getString(R.string.text_km));
+        tvKm.setText(context.getString(R.string.unit_km));
         tvKm.setLayoutParams(tvKmLayoutParams);
 
         llKm.addView(tvKm);

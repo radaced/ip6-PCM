@@ -55,17 +55,17 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
         mDashboardHelper.addSummaryView(
             getString(R.string.text_autarchy),
             (WaveLoadingView) getView().findViewById(R.id.wlvAutarchy),
-            mAppContext.UNIT_PERCENTAGE
+            mAppContext.getString(R.string.unit_percentage)
         );
         mDashboardHelper.addSummaryView(
             getString(R.string.text_selfsupply),
             (WaveLoadingView) getView().findViewById(R.id.wlvSelfsupply),
-            mAppContext.UNIT_PERCENTAGE
+            mAppContext.getString(R.string.unit_percentage)
         );
         mDashboardHelper.addSummaryView(
             getString(R.string.text_consumption),
             (WaveLoadingView) getView().findViewById(R.id.wlvConsumption),
-            mAppContext.UNIT_KW
+            mAppContext.getString(R.string.unit_kw)
         );
 
         mDashboardHelper.setSummaryRatio(getString(R.string.text_autarchy), (int) mAppContext.getPCMData().getAutarchy());
