@@ -2,8 +2,6 @@ package ch.fhnw.ip6.powerconsumptionmanager.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +9,8 @@ import android.widget.TextView;
 
 import com.roomorama.caldroid.CaldroidFragment;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.util.helper.PlanHelper;
+import ch.fhnw.ip6.powerconsumptionmanager.util.helper.PlanCalendarViewHelper;
 
 /**
  * This Fragment shows the charge plan created by the user, but managed over the standard
@@ -23,7 +18,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.helper.PlanHelper;
  */
 public class PlanFragment extends Fragment {
     CaldroidFragment mCaldroidFragment;
-    PlanHelper mPlanHelper;
+    PlanCalendarViewHelper mPlanCalendarViewHelper;
     TextView mTitle;
     TextView mTimeRange;
     TextView mRoute;
@@ -53,7 +48,7 @@ public class PlanFragment extends Fragment {
 //        // Objects to set up caldroid
 //        FragmentTransaction transaction = getFragmentManager().beginTransaction();
 //        mCaldroidFragment = new CaldroidFragment();
-//        mPlanHelper = new PlanHelper(mCaldroidFragment, this);
+//        mPlanCalendarViewHelper = new PlanCalendarViewHelper(mCaldroidFragment, this);
 //        Calendar cal = Calendar.getInstance();
 //
 //        // Check if caldroid fragment already exists (after screen rotation) and set saved data if needed
@@ -62,7 +57,7 @@ public class PlanFragment extends Fragment {
 //            long selectedDay = savedInstanceState.getLong("selectedDay");
 //            if(selectedDay != 0) {
 //                mCaldroidFragment.setBackgroundResourceForDate(R.drawable.caldroid_selected_day, new Date(selectedDay));
-//                mPlanHelper.setSelectedDate(new Date(selectedDay));
+//                mPlanCalendarViewHelper.setSelectedDate(new Date(selectedDay));
 //            }
 //            mTitle.setText(savedInstanceState.getString("mTitle"));
 //            mTimeRange.setText(savedInstanceState.getString("mTimeRange"));
@@ -79,19 +74,19 @@ public class PlanFragment extends Fragment {
 //        // Set up the calendar fragment with the helper class
 //        int month = cal.get(Calendar.MONTH);
 //        int year = cal.get(Calendar.YEAR);
-//        mPlanHelper.setup(cal);
+//        mPlanCalendarViewHelper.setup(cal);
 //
 //        // Get date range ends (reading instances for 1 month)
-//        long startOfMonth = mPlanHelper.getMonthStart(year, month);
-//        long endOfMonth = mPlanHelper.getMonthEnd(year, month);
+//        long startOfMonth = mPlanCalendarViewHelper.getMonthStart(year, month);
+//        long endOfMonth = mPlanCalendarViewHelper.getMonthEnd(year, month);
 //
 //        // Read calender instances
-//        mPlanHelper.readPlannedTrips(startOfMonth, endOfMonth);
-//        mPlanHelper.markDays();
-//        mPlanHelper.generateListener();
+//        mPlanCalendarViewHelper.readPlannedTrips(startOfMonth, endOfMonth);
+//        mPlanCalendarViewHelper.markDays();
+//        mPlanCalendarViewHelper.generateListener();
 //
 //        // Load fragment into container
-//        transaction.replace(R.id.caldroid_fragment, mPlanHelper.getCaldroid());
+//        transaction.replace(R.id.caldroid_fragment, mPlanCalendarViewHelper.getCaldroid());
 //        transaction.commit();
     }
 
@@ -106,7 +101,7 @@ public class PlanFragment extends Fragment {
 
         if (mCaldroidFragment != null) {
             mCaldroidFragment.saveStatesToKey(outState, "CALDROID_SAVED_STATE");
-            outState.putLong("selectedDay", mPlanHelper.getSelectedDate().getTime());
+            outState.putLong("selectedDay", mPlanCalendarViewHelper.getSelectedDate().getTime());
             outState.putString("mTitle", mTitle.getText().toString());
             outState.putString("mTimeRange", mTimeRange.getText().toString());
             outState.putString("mRoute", mRoute.getText().toString());

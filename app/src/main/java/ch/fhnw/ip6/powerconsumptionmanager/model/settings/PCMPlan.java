@@ -22,10 +22,10 @@ import java.util.LinkedHashMap;
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.activity.ComponentSettingsActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.PCMPlanEntry;
-import ch.fhnw.ip6.powerconsumptionmanager.util.helper.PlanHelper;
+import ch.fhnw.ip6.powerconsumptionmanager.util.helper.PlanCalendarViewHelper;
 
 public class PCMPlan extends PCMSetting {
-    private PlanHelper mPlanHelper;
+    private PlanCalendarViewHelper mPlanCalendarViewHelper;
     private boolean mUsesGoogleCalendar;
     private int mFragmentContainerId;
 
@@ -82,7 +82,7 @@ public class PCMPlan extends PCMSetting {
         FragmentTransaction transaction = ((ComponentSettingsActivity) context).getSupportFragmentManager().beginTransaction();
 
         mCaldroidFragment = new CaldroidFragment();
-        mPlanHelper = new PlanHelper(mCaldroidFragment, (ComponentSettingsActivity) context);
+        mPlanCalendarViewHelper = new PlanCalendarViewHelper(mCaldroidFragment, (ComponentSettingsActivity) context);
 
         LinearLayout llFragmentContainer = new LinearLayout(context);
         llFragmentContainer.setId(mFragmentContainerId);
@@ -92,16 +92,16 @@ public class PCMPlan extends PCMSetting {
         Calendar cal = Calendar.getInstance();
         int month = cal.get(Calendar.MONTH);
         int year = cal.get(Calendar.YEAR);
-        mPlanHelper.setup(cal);
+        mPlanCalendarViewHelper.setup(cal);
 
-        long startOfMonth = mPlanHelper.getMonthStart(year, month);
-        long endOfMonth = mPlanHelper.getMonthEnd(year, month);
+        long startOfMonth = mPlanCalendarViewHelper.getMonthStart(year, month);
+        long endOfMonth = mPlanCalendarViewHelper.getMonthEnd(year, month);
 
-        mPlanHelper.readPlannedTrips(startOfMonth, endOfMonth);
-        mPlanHelper.markDays();
-        mPlanHelper.generateListener();
+        mPlanCalendarViewHelper.readPlannedTrips(startOfMonth, endOfMonth);
+        mPlanCalendarViewHelper.markDays();
+        mPlanCalendarViewHelper.generateListener();
 
-        transaction.replace(mFragmentContainerId, mPlanHelper.getCaldroid()).commit();
+        transaction.replace(mFragmentContainerId, mPlanCalendarViewHelper.getCaldroid()).commit();
         container.addView(llFragmentContainer);
     }
 

@@ -29,7 +29,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 /**
  * Helper class to handle and modify caldroid
  */
-public class PlanHelper implements DataLoaderCallback {
+public class PlanCalendarViewHelper implements DataLoaderCallback {
     // The caldroid fragment itself
     private CaldroidFragment mCaldroid;
     // Contexts
@@ -48,7 +48,7 @@ public class PlanHelper implements DataLoaderCallback {
     private TextView mInfoRouteInformation;
     private TextView mInfoDescription;
 
-    public PlanHelper(CaldroidFragment caldroid, ComponentSettingsActivity context) {
+    public PlanCalendarViewHelper(CaldroidFragment caldroid, ComponentSettingsActivity context) {
         mCaldroid = caldroid;
         mContext = context;
         mAppContext = (PowerConsumptionManagerAppContext) mContext.getApplicationContext();
@@ -136,10 +136,10 @@ public class PlanHelper implements DataLoaderCallback {
                 int pressedDay = mCalendar.get(Calendar.DAY_OF_MONTH);
 
                 // Mark selected day with accent color and load data to the instance on that day
-                if(mInstances.containsKey(pressedDay) && !mSelectedDate.equals(date)) {
+                if(mInstances.containsKey(pressedDay)) {
                     // Modify look and feel
-                    mCaldroid.setBackgroundResourceForDate(R.drawable.caldroid_selected_day, date);
                     mCaldroid.clearBackgroundResourceForDate(mSelectedDate);
+                    mCaldroid.setBackgroundResourceForDate(R.drawable.caldroid_selected_day, date);
                     mSelectedDate = date;
                     mCaldroid.refreshView();
 
