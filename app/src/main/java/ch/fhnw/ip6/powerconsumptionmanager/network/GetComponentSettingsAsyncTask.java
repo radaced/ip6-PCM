@@ -20,6 +20,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSetting;
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSlider;
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSwitch;
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMTextInfo;
+import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMTimer;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -149,10 +150,10 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                     switch (dataJsonEntry.getString("Typ")) {
                         case "slider":
                             /*
-                             * TODO: store in a key-value pair "unit"
+                             * TODO: receive unit in a json key-value pair "unit"
                              * throws error now because not all settings have their unit stored in the setting name
+                             * String unit = dataJsonEntry.getString("Signal").split("\\(")[1].split("\\)")[0];
                              */
-                            //String unit = dataJsonEntry.getString("Signal").split("\\(")[1].split("\\)")[0];
                             settingList.add(
                                 new PCMSlider(
                                     name,
@@ -173,10 +174,21 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                             mRequestChargePlanData = !mAppContext.usesGoogleCalendar();
                             break;
 
+                        // TODO: currently no data (only type) delivered over the webservice by Zogg Energy Control
                         case "uhrzeit":
+                            int hour = 10; int minute = 25;
+                            if(dataJsonEntry.has("hour")) { hour = dataJsonEntry.getInt("hour"); }
+                            if(dataJsonEntry.has("minute")) { minute = dataJsonEntry.getInt("minute"); }
+                            settingList.add(new PCMTimer(dataJsonEntry.getString("Signal"), hour, minute));
                             break;
 
-                        case "switch": // TODO: not dynamically implemented by Zogg Energy Control yet
+                        /* TODO: not dynamically implemented by Zogg Energy Control yet
+                         * Niedertarif is the only setting that uses the switch but the data is not delivered over the comfort
+                         * settings webservice but over the program settings webservice. As of now for every component the program
+                         * settings are being checked (handleProgramSettingsResponse) and a switch widget gets added depending
+                         * on the received data.
+                         */
+                        case "switch":
                             String textOn = "", textOff = ""; boolean isOn = true;
                             if(dataJsonEntry.has("textOn")) { textOn = dataJsonEntry.getString("textOn"); }
                             if(dataJsonEntry.has("textOff")) { textOff = dataJsonEntry.getString("textOff"); }
@@ -184,7 +196,8 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                             settingList.add(new PCMSwitch(dataJsonEntry.getString("Signal"), textOn, textOff, isOn));
                             break;
 
-                        case "textinfo": // TODO: not implemented by Zogg Energy Control yet
+                        // TODO: not implemented by Zogg Energy Control yet
+                        case "textinfo":
                             JSONArray infoTexts = dataJsonEntry.getJSONArray("infoTexts");
                             LinkedHashMap<String, String> descTextPairs = new LinkedHashMap<>();
 
@@ -197,7 +210,7 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                             break;
 
                         case "numeric":
-                        /* TODO: Receiving faulty data from the webservice (setting "Stellwert (kW)"), should also generate a PCMSlider */
+                        /* TODO: receiving faulty data from the webservice (setting "Stellwert (kW)"), should also generate a PCMSlider */
                             break;
                         default:
                             break;

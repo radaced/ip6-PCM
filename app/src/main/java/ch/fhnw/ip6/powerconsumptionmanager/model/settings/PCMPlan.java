@@ -153,7 +153,7 @@ public class PCMPlan extends PCMSetting {
 
         llDeparture.addView(tvDeparture);
 
-        final TimePicker tpDeparture = new TimePicker(context, null, 1);
+        final TimePicker tpDeparture = new TimePicker(context, null, 1); // Use this constructor to display the time picker as a spinner!
         tpDeparture.setIs24HourView(true);
         tpDeparture.setCurrentHour(mChargePlanData.get(mDayIndex).getDepartureHour());
         tpDeparture.setCurrentMinute(mChargePlanData.get(mDayIndex).getDepartureMinute());
@@ -176,7 +176,7 @@ public class PCMPlan extends PCMSetting {
 
         llArrival.addView(tvArrival);
 
-        final TimePicker tpArrival = new TimePicker(context, null, 1);
+        final TimePicker tpArrival = new TimePicker(context, null, 1); // Use this constructor to display the time picker as a spinner!
         tpArrival.setIs24HourView(true);
         tpArrival.setCurrentHour(mChargePlanData.get(mDayIndex).getArrivalHour());
         tpArrival.setCurrentMinute(mChargePlanData.get(mDayIndex).getArrivalMinute());
