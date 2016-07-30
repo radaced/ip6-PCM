@@ -39,12 +39,13 @@ public class PCMSwitch extends PCMSetting {
 
         LinearLayout.LayoutParams tvLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1
         );
 
         TextView tvSettingDescription = new TextView(context);
         tvSettingDescription.setText(super.getName());
-        tvSettingDescription.setTextSize(14);
+        tvSettingDescription.setTextSize(18);
         tvSettingDescription.setTextColor(ContextCompat.getColor(context, R.color.colorTextPrimary));
         tvSettingDescription.setLayoutParams(tvLayoutParams);
 
@@ -52,7 +53,8 @@ public class PCMSwitch extends PCMSetting {
 
         LinearLayout.LayoutParams swLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1
         );
 
         mSwitch = new Switch(context);

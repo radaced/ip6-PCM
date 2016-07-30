@@ -43,16 +43,19 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
     @Override
     protected Boolean doInBackground(Void... params) {
         boolean successComfortSettings;
-//        boolean successProgramSettings;
+        boolean successProgramSettings;
 
         Request comfortSettings = new Request.Builder()
             .url(mURL + mAppContext.getString(R.string.webservice_getComfortSettings) + mComponentName)
             .build();
-//        Request programSettings = new Request.Builder()
-//                .url(mURL + mAppContext.getString(R.string.webservice_getProgramSettings) + mComponentName)
-//                .build();
+        Request programSettings = new Request.Builder()
+                .url(mURL + mAppContext.getString(R.string.webservice_getProgramSettings) + mComponentName)
+                .build();
 
         Response response;
+
+        mPCMData.getComponentData().get(mComponentName).getSettings().clear();
+        List<PCMSetting> settingList = mPCMData.getComponentData().get(mComponentName).getSettings();
 
         try {
             response = mAppContext.getOkHTTPClient().newCall(comfortSettings).execute();
@@ -60,7 +63,7 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                 Log.e(TAG, "Response for comfort settings of " + mComponentName + " not successful.");
                 return false;
             }
-            successComfortSettings = handleComfortSettingsResponse(response);
+            successComfortSettings = handleComfortSettingsResponse(response, settingList);
         } catch (IOException e) {
             Log.e(TAG, "Exception while loading comfort settings of " + mComponentName + ".");
             successComfortSettings = false;
@@ -77,7 +80,7 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                     Log.e(TAG, "Response for charge plan data not successful.");
                     return false;
                 }
-                successComfortSettings = handleChargePlanResponse(response);
+                successComfortSettings = handleChargePlanResponse(response, settingList);
             } catch (IOException e) {
                 Log.e(TAG, "Exception while loading charge plan data.");
                 successComfortSettings = false;
@@ -85,19 +88,19 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
 
         }
 
-//        try {
-//            response = mAppContext.getOkHTTPClient().newCall(programSettings).execute();
-//            if(!response.isSuccessful()) {
-//                Log.e(TAG, "Response for program settings of " + mComponentName + " not successful.");
-//                return false;
-//            }
-//            successProgramSettings = handleProgramSettingsResponse(response);
-//        } catch (IOException e) {
-//            Log.e(TAG, "Exception while loading program settings of " + mComponentName + ".");
-//            successProgramSettings = false;
-//        }
+        try {
+            response = mAppContext.getOkHTTPClient().newCall(programSettings).execute();
+            if(!response.isSuccessful()) {
+                Log.e(TAG, "Response for program settings of " + mComponentName + " not successful.");
+                return false;
+            }
+            successProgramSettings = handleProgramSettingsResponse(response, settingList);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception while loading program settings of " + mComponentName + ".");
+            successProgramSettings = false;
+        }
 
-        return successComfortSettings; // && successProgramSettings;
+        return successComfortSettings && successProgramSettings;
     }
 
     @Override
@@ -106,10 +109,9 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
         mCallbackContext.asyncTaskFinished(result);
     }
 
-    public boolean handleComfortSettingsResponse(Response response) throws IOException {
+    public boolean handleComfortSettingsResponse(Response response, List<PCMSetting> settingList) throws IOException {
         boolean success = true;
-        mPCMData.getComponentData().get(mComponentName).getSettings().clear();
-        List<PCMSetting> settingList = mPCMData.getComponentData().get(mComponentName).getSettings();
+
 
         try {
             JSONArray dataJson = new JSONArray(response.body().string());
@@ -123,7 +125,10 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                 if(dataJsonEntry.has("Typ") && !"".equals(name)) {
                     switch (dataJsonEntry.getString("Typ")) {
                         case "slider":
-                            // TODO: store in a key-value pair "unit"
+                            /*
+                             * TODO: store in a key-value pair "unit"
+                             * throws error now because not all settings have their unit stored in the setting name
+                             */
                             //String unit = dataJsonEntry.getString("Signal").split("\\(")[1].split("\\)")[0];
                             settingList.add(
                                 new PCMSlider(
@@ -148,13 +153,14 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                         case "uhrzeit":
                             break;
 
-                        case "switch": // TODO: not existing yet (over getProgramSettings-Webservice)
+                        case "switch": // TODO: not dynamically implemented by Zogg Energy Control yet
                             String textOn = "", textOff = ""; boolean isOn = true;
-                            if(dataJsonEntry.has("textOn")) { textOn = dataJsonEntry.getString("textOn"); } // TODO: not existing yet
-                            if(dataJsonEntry.has("textOff")) { textOff = dataJsonEntry.getString("textOff"); } // TODO: not existing yet
-                            if(dataJsonEntry.has("isOn")) { isOn = dataJsonEntry.getBoolean("isOn"); } // TODO: not existing yet
+                            if(dataJsonEntry.has("textOn")) { textOn = dataJsonEntry.getString("textOn"); } // TODO: not implemented by Zogg Energy Control
+                            if(dataJsonEntry.has("textOff")) { textOff = dataJsonEntry.getString("textOff"); } // TODO: not implemented by Zogg Energy Control
+                            if(dataJsonEntry.has("isOn")) { isOn = dataJsonEntry.getBoolean("isOn"); } // TODO: not implemented by Zogg Energy Control
                             settingList.add(new PCMSwitch(dataJsonEntry.getString("Signal"), textOn, textOff, isOn));
                             break;
+
                         case "numeric":
                         /* TODO: Receiving faulty data from the webservice (setting "Stellwert (kW)"), should also generate a PCMSlider */
                             break;
@@ -164,18 +170,17 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                 }
             }
         } catch (JSONException e) {
-            Log.e(TAG, "JSON exception while processing current statistics data.");
+            Log.e(TAG, "JSON exception while processing comfort settings.");
             success = false;
         }
 
         return success;
     }
 
-    public boolean handleChargePlanResponse(Response response) throws IOException {
+    public boolean handleChargePlanResponse(Response response, List<PCMSetting> settingList) throws IOException {
         boolean success = true;
         try {
             JSONArray dataJson = new JSONArray(response.body().string());
-            List<PCMSetting> settingList = mPCMData.getComponentData().get(mComponentName).getSettings();
 
             for(int j = 0; j < settingList.size(); j++) {
                 if(settingList.get(j) instanceof PCMPlan) {
@@ -188,31 +193,25 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
             }
 
         } catch (JSONException e) {
-            Log.e(TAG, "JSON exception while processing current component data.");
+            Log.e(TAG, "JSON exception while processing charge plan data.");
             success = false;
         }
 
         return success;
     }
 
+    public boolean handleProgramSettingsResponse(Response response, List<PCMSetting> settingList) throws IOException {
+        boolean success = true;
 
-//    public boolean handleProgramSettingsResponse(Response response) throws IOException {
-//        boolean success = true;
-//        try {
-//            JSONArray dataJson = new JSONArray(response.body().string());
-//
-//            switch (dataJson)
-//
-//            for(int i = 0; i < dataJson.length(); i++) {
-//                JSONObject dataJsonEntry = (JSONObject) dataJson.get(i);
-//                PCMComponent ccdm = new PCMComponent(dataJsonEntry.getString("Name"), dataJsonEntry.getJSONObject("Data"));
-//                mPCMData.getComponentData().put(dataJsonEntry.getString("Name"), ccdm);
-//            }
-//        } catch (JSONException e) {
-//            Log.e(TAG, "JSON exception while processing current component data.");
-//            success = false;
-//        }
-//
-//        return success;
-//    }
+        try {
+            JSONObject dataJson = new JSONObject(response.body().string());
+            boolean lowerRate = dataJson.getBoolean("Niedertarif");
+            settingList.add(new PCMSwitch("Niedertarif", "", "", lowerRate));
+        } catch (JSONException e) {
+            Log.e(TAG, "JSON exception while processing program settings.");
+            success = false;
+        }
+
+        return success;
+    }
 }
