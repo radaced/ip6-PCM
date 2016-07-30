@@ -1,20 +1,13 @@
 package ch.fhnw.ip6.powerconsumptionmanager.model.settings;
 
 import android.content.Context;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.appyvet.rangebar.IRangeBarFormatter;
 import com.appyvet.rangebar.RangeBar;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.zip.DeflaterInputStream;
-
-import ch.fhnw.ip6.powerconsumptionmanager.R;
+import java.util.LinkedHashMap;
 
 
 public class PCMSlider extends PCMSetting {
@@ -23,7 +16,8 @@ public class PCMSlider extends PCMSetting {
     private float mMinValue, mMaxValue;
     private boolean mIsRange;
     private boolean mStartsNegative;
-    private HashMap<Float, Float> mScaleMap = new HashMap<>();
+    private LinkedHashMap<Float, Float> mPCMValueToRangeBarValue = new LinkedHashMap<>();
+    private LinkedHashMap<Float, Float> mRangeBarValueToPCMValue = new LinkedHashMap<>();
 
     private RangeBar mRangebar;
 
@@ -59,8 +53,10 @@ public class PCMSlider extends PCMSetting {
         mRangebar = new RangeBar(context, null);
 
         for (int i = 0; i <= mMaxScale - mMinScale; i++) {
-            mScaleMap.put(mMinScale + i, (float) i);
-            mScaleMap.put((float) (mMinScale + i + 0.5), (float) (i + 0.5));
+            mPCMValueToRangeBarValue.put(mMinScale + i, (float) i);
+            mPCMValueToRangeBarValue.put((float) (mMinScale + i + 0.5), (float) (i + 0.5));
+            mRangeBarValueToPCMValue.put((float) i, mMinScale + i);
+            mRangeBarValueToPCMValue.put((float) (i + 0.5), (float) (mMinScale + i + 0.5));
         }
 
         if(mStartsNegative) {
@@ -75,16 +71,20 @@ public class PCMSlider extends PCMSetting {
 
         mRangebar.setRangeBarEnabled(mIsRange);
         if(mIsRange) {
-            mRangebar.setRangePinsByValue(mScaleMap.get(mMinValue) + mMinScale, mScaleMap.get(mMaxValue) + mMinScale);
+            mRangebar.setRangePinsByValue(mPCMValueToRangeBarValue.get(mMinValue) + mMinScale, mPCMValueToRangeBarValue.get(mMaxValue) + mMinScale);
         } else {
-            mRangebar.setSeekPinByValue(mScaleMap.get(mMinValue) + mMinScale);
+            mRangebar.setSeekPinByValue(mPCMValueToRangeBarValue.get(mMinValue));
         }
 
         mRangebar.setPinRadius(75);
         mRangebar.setFormatter(new IRangeBarFormatter() {
             @Override
             public String format(String value) {
-                return numberFormat.format(Double.valueOf(value)) + " " + mUnit;
+                if(!mStartsNegative) {
+                    return numberFormat.format(Float.valueOf(value)) + " " + mUnit;
+                } else {
+                    return numberFormat.format(mRangeBarValueToPCMValue.get(Float.valueOf(value))) + " " + mUnit;
+                }
             }
         });
         mRangebar.setLayoutParams(rbLayoutParams);
