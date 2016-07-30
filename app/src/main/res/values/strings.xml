@@ -37,7 +37,7 @@
 
     <!--****** Fragment charge plan ******-->
     <string name="title_frag_plan">Charge plan</string>
-    <string name="instance_title">Tesla Trip</string>
+    <string name="instance_title">Emobil</string>
     <string name="text_route_information_route_to">to</string>
     <string name="text_route_information_distance">Distance:</string>
     <string name="text_route_information_duration">Duration:</string>
@@ -98,5 +98,19 @@
     <string name="title_activity_actionbar">Settings for</string>
     <string name="text_loading_component_settings">Loading settings for component…</string>
     <string name="dialog_button_close">Close</string>
+
+    <!--****** Setting PCMPlan ****** -->
+    <array name="weekdays">
+        <item>Mo</item>
+        <item>Tu</item>
+        <item>We</item>
+        <item>Th</item>
+        <item>Fr</item>
+        <item>Sa</item>
+        <item>Su</item>
+    </array>
+    <string name="text_km">km</string>
+    <string name="text_departure_time">Departure</string>
+    <string name="text_arrival_time">Arrival</string>
 
 </resources>

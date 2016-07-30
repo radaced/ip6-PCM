@@ -1,6 +1,5 @@
 package ch.fhnw.ip6.powerconsumptionmanager.network;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -9,11 +8,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.PCMData;
+import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.PCMPlanEntry;
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMPlan;
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSetting;
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSlider;
@@ -30,6 +29,7 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
     private String mComponentName;
     private String mURL;
     private PCMData mPCMData;
+    private boolean mRequestChargePlanData;
 
     public GetComponentSettingsAsyncTask(PowerConsumptionManagerAppContext appContext, AsyncTaskCallback callbackContext, String componentName) {
         mAppContext = appContext;
@@ -37,6 +37,7 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
         mComponentName = componentName;
         mURL = "http://" + mAppContext.getIPAdress() + ":";
         mPCMData = mAppContext.getPCMData();
+        mRequestChargePlanData = false;
     }
 
     @Override
@@ -45,8 +46,8 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
 //        boolean successProgramSettings;
 
         Request comfortSettings = new Request.Builder()
-                .url(mURL + mAppContext.getString(R.string.webservice_getComfortSettings) + mComponentName)
-                .build();
+            .url(mURL + mAppContext.getString(R.string.webservice_getComfortSettings) + mComponentName)
+            .build();
 //        Request programSettings = new Request.Builder()
 //                .url(mURL + mAppContext.getString(R.string.webservice_getProgramSettings) + mComponentName)
 //                .build();
@@ -63,6 +64,25 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
         } catch (IOException e) {
             Log.e(TAG, "Exception while loading comfort settings of " + mComponentName + ".");
             successComfortSettings = false;
+        }
+
+        if(mRequestChargePlanData && successComfortSettings) {
+            Request chargePlanData = new Request.Builder()
+                .url(mURL + mAppContext.getString(R.string.webservice_getChargePlan))
+                .build();
+
+            try {
+                response = mAppContext.getOkHTTPClient().newCall(chargePlanData).execute();
+                if(!response.isSuccessful()) {
+                    Log.e(TAG, "Response for charge plan data not successful.");
+                    return false;
+                }
+                successComfortSettings = handleChargePlanResponse(response);
+            } catch (IOException e) {
+                Log.e(TAG, "Exception while loading charge plan data.");
+                successComfortSettings = false;
+            }
+
         }
 
 //        try {
@@ -119,7 +139,10 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                             break;
 
                         case "plan":
-                            settingList.add(new PCMPlan(name));
+                            // Idea: Make instance title a dynamic json-parameter so multiple calendar widgets can display
+                            // different instances in one google calendar
+                            settingList.add(new PCMPlan(name, mAppContext.usesGoogleCalendar()));
+                            mRequestChargePlanData = !mAppContext.usesGoogleCalendar();
                             break;
 
                         case "uhrzeit":
@@ -147,6 +170,31 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
 
         return success;
     }
+
+    public boolean handleChargePlanResponse(Response response) throws IOException {
+        boolean success = true;
+        try {
+            JSONArray dataJson = new JSONArray(response.body().string());
+            List<PCMSetting> settingList = mPCMData.getComponentData().get(mComponentName).getSettings();
+
+            for(int j = 0; j < settingList.size(); j++) {
+                if(settingList.get(j) instanceof PCMPlan) {
+                    PCMPlan plan = (PCMPlan) settingList.get(j);
+                    for(int i = 0; i < dataJson.length(); i++) {
+                        JSONObject dataJsonEntry = (JSONObject) dataJson.get(i);
+                        plan.getChargePlanData().put(i, new PCMPlanEntry(dataJsonEntry));
+                    }
+                }
+            }
+
+        } catch (JSONException e) {
+            Log.e(TAG, "JSON exception while processing current component data.");
+            success = false;
+        }
+
+        return success;
+    }
+
 
 //    public boolean handleProgramSettingsResponse(Response response) throws IOException {
 //        boolean success = true;

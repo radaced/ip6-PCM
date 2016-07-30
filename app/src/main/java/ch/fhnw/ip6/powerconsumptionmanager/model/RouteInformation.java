@@ -3,11 +3,11 @@ package ch.fhnw.ip6.powerconsumptionmanager.model;
 /**
  * Holds the loaded route information to an origin and destination
  */
-public class RouteInformationModel {
+public class RouteInformation {
     private String mDurationText;
     private String mDistanceText;
 
-    public RouteInformationModel(String durationText, String distanceText) {
+    public RouteInformation(String durationText, String distanceText) {
         this.mDurationText = durationText;
         this.mDistanceText = distanceText;
     }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionChartDataModel;
-import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformationModel;
+import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformation;
 import ch.fhnw.ip6.powerconsumptionmanager.model.PCMData;
 import okhttp3.OkHttpClient;
 
@@ -40,7 +40,7 @@ public class PowerConsumptionManagerAppContext extends Application {
 
     private ArrayList<ConsumptionChartDataModel> mConsumptionData = new ArrayList<>();
     private ArrayList<String> mComponents = new ArrayList<>();
-    private RouteInformationModel mRouteInformation;
+    private RouteInformation mRouteInformation;
 
 
     public OkHttpClient getOkHTTPClient() {
@@ -119,11 +119,11 @@ public class PowerConsumptionManagerAppContext extends Application {
         return mComponents;
     }
 
-    public RouteInformationModel getRouteInformation() {
+    public RouteInformation getRouteInformation() {
         return mRouteInformation;
     }
 
-    public void setRouteInformation(RouteInformationModel mRouteInformation) {
+    public void setRouteInformation(RouteInformation mRouteInformation) {
         this.mRouteInformation = mRouteInformation;
     }
 }

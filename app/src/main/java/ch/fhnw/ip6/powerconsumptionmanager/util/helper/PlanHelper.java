@@ -1,19 +1,15 @@
 package ch.fhnw.ip6.powerconsumptionmanager.util.helper;
 
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,8 +19,8 @@ import java.util.Map;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.activity.ComponentSettingsActivity;
-import ch.fhnw.ip6.powerconsumptionmanager.model.PlanEntryModel;
-import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformationModel;
+import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.CalendarEntry;
+import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformation;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoader;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoaderCallback;
 import ch.fhnw.ip6.powerconsumptionmanager.util.CalendarInstanceReader;
@@ -43,11 +39,10 @@ public class PlanHelper implements DataLoaderCallback {
     // Calendar instance to make date operations
     private Calendar mCalendar;
     // Holds the read instances from the calendar.instances table of one month
-    private HashMap<Integer, PlanEntryModel> mInstances;
+    private HashMap<Integer, CalendarEntry> mInstances;
     // The actual selected date in the caldroid fragment
     private Date mSelectedDate = new Date();
 
-    private TextView mInfoTitle;
     private TextView mInfoTimerange;
     private TextView mInfoRoute;
     private TextView mInfoRouteInformation;
@@ -117,7 +112,7 @@ public class PlanHelper implements DataLoaderCallback {
     public void markDays() {
         // Iterate through all read calendar instances
         for (Map.Entry pair : mInstances.entrySet()) {
-            PlanEntryModel pem = (PlanEntryModel) pair.getValue();
+            CalendarEntry pem = (CalendarEntry) pair.getValue();
             mCalendar.setTime(pem.getBegin());
             mCaldroid.setSelectedDate(mCalendar.getTime());
         }
@@ -149,7 +144,7 @@ public class PlanHelper implements DataLoaderCallback {
                     mCaldroid.refreshView();
 
                     // Display instance data
-                    PlanEntryModel pem = mInstances.get(pressedDay);
+                    CalendarEntry pem = mInstances.get(pressedDay);
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.CustomDialogStyle);
                     builder.setTitle(titleFormat.format(pem.getBegin()));
@@ -239,7 +234,7 @@ public class PlanHelper implements DataLoaderCallback {
         mContext.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                RouteInformationModel rim = mAppContext.getRouteInformation();
+                RouteInformation rim = mAppContext.getRouteInformation();
 
                 // Check if a route existed
                 if (rim.getDistanceText().equals("")) {

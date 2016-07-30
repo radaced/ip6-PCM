@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.PlanEntryModel;
+import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.CalendarEntry;
 
 /**
  * Class to read instances from the calendar.instance table
@@ -36,7 +36,7 @@ public class CalendarInstanceReader {
 
     private Calendar mCalendar;
     private Context mContext;
-    private HashMap<Integer, PlanEntryModel> mInstances;
+    private HashMap<Integer, CalendarEntry> mInstances;
 
     public CalendarInstanceReader(Calendar calendar, Context context) {
         mCalendar = calendar;
@@ -52,7 +52,7 @@ public class CalendarInstanceReader {
      * @return Hashmap that contains information according to the projection array (key is the day where
      * the instance occures)
      */
-    public HashMap<Integer, PlanEntryModel> readInstancesBetweenTimestamps(long lowerRangeEnd, long upperRangeEnd) {
+    public HashMap<Integer, CalendarEntry> readInstancesBetweenTimestamps(long lowerRangeEnd, long upperRangeEnd) {
         ContentResolver cr = mContext.getApplicationContext().getContentResolver();
         // Condition what entries in the instance table to read
         String selection = "((" + CalendarContract.Instances.BEGIN + " >= ?) AND (" + CalendarContract.Instances.END + " <= ?))";
@@ -87,7 +87,7 @@ public class CalendarInstanceReader {
 
             // Store read data into hash map
             if(!mInstances.containsKey(startDay)) {
-                mInstances.put(startDay, new PlanEntryModel(title, eventLocation, description, new Date(begin), new Date(end)));
+                mInstances.put(startDay, new CalendarEntry(title, eventLocation, description, new Date(begin), new Date(end)));
             }
         }
         cursor.close();

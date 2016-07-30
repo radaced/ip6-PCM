@@ -53,7 +53,7 @@ public class PCMSlider extends PCMSetting {
 
         TextView tvSettingDescription = new TextView(context);
         tvSettingDescription.setText(super.getName());
-        tvSettingDescription.setTextSize(14);
+        tvSettingDescription.setTextSize(18);
         tvSettingDescription.setTextColor(ContextCompat.getColor(context, R.color.colorTextPrimary));
         tvSettingDescription.setLayoutParams(tvLayoutParams);
 

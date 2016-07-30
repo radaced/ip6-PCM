@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.PlanEntryModel;
-import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformationModel;
+import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.CalendarEntry;
+import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformation;
 import ch.fhnw.ip6.powerconsumptionmanager.util.CalendarInstanceReader;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import okhttp3.OkHttpClient;
@@ -64,7 +64,7 @@ public class PlanAsyncStringBuilderTask extends AsyncTask<Void, Void, String> {
         long upperRangeEnd = calendar.getTimeInMillis();
 
         // Get all calendar instances that take place in the current week
-        HashMap<Integer, PlanEntryModel> instances = cir.readInstancesBetweenTimestamps(lowerRangeEnd, upperRangeEnd);
+        HashMap<Integer, CalendarEntry> instances = cir.readInstancesBetweenTimestamps(lowerRangeEnd, upperRangeEnd);
 
         String day;
         String weekday;
@@ -77,7 +77,7 @@ public class PlanAsyncStringBuilderTask extends AsyncTask<Void, Void, String> {
         for (int i = 0; i < 7; i++) {
             // Check if a calendar instance exists to a day that needs to be synched
             if (instances.containsKey(dayKeys[i])) {
-                PlanEntryModel pem = instances.get(dayKeys[i]);
+                CalendarEntry pem = instances.get(dayKeys[i]);
                 String[] locations = pem.getEventLocation().split("/");
                 // Check if an event location has been specified
                 if (locations.length == 2 && !"".equals(locations[0]) && !"".equals(locations[1])) {
@@ -109,7 +109,7 @@ public class PlanAsyncStringBuilderTask extends AsyncTask<Void, Void, String> {
                 start = time.format(pem.getBegin());
                 end = time.format(pem.getEnd());
 
-                RouteInformationModel rim = mAppContext.getRouteInformation();
+                RouteInformation rim = mAppContext.getRouteInformation();
                 if (rim.getDistanceText().equals("")) {
                     kilometer = 0;
                 } else {

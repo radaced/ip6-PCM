@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionChartDataModel;
-import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformationModel;
+import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformation;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -238,9 +238,9 @@ public class DataLoader {
                 String durationText = duration.getString("text");
 
                 // Store in application context
-                mAppContext.setRouteInformation(new RouteInformationModel(durationText, distanceText));
+                mAppContext.setRouteInformation(new RouteInformation(durationText, distanceText));
             } else {
-                mAppContext.setRouteInformation(new RouteInformationModel(
+                mAppContext.setRouteInformation(new RouteInformation(
                         mAppContext.getString(R.string.text_route_information_no_route),
                         ""
                 ));
