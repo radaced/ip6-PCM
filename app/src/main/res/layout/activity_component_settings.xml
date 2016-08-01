@@ -64,6 +64,22 @@
 
         </ScrollView>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llOnErrorComponentSettings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvErrorMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_error_loading_component_settings"
+            android:textColor="@color/colorTextPrimary"
+            android:gravity="center"/>
 
     </LinearLayout>
 </LinearLayout>

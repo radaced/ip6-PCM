@@ -23,6 +23,7 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
     private String mComponentName;
     private LinearLayout mLoadingLayout;
     private LinearLayout mComponentSettingsLayout;
+    private LinearLayout mOnErrorComponentSettingsLayout;
     private LinearLayout mSettingsContainer;
 
     @Override
@@ -40,6 +41,7 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
 
         mLoadingLayout = (LinearLayout) findViewById(R.id.llLoading);
         mComponentSettingsLayout = (LinearLayout) findViewById(R.id.llComponentSettings);
+        mOnErrorComponentSettingsLayout = (LinearLayout) findViewById(R.id.llOnErrorComponentSettings);
         mSettingsContainer = (LinearLayout) findViewById(R.id.llSettingsContainer);
 
         Bundle extras = this.getIntent().getExtras();
@@ -80,11 +82,16 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
 
     @Override
     public void asyncTaskFinished(boolean result) {
-        for (PCMSetting setting : mAppContext.getPCMData().getComponentData().get(mComponentName).getSettings()) {
-            setting.inflateLayout(this, mSettingsContainer);
-        }
-
         mLoadingLayout.setVisibility(View.GONE);
-        mComponentSettingsLayout.setVisibility(View.VISIBLE);
+
+        if(result) {
+            for (PCMSetting setting : mAppContext.getPCMData().getComponentData().get(mComponentName).getSettings()) {
+                setting.inflateLayout(this, mSettingsContainer);
+            }
+
+            mComponentSettingsLayout.setVisibility(View.VISIBLE);
+        } else {
+            mOnErrorComponentSettingsLayout.setVisibility(View.VISIBLE);
+        }
     }
 }

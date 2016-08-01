@@ -107,6 +107,7 @@
     <string name="title_activity_component_settings">Component settings</string>
     <string name="title_activity_actionbar">Settings for</string>
     <string name="text_loading_component_settings">Loading settings for component…</string>
+    <string name="text_error_loading_component_settings">Error while loading component settings…</string>
     <string name="dialog_button_close">Close</string>
 
     <!--****** Setting PCMPlan ****** -->
