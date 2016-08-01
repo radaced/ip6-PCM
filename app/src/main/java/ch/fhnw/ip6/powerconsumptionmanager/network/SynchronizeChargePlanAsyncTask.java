@@ -24,22 +24,30 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Background task to build the JSON of the charge plan data that needs to be synced
+ * Background task to build and send the json for synchronizing the PCM charge plan
  */
-public class PlanAsyncStringBuilderTask extends AsyncTask<Void, Void, Boolean> {
+public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "PlanSyncStringBuilder";
     private static final String[] WEEKDAY_SHORTCUTS = { "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So" };
 
     private PowerConsumptionManagerAppContext mAppContext;
+    private AsyncTaskCallback mCallbackContext;
     private LinkedHashMap<Integer, PCMPlanEntry> mChargePlanData;
     private StringBuilder mJsonString;
     private String[] mWeekToSync = new String[7];
-    private int mSyncStartDay;
 
-    public PlanAsyncStringBuilderTask(PowerConsumptionManagerAppContext context, LinkedHashMap<Integer, PCMPlanEntry> chargePlanData) {
+    public SynchronizeChargePlanAsyncTask(PowerConsumptionManagerAppContext context, LinkedHashMap<Integer, PCMPlanEntry> chargePlanData) {
         mAppContext = context;
         mChargePlanData = chargePlanData;
         mJsonString = new StringBuilder(1000);
+    }
+
+    public SynchronizeChargePlanAsyncTask(
+            PowerConsumptionManagerAppContext context,
+            AsyncTaskCallback callbackContext,
+            LinkedHashMap<Integer, PCMPlanEntry> chargePlanData) {
+        this(context, chargePlanData);
+        mCallbackContext = callbackContext;
     }
 
     /**
@@ -59,7 +67,7 @@ public class PlanAsyncStringBuilderTask extends AsyncTask<Void, Void, Boolean> {
             // Calculate the lower and upper range to request tesla trips to sync (one week range)
             calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
             calendar.set(Calendar.MILLISECOND, 0);
-            mSyncStartDay = calendar.get(Calendar.DAY_OF_WEEK_IN_MONTH) - 1;
+            int syncStartDay = calendar.get(Calendar.DAY_OF_WEEK_IN_MONTH) - 1;
             long lowerRangeEnd = calendar.getTimeInMillis();
 
             /*
@@ -139,7 +147,7 @@ public class PlanAsyncStringBuilderTask extends AsyncTask<Void, Void, Boolean> {
 
                     mWeekToSync[getWeekdayNumber(weekday)] = day;
                 } else {
-                    weekday = WEEKDAY_SHORTCUTS[(mSyncStartDay + i) % 7];
+                    weekday = WEEKDAY_SHORTCUTS[(syncStartDay + i) % 7];
 
                     // Build string for day with no data
                     day = "{" +
@@ -195,6 +203,7 @@ public class PlanAsyncStringBuilderTask extends AsyncTask<Void, Void, Boolean> {
                 success = response.isSuccessful();
             } catch (IOException e) {
                 Log.e(TAG, "Exception while saving charge plan data with PUT-request.");
+                success = false;
             }
         } else {
             success = false;
@@ -207,10 +216,14 @@ public class PlanAsyncStringBuilderTask extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
 
-        if(result) {
-            Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_sync_ended_success), Toast.LENGTH_SHORT).show();
+        if(mCallbackContext != null) {
+            mCallbackContext.asyncTaskFinished(result);
         } else {
-            Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_sync_ended_error_loading), Toast.LENGTH_SHORT).show();
+            if(result) {
+                Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_sync_ended_success), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_sync_ended_error_loading), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -235,29 +248,6 @@ public class PlanAsyncStringBuilderTask extends AsyncTask<Void, Void, Boolean> {
         }
 
         return weekdayNumber;
-    }
-
-    private String getWeekdayShortcut(int weekday) {
-        String weekdayShortcut;
-
-        // Get the weekday shortcut of the day that has no data to sync
-        if (weekday == 0) {
-            weekdayShortcut = "Mo";
-        } else if (weekday == 1) {
-            weekdayShortcut = "Di";
-        } else if (weekday == 2) {
-            weekdayShortcut = "Mi";
-        } else if (weekday == 3) {
-            weekdayShortcut = "Do";
-        } else if (weekday == 4) {
-            weekdayShortcut = "Fr";
-        } else if (weekday == 5) {
-            weekdayShortcut = "Sa";
-        } else {
-            weekdayShortcut = "So";
-        }
-
-        return weekdayShortcut;
     }
 
     private void appendDayToJson(String jsonPart, int numberOfDay) {

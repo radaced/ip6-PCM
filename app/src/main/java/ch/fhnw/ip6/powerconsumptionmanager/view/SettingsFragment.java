@@ -28,7 +28,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private static final String TAG = "SettingsFragment";
 
     private PowerConsumptionManagerAppContext mAppContext;
-    private SettingsFragment mContext;
 
     private SharedPreferences mSharedPreferences;
 
@@ -56,7 +55,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         addPreferencesFromResource(R.xml.preferences);
 
         mAppContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
-        mContext = this;
         mSharedPreferences = getPreferenceScreen().getSharedPreferences();
 
         // Setup google calendar checkbox preference

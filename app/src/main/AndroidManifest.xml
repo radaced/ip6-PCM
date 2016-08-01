@@ -33,6 +33,13 @@
             android:label="@string/title_activity_component_settings"
             android:theme="@style/AppTheme">
         </activity>
+        <receiver android:name=".util.CalendarBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PROVIDER_CHANGED"/>
+                <data android:scheme="content"/>
+                <data android:host="com.android.calendar"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

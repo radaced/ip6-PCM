@@ -1,8 +1,10 @@
 package ch.fhnw.ip6.powerconsumptionmanager.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.util.ChargePlanSyncChecker;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.view.ConnectedDevicesFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.ConsumptionFragment;
@@ -164,5 +167,12 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         SETTINGS_UPDATED = false;
         mAppContext.setOnline(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        ChargePlanSyncChecker.executeSyncIfPending(mAppContext, settings);
     }
 }

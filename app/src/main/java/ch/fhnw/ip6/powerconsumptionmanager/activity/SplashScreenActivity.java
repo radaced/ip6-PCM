@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
+import ch.fhnw.ip6.powerconsumptionmanager.network.SynchronizeChargePlanAsyncTask;
+import ch.fhnw.ip6.powerconsumptionmanager.util.ChargePlanSyncChecker;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.view.startup.InitFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.startup.SplashFragment;
@@ -111,7 +113,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncTask
         Fragment fragment;
 
         // On initial startup show mask to enter ip, otherwise directly load data to display
-        if (settings.contains("IP")) {
+        if(settings.contains("IP")) {
             // Load preferences from file into application context for easier access
             mAppContext.setGoogleCalendar(settings.getBoolean("googleCalendar", false));
             mAppContext.setUpdatingAutomatically(settings.getBoolean("updateAutomatically", true));
@@ -123,6 +125,8 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncTask
         } else {
             fragment = InitFragment.newInstance();
         }
+
+        ChargePlanSyncChecker.executeSyncIfPending(mAppContext, settings);
 
         transaction.replace(R.id.flStartupContentContainer, fragment);
         transaction.commitAllowingStateLoss();

@@ -131,4 +131,8 @@
     <string name="text_plugged_false">No</string>
     <string name="text_charge_state_emobil">Charge state of Emobil</string>
 
+    <!--****** Calendar broadcast receiver ******-->
+    <string name="toast_br_sync_success">Synchronisation with PCM finished</string>
+    <string name="toast_br_sync_no_connection">Could not synchronize with PCM, trying again on next startup of app</string>
+
 </resources>

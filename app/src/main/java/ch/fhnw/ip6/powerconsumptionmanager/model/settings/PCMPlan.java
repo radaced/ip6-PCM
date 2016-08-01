@@ -22,7 +22,7 @@ import java.util.LinkedHashMap;
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.activity.ComponentSettingsActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.PCMPlanEntry;
-import ch.fhnw.ip6.powerconsumptionmanager.network.PlanAsyncStringBuilderTask;
+import ch.fhnw.ip6.powerconsumptionmanager.network.SynchronizeChargePlanAsyncTask;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.util.helper.PlanCalendarViewHelper;
 
@@ -64,9 +64,9 @@ public class PCMPlan extends PCMSetting {
     @Override
     public String generateSaveJson(Context context) {
         if(mUsesGoogleCalendar) {
-            new PlanAsyncStringBuilderTask((PowerConsumptionManagerAppContext) context.getApplicationContext(), null).execute();
+            new SynchronizeChargePlanAsyncTask((PowerConsumptionManagerAppContext) context.getApplicationContext(), null).execute();
         } else {
-            new PlanAsyncStringBuilderTask((PowerConsumptionManagerAppContext) context.getApplicationContext(), mChargePlanData).execute();
+            new SynchronizeChargePlanAsyncTask((PowerConsumptionManagerAppContext) context.getApplicationContext(), mChargePlanData).execute();
         }
 
         return "";
