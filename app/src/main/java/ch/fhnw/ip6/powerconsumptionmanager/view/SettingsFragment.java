@@ -28,7 +28,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 /**
  * Holds the different settings in a preference fragment and displays them accordingly.
  */
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener, DataLoaderCallback {
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "SettingsFragment";
 
     private PowerConsumptionManagerAppContext mAppContext;
@@ -79,10 +79,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         final Preference costStatisticsPeriod = findPreference("costStatisticsPeriod");
         setupCostStatisticsPeriodDialog(costStatisticsPeriod);
 
-        // Setup sync preference
-        final Preference syncPreference = findPreference("syncPlan");
-        setupSyncProcessPreference(syncPreference);
-
         // Setup ip dialog preference
         final Preference ipDialog = findPreference("IP");
         setupIPDialog(ipDialog);
@@ -131,28 +127,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 break;
         }
     }
-
-    /**** Return point from the sync request ****/
-    @Override
-    public void DataLoaderDidFinish() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getActivity(), getString(R.string.toast_sync_ended_success), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    @Override
-    public void DataLoaderDidFail() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getActivity(), getString(R.string.toast_sync_ended_error_loading), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-    /********/
 
     private void setupGoogleCalendarPreference(CheckBoxPreference googleCalendarPreference) {
         googleCalendarPreference.setChecked(mSharedPreferences.getBoolean("googleCalendar", false));
@@ -353,23 +327,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 builder.setNegativeButton("Cancel", null);
                 builder.show();
 
-                return true;
-            }
-        });
-    }
-
-    private void setupSyncProcessPreference(Preference syncPreference) {
-        syncPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.toast_sync_started), Toast.LENGTH_SHORT).show();
-                DataLoader loader = new DataLoader(mAppContext, mContext);
-                try {
-                    loader.synchronizeChargePlan("http://" + mAppContext.getIPAdress() + ":" + getString(R.string.webservice_putChargePlan));
-                } catch (ExecutionException | InterruptedException e) {
-                    Log.e(TAG, "Exception while synchronizing charge plan.");
-                    Toast.makeText(getActivity(), getString(R.string.toast_sync_ended_error_interrupted), Toast.LENGTH_LONG).show();
-                }
                 return true;
             }
         });

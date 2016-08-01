@@ -35,7 +35,7 @@ public class PCMTimer extends PCMSetting {
     }
 
     @Override
-    public String generateSaveJson() {
-        return null;
+    public String generateSaveJson(Context context) {
+        return "";
     }
 }

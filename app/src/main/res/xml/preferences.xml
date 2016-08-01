@@ -22,12 +22,6 @@
             android:key="costStatisticsPeriod"
             android:title="@string/text_pref_cost_statistics_period_title"/>
 
-        <Preference
-            android:key="syncPlan"
-            android:title="Synchronize charging plan"
-            android:summary="@string/text_pref_sync_summary"
-            android:icon="@mipmap/ic_settings_synchronized"/>
-
     </PreferenceCategory>
 
     <PreferenceCategory

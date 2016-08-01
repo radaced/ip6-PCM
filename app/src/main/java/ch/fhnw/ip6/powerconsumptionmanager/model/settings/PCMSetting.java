@@ -35,7 +35,7 @@ public abstract class PCMSetting {
         container.addView(tvSettingDescription);
     }
 
-    public abstract String generateSaveJson();
+    public abstract String generateSaveJson(Context context);
 
 
 

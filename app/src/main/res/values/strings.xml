@@ -107,6 +107,8 @@
     <string name="dialog_button_close">Close</string>
 
     <!--****** Setting PCMPlan ****** -->
+    <string name="menu_save_component_settings">Save</string>
+    <string name="toast_save_component_settings">Saving your settings...</string>
     <array name="weekdays">
         <item>Mo</item>
         <item>Tu</item>

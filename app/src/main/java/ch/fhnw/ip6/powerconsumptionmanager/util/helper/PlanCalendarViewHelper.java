@@ -21,15 +21,17 @@ import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.activity.ComponentSettingsActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.CalendarEntry;
 import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformation;
+import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoader;
 import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoaderCallback;
+import ch.fhnw.ip6.powerconsumptionmanager.network.GetRouteInformationAsyncTask;
 import ch.fhnw.ip6.powerconsumptionmanager.util.CalendarInstanceReader;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
  * Helper class to handle and modify caldroid
  */
-public class PlanCalendarViewHelper implements DataLoaderCallback {
+public class PlanCalendarViewHelper implements AsyncTaskCallback {
     // The caldroid fragment itself
     private CaldroidFragment mCaldroid;
     // Contexts
@@ -227,40 +229,35 @@ public class PlanCalendarViewHelper implements DataLoaderCallback {
         this.mSelectedDate = mSelectedDate;
     }
 
-    /**** Return point from requests that were called after a day field was pressed in caldroid ****/
     @Override
-    public void DataLoaderDidFinish() {
-        // Update the text view field for the route information with the loaded data on the UI thread
-        mContext.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                RouteInformation rim = mAppContext.getRouteInformation();
+    public void asyncTaskFinished(boolean result) {
+        if(result) {
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    RouteInformation rim = mAppContext.getRouteInformation();
 
-                // Check if a route existed
-                if (rim.getDistanceText().equals("")) {
-                    displayRouteInformation(mInfoRouteInformation, mContext.getString(R.string.text_route_information_no_route), "");
-                } else {
-                    displayRouteInformation(
-                        mInfoRouteInformation,
-                        mContext.getString(R.string.text_route_information_distance) + " " + rim.getDistanceText(),
-                        mContext.getString(R.string.text_route_information_duration) + " " + rim.getDurationText()
-                    );
+                    // Check if a route existed
+                    if (rim.getDistanceText().equals("")) {
+                        displayRouteInformation(mInfoRouteInformation, mContext.getString(R.string.text_route_information_no_route), "");
+                    } else {
+                        displayRouteInformation(
+                                mInfoRouteInformation,
+                                mContext.getString(R.string.text_route_information_distance) + " " + rim.getDistanceText(),
+                                mContext.getString(R.string.text_route_information_duration) + " " + rim.getDurationText()
+                        );
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    displayRouteInformation(mInfoRouteInformation, mContext.getString(R.string.text_route_information_error), "");
+                }
+            });
+        }
     }
-
-    @Override
-    public void DataLoaderDidFail() {
-        // Update the text view field for the route information with the error message on the UI thread
-        mContext.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                displayRouteInformation(mInfoRouteInformation, mContext.getString(R.string.text_route_information_error), "");
-            }
-        });
-    }
-    /********/
 
     /**
      * Call google.maps API with the origin and destination location to find out distance and duration
@@ -269,13 +266,14 @@ public class PlanCalendarViewHelper implements DataLoaderCallback {
      * @param destination The destination of the route
      */
     private void calculateDistance(String origin, String destination) {
-        DataLoader loader = new DataLoader(mAppContext, this);
-        loader.loadRouteInformation(
+        new GetRouteInformationAsyncTask(
+            mAppContext,
+            this,
             mContext.getString(R.string.googleMaps_Api1) +
             "origin=" + origin +
             "&destination=" + destination +
             mContext.getString(R.string.googleMaps_Api2)
-        );
+        ).execute();
     }
 
     /**

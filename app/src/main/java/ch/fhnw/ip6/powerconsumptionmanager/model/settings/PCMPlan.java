@@ -22,14 +22,14 @@ import java.util.LinkedHashMap;
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.activity.ComponentSettingsActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.PCMPlanEntry;
+import ch.fhnw.ip6.powerconsumptionmanager.network.PlanAsyncStringBuilderTask;
+import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.util.helper.PlanCalendarViewHelper;
 
 public class PCMPlan extends PCMSetting {
-    private PlanCalendarViewHelper mPlanCalendarViewHelper;
     private boolean mUsesGoogleCalendar;
     private int mFragmentContainerId;
 
-    private CaldroidFragment mCaldroidFragment;
     private LinkedHashMap<Integer, PCMPlanEntry> mChargePlanData = new LinkedHashMap<>();
     private int mDayIndex = 0;
     private boolean mIgnoreChange = false;
@@ -62,15 +62,21 @@ public class PCMPlan extends PCMSetting {
     }
 
     @Override
-    public String generateSaveJson() {
-        return null;
+    public String generateSaveJson(Context context) {
+        if(mUsesGoogleCalendar) {
+            new PlanAsyncStringBuilderTask((PowerConsumptionManagerAppContext) context.getApplicationContext(), null).execute();
+        } else {
+            new PlanAsyncStringBuilderTask((PowerConsumptionManagerAppContext) context.getApplicationContext(), mChargePlanData).execute();
+        }
+
+        return "";
     }
 
     private void loadCalendarView(Context context, LinearLayout container, LinearLayout.LayoutParams layoutParams) {
         FragmentTransaction transaction = ((ComponentSettingsActivity) context).getSupportFragmentManager().beginTransaction();
 
-        mCaldroidFragment = new CaldroidFragment();
-        mPlanCalendarViewHelper = new PlanCalendarViewHelper(mCaldroidFragment, (ComponentSettingsActivity) context);
+        CaldroidFragment mCaldroidFragment = new CaldroidFragment();
+        PlanCalendarViewHelper mPlanCalendarViewHelper = new PlanCalendarViewHelper(mCaldroidFragment, (ComponentSettingsActivity) context);
 
         LinearLayout llFragmentContainer = new LinearLayout(context);
         llFragmentContainer.setId(mFragmentContainerId);
@@ -276,7 +282,11 @@ public class PCMPlan extends PCMSetting {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!mIgnoreChange) {
-                    mChargePlanData.get(mDayIndex).setKm(Integer.valueOf(s.toString()));
+                    if(s.toString().equals("")) {
+                        mChargePlanData.get(mDayIndex).setKm(0);
+                    } else {
+                        mChargePlanData.get(mDayIndex).setKm(Integer.valueOf(s.toString()));
+                    }
                 }
             }
 

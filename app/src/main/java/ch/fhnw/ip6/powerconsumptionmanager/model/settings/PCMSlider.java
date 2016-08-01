@@ -7,7 +7,7 @@ import com.appyvet.rangebar.IRangeBarFormatter;
 import com.appyvet.rangebar.RangeBar;
 
 import java.text.NumberFormat;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 
 
 public class PCMSlider extends PCMSetting {
@@ -16,8 +16,8 @@ public class PCMSlider extends PCMSetting {
     private float mMinValue, mMaxValue;
     private boolean mIsRange;
     private boolean mStartsNegative;
-    private LinkedHashMap<Float, Float> mPCMValueToRangeBarValue = new LinkedHashMap<>();
-    private LinkedHashMap<Float, Float> mRangeBarValueToPCMValue = new LinkedHashMap<>();
+    private HashMap<Float, Float> mPCMValueToRangeBarValue = new HashMap<>();
+    private HashMap<Float, Float> mRangeBarValueToPCMValue = new HashMap<>();
 
     private RangeBar mRangebar;
 
@@ -92,7 +92,7 @@ public class PCMSlider extends PCMSetting {
     }
 
     @Override
-    public String generateSaveJson() {
-        return null;
+    public String generateSaveJson(Context context) {
+        return "";
     }
 }

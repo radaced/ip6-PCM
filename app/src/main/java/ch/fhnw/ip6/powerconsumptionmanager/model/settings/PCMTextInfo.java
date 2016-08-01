@@ -78,7 +78,7 @@ public class PCMTextInfo extends PCMSetting {
     }
 
     @Override
-    public String generateSaveJson() {
-        return null;
+    public String generateSaveJson(Context context) {
+        return "";
     }
 }
