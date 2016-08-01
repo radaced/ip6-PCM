@@ -5,7 +5,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -14,7 +13,7 @@ import java.util.Locale;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.CalendarEntry;
-import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformation;
+import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.RouteInformation;
 import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.PCMPlanEntry;
 import ch.fhnw.ip6.powerconsumptionmanager.util.CalendarInstanceReader;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;

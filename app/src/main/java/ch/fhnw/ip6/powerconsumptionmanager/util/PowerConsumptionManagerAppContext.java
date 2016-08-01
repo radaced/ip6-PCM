@@ -5,8 +5,8 @@ import android.app.Application;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionChartDataModel;
-import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformation;
+import ch.fhnw.ip6.powerconsumptionmanager.model.consumptiondata.ConsumptionComponentModel;
+import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.RouteInformation;
 import ch.fhnw.ip6.powerconsumptionmanager.model.PCMData;
 import okhttp3.OkHttpClient;
 
@@ -15,6 +15,7 @@ import okhttp3.OkHttpClient;
  */
 public class PowerConsumptionManagerAppContext extends Application {
 
+    /* HTTP client for web requests */
     private final OkHttpClient mOkHTTPClient = new OkHttpClient().newBuilder()
             .connectTimeout(5, TimeUnit.SECONDS)
             .readTimeout(5, TimeUnit.SECONDS)
@@ -35,9 +36,12 @@ public class PowerConsumptionManagerAppContext extends Application {
     /* Data */
     private PCMData mPCMData;
 
-    private ArrayList<ConsumptionChartDataModel> mConsumptionData = new ArrayList<>();
+    /* Consumption data */
+    private ArrayList<ConsumptionComponentModel> mConsumptionData = new ArrayList<>();
     private ArrayList<String> mComponents = new ArrayList<>();
+
     private RouteInformation mRouteInformation;
+
 
 
     public OkHttpClient getOkHTTPClient() {
@@ -100,11 +104,11 @@ public class PowerConsumptionManagerAppContext extends Application {
         this.mPCMData = mPCMData;
     }
 
-    public void setConsumptionData(ArrayList<ConsumptionChartDataModel> mConsumptionData) {
+    public void setConsumptionData(ArrayList<ConsumptionComponentModel> mConsumptionData) {
         this.mConsumptionData = mConsumptionData;
     }
 
-    public ArrayList<ConsumptionChartDataModel> getConsumptionData() {
+    public ArrayList<ConsumptionComponentModel> getConsumptionData() {
         return mConsumptionData;
     }
 

@@ -1,7 +1,10 @@
 package ch.fhnw.ip6.powerconsumptionmanager.util.helper;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
@@ -18,12 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.activity.ComponentSettingsActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.CalendarEntry;
-import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformation;
+import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.RouteInformation;
 import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
-import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoader;
-import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoaderCallback;
 import ch.fhnw.ip6.powerconsumptionmanager.network.GetRouteInformationAsyncTask;
 import ch.fhnw.ip6.powerconsumptionmanager.util.CalendarInstanceReader;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
@@ -35,8 +35,7 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
     // The caldroid fragment itself
     private CaldroidFragment mCaldroid;
     // Contexts
-    /* TODO: Change to type Context */
-    private ComponentSettingsActivity mContext;
+    private Context mContext;
     private PowerConsumptionManagerAppContext mAppContext;
     // Calendar instance to make date operations
     private Calendar mCalendar;
@@ -50,7 +49,7 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
     private TextView mInfoRouteInformation;
     private TextView mInfoDescription;
 
-    public PlanCalendarViewHelper(CaldroidFragment caldroid, ComponentSettingsActivity context) {
+    public PlanCalendarViewHelper(CaldroidFragment caldroid, Context context) {
         mCaldroid = caldroid;
         mContext = context;
         mAppContext = (PowerConsumptionManagerAppContext) mContext.getApplicationContext();
@@ -151,7 +150,7 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.CustomDialogStyle);
                     builder.setTitle(titleFormat.format(pem.getBegin()));
 
-                    LayoutInflater layoutInflater = mContext.getLayoutInflater();
+                    LayoutInflater layoutInflater = LayoutInflater.from(mContext);
                     View planEntryView = layoutInflater.inflate(R.layout.dialog_plan_entry, null);
                     builder.setView(planEntryView);
 
@@ -231,8 +230,9 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
 
     @Override
     public void asyncTaskFinished(boolean result) {
+        Handler handler = new android.os.Handler(Looper.getMainLooper());
         if(result) {
-            mContext.runOnUiThread(new Runnable() {
+           handler.post(new Runnable() {
                 @Override
                 public void run() {
                     RouteInformation rim = mAppContext.getRouteInformation();
@@ -250,7 +250,7 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
                 }
             });
         } else {
-            mContext.runOnUiThread(new Runnable() {
+            handler.post(new Runnable() {
                 @Override
                 public void run() {
                     displayRouteInformation(mInfoRouteInformation, mContext.getString(R.string.text_route_information_error), "");

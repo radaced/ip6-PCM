@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.RouteInformation;
+import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.RouteInformation;
 import okhttp3.Response;
 
 public class RouteProcessor {

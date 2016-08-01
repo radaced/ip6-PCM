@@ -41,6 +41,8 @@
     <string name="chart_no_data">No data available.</string>
     <string name="list_device_error">No devices found.</string>
     <string name="toast_chart_update_error">Error while updating chart data</string>
+    <string name="text_loading_consumption_data">Loading consumption data…</string>
+    <string name="text_error_loading_consumption_data">Error while loading consumption data…</string>
 
     <!--****** Fragment charge plan ******-->
     <string name="title_frag_plan">Charge plan</string>
@@ -63,6 +65,7 @@
     </array>
     <string name="menu_refresh">Refresh</string>
     <string name="text_loading_cost_statistics">Loading cost statistics…</string>
+    <string name="text_error_loading_cost_statistics">Error while loading cost statistics…</string>
     <string name="text_refreshing_cost_statistics">Refreshing cost statistics…</string>
 
     <!--****** Fragment settings ******-->

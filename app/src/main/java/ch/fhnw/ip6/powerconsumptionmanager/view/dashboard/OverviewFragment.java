@@ -128,6 +128,7 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     @Override
     public void onStop() {
         super.onStop();
+        // Stop data updater if instantiated
         if(mUpdateHandler != null) {
             mUpdateHandler.removeCallbacks(updateCurrentPCMData);
         }
@@ -136,6 +137,7 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     @Override
     public void onResume() {
         super.onResume();
+        // Start data updater if instantiated
         if(mUpdateHandler != null) {
             mUpdateHandler.postDelayed(updateCurrentPCMData, mAppContext.getUpdateInterval() * 1000);
         }

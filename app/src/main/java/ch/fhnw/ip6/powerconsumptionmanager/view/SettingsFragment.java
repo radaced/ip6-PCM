@@ -7,7 +7,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -17,12 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.StringTokenizer;
-import java.util.concurrent.ExecutionException;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.activity.MainActivity;
-import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoader;
-import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoaderCallback;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**

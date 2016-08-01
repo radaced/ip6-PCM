@@ -1,5 +1,6 @@
 package ch.fhnw.ip6.powerconsumptionmanager.util.helper;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
@@ -8,23 +9,23 @@ import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionChartDataModel;
+import ch.fhnw.ip6.powerconsumptionmanager.model.consumptiondata.ConsumptionComponentModel;
 import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.XAxisTimeFormatter;
-import ch.fhnw.ip6.powerconsumptionmanager.view.ConsumptionFragment;
 
 /**
  * Helper class to handle and modify the chart
  */
-public class ChartHelper {
-    private LineChart mConsumptionChart;
-    /* TODO: Change to type Context */
-    private ConsumptionFragment mContext;
+public class ConsumptionDataHelper {
+    private Context mContext;
+    private LineChart mLCConsumption;
     // Holds x values (timestamps)
     private ArrayList<String> mXValues;
     // Holds all data sets from the chart
@@ -36,9 +37,9 @@ public class ChartHelper {
     private Paint mChartDrawer;
 
 
-    public ChartHelper(LineChart chart, ConsumptionFragment context) {
-        mConsumptionChart = chart;
+    public ConsumptionDataHelper(Context context, LineChart chart) {
         mContext = context;
+        mLCConsumption = chart;
 
         mXValues = new ArrayList<>();
         mConsumptionDataSet = new HashMap<>();
@@ -53,40 +54,39 @@ public class ChartHelper {
      */
     public void setup() {
         // Set looks
-        mConsumptionChart.setBackgroundColor(ContextCompat.getColor(mContext.getActivity(), R.color.colorChartBackground));
-        mConsumptionChart.setDrawGridBackground(false);
-        mConsumptionChart.setDrawBorders(false);
-        mConsumptionChart.setDescription(null);
-        mConsumptionChart.setNoDataText(mContext.getActivity().getString(R.string.chart_no_data));
-        mChartDrawer.setColor(ContextCompat.getColor(mContext.getActivity(), R.color.colorTextPrimaryInverse));
+        mLCConsumption.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorChartBackground));
+        mLCConsumption.setDrawGridBackground(false);
+        mLCConsumption.setDrawBorders(false);
+        mLCConsumption.setDescription(null);
+        mLCConsumption.setNoDataText(mContext.getString(R.string.chart_no_data));
+        mChartDrawer.setColor(ContextCompat.getColor(mContext, R.color.colorTextPrimaryInverse));
 
         // Define which axis to display
-        mConsumptionChart.getAxisLeft().setDrawAxisLine(true);
-        mConsumptionChart.getAxisLeft().setDrawGridLines(true);
-        mConsumptionChart.getAxisLeft().setGridColor(Color.BLACK);
-        mConsumptionChart.getAxisLeft().setAxisLineColor(Color.BLUE);
-        mConsumptionChart.getAxisRight().setEnabled(false);
-        mConsumptionChart.getXAxis().setDrawAxisLine(false);
-        mConsumptionChart.getXAxis().setDrawGridLines(false);
-        mConsumptionChart.getXAxis().setValueFormatter(new XAxisTimeFormatter());
+        mLCConsumption.getAxisLeft().setDrawAxisLine(true);
+        mLCConsumption.getAxisLeft().setDrawGridLines(true);
+        mLCConsumption.getAxisLeft().setGridColor(Color.BLACK);
+        mLCConsumption.getAxisLeft().setAxisLineColor(Color.BLUE);
+        mLCConsumption.getAxisRight().setEnabled(false);
+        mLCConsumption.getXAxis().setDrawAxisLine(false);
+        mLCConsumption.getXAxis().setDrawGridLines(false);
+        mLCConsumption.getXAxis().setValueFormatter(new XAxisTimeFormatter());
 
         // Set functionality
-        mConsumptionChart.setDoubleTapToZoomEnabled(true);
-        mConsumptionChart.setTouchEnabled(true);
-        mConsumptionChart.setDragEnabled(true);
-        mConsumptionChart.setScaleEnabled(true);
-        mConsumptionChart.setPinchZoom(true);
-        mConsumptionChart.setOnChartValueSelectedListener(mContext);
+        mLCConsumption.setDoubleTapToZoomEnabled(true);
+        mLCConsumption.setTouchEnabled(true);
+        mLCConsumption.setDragEnabled(true);
+        mLCConsumption.setScaleEnabled(true);
+        mLCConsumption.setPinchZoom(true);
     }
 
     /**
      * Set error messages for empty chart
      */
     public void setupOnError() {
-        mConsumptionChart.setNoDataText(mContext.getActivity().getString(R.string.chart_connection_error_title));
-        mConsumptionChart.setNoDataTextDescription(mContext.getActivity().getString(R.string.chart_connection_error_description));
-        mConsumptionChart.setBackgroundColor(ContextCompat.getColor(mContext.getActivity(), R.color.colorChartBackground));
-        mChartDrawer.setColor(ContextCompat.getColor(mContext.getActivity(), R.color.colorTextPrimaryInverse));
+        mLCConsumption.setNoDataText(mContext.getString(R.string.chart_connection_error_title));
+        mLCConsumption.setNoDataTextDescription(mContext.getString(R.string.chart_connection_error_description));
+        mLCConsumption.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorChartBackground));
+        mChartDrawer.setColor(ContextCompat.getColor(mContext, R.color.colorTextPrimaryInverse));
     }
 
     /**
@@ -94,7 +94,7 @@ public class ChartHelper {
      * @param enable true to show, false to hide
      */
     public void setLegend(boolean enable) {
-        Legend l = mConsumptionChart.getLegend();
+        Legend l = mLCConsumption.getLegend();
         if(enable) {
             l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
         }
@@ -105,7 +105,7 @@ public class ChartHelper {
      * Generates the x values of the chart (amount of x and y values need to be equal)
      * @param data Loaded consumption data of a single device
      */
-    public void generateXValues(ConsumptionChartDataModel data) {
+    public void generateXValues(ConsumptionComponentModel data) {
         if(!mXValues.isEmpty()) {
             mXValues.clear();
         }
@@ -121,7 +121,7 @@ public class ChartHelper {
      * @param colorCode Array index to set color for the graph (data set)
      */
     // Generates a single data set and adds it to the hash map that holds all data sets
-    public void generateDataSet(ConsumptionChartDataModel data, int colorCode) {
+    public void generateDataSet(ConsumptionComponentModel data, int colorCode) {
         ArrayList<Entry> values = new ArrayList<>();
 
         for (int i = 0; i < data.getComponentData().size(); i++) {
@@ -142,14 +142,13 @@ public class ChartHelper {
      * Show all data sets
      */
     public void initChartData() {
-        ArrayList<LineDataSet> list = new ArrayList<>();
+        ArrayList<ILineDataSet> list = new ArrayList<>();
         for(int i = 0; i < mConsumptionDataSet.size(); i++) {
             list.add(mConsumptionDataSet.get(i));
         }
 
-        /* TODO: doens't work after update of library */
-//        LineData data = new LineData(this.getXValues(), list);
-//        mConsumptionChart.setData(data);
+        LineData data = new LineData(this.getXValues(), list);
+        mLCConsumption.setData(data);
     }
 
     /**
@@ -157,7 +156,7 @@ public class ChartHelper {
      * that holds the indices to ignore)
      */
     public void updateChartData() {
-        ArrayList<LineDataSet> list = new ArrayList<>();
+        ArrayList<ILineDataSet> list = new ArrayList<>();
         for(int i = 0; i < mConsumptionDataSet.size(); i++) {
             if(mRemovedDataSetIndexes.contains(i)) {
                 continue;
@@ -165,9 +164,12 @@ public class ChartHelper {
             list.add(mConsumptionDataSet.get(i));
         }
 
-        /* TODO: doens't work after update of library */
-//        LineData data = new LineData(this.getXValues(), list);
-//        mConsumptionChart.setData(data);
+        LineData data = new LineData(this.getXValues(), list);
+        mLCConsumption.setData(data);
+
+        mLCConsumption.getData().notifyDataChanged();
+        mLCConsumption.notifyDataSetChanged();
+        mLCConsumption.invalidate();
     }
 
 
@@ -175,14 +177,14 @@ public class ChartHelper {
      * Display chart data animated (chart data fades in from bottom to top)
      */
     public void displayAnimated() {
-        mConsumptionChart.animateY(2000);
+        mLCConsumption.animateY(2000);
     }
 
     /**
      * Display without animation
      */
     public void displayNoneAnimated() {
-        mConsumptionChart.invalidate();
+        mLCConsumption.invalidate();
     }
 
     public ArrayList<String> getXValues() {
@@ -190,7 +192,7 @@ public class ChartHelper {
     }
 
     public LineChart getChart() {
-        return mConsumptionChart;
+        return mLCConsumption;
     }
 
     public ArrayList<Integer> getRemovedDataSetIndexes() {

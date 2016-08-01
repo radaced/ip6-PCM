@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.model;
+package ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan;
 
 /**
  * Holds the loaded route information to an origin and destination

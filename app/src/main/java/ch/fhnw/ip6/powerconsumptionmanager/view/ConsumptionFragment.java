@@ -3,37 +3,38 @@ package ch.fhnw.ip6.powerconsumptionmanager.view;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.adapter.ConsumptionDeviceListAdapter;
-import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoader;
-import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoaderCallback;
-import ch.fhnw.ip6.powerconsumptionmanager.util.helper.ChartHelper;
+import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
+import ch.fhnw.ip6.powerconsumptionmanager.network.GetConsumptionDataAsyncTask;
+import ch.fhnw.ip6.powerconsumptionmanager.util.helper.ConsumptionDataHelper;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
  * This Fragment shows usage data in a chart and connected devices in a list
  */
-public class ConsumptionFragment extends Fragment implements OnChartValueSelectedListener, DataLoaderCallback {
+public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
     private static final String TAG = "ConsumptionFragment";
 
     private Handler mUpdateHandler;
-    private ChartHelper mChartHelper;
+    private ConsumptionDataHelper mConsumptionDataHelper;
     private PowerConsumptionManagerAppContext mAppContext;
-    private ConsumptionFragment mContext;
+
+    private LinearLayout mLoadingLayout;
+    private LinearLayout mConsumptionDataLayout;
+    private LinearLayout mOnErrorConsumptionDataLayout;
+    private ListView mListViewDevices;
+    private boolean mHasUpdated = false;
 
     public static ConsumptionFragment newInstance() {
         return new ConsumptionFragment();
@@ -48,73 +49,16 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mAppContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
-        mContext = this;
+
+        mLoadingLayout = (LinearLayout) view.findViewById(R.id.llLoading);
+        mConsumptionDataLayout = (LinearLayout) view.findViewById(R.id.llConsumptionData);
+        mOnErrorConsumptionDataLayout = (LinearLayout) view.findViewById(R.id.llOnErrorConsumptionData);
 
         LineChart consumptionChart = (LineChart) view.findViewById(R.id.consumptionDataLineChart);
-        mChartHelper = new ChartHelper(consumptionChart, this);
-        ListView lvDevices = (ListView) view.findViewById(R.id.lvDevices);
-        int layoutResource;
-        ArrayList<String> listItems;
+        mListViewDevices = (ListView) view.findViewById(R.id.lvDevices);
+        mConsumptionDataHelper = new ConsumptionDataHelper(getContext(), consumptionChart);
 
-        // Check if web requests for consumption data were successful
-        if (mAppContext.isOnline()) {
-            // Set up the whole chart with data sets and so on with the helper class
-            mChartHelper.setup();
-            mChartHelper.setLegend(false);
-            mChartHelper.generateXValues(mAppContext.getConsumptionData().get(0));
-
-            // Generate the data sets to display
-            for (int i = 0; i < mAppContext.getConsumptionData().size(); i++) {
-                mChartHelper.generateDataSet(mAppContext.getConsumptionData().get(i), i);
-            }
-
-            // Display the chart
-            mChartHelper.initChartData();
-            mChartHelper.displayAnimated();
-
-            // Instantiate the update handler
-            mUpdateHandler = new Handler();
-
-            // Define device list adapter parameters
-            layoutResource = R.layout.list_consumption_device;
-            listItems = mAppContext.getComponents();
-        } else {
-            // Set up an empty chart with an error message
-            mChartHelper.setupOnError();
-
-            // Define device list adapter parameters
-            layoutResource = R.layout.list_no_device;
-            listItems = new ArrayList<>();
-            listItems.add(getString(R.string.list_device_error));
-        }
-
-        // Set up the device list
-        lvDevices.setAdapter(
-                new ConsumptionDeviceListAdapter(
-                        getActivity(),
-                        layoutResource,
-                        listItems,
-                        mChartHelper,
-                        mAppContext.isOnline()
-                )
-        );
-    }
-
-
-    /**
-     * Determines if the fragment is currently visible in the view pager
-     * @param isVisibleToUser true when currently visible, false otherwise
-     */
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(mUpdateHandler != null) {
-            if(isVisibleToUser) {
-                mUpdateHandler.postDelayed(updateData, 10000);
-            } else {
-                mUpdateHandler.removeCallbacks(updateData);
-            }
-        }
+        new GetConsumptionDataAsyncTask(mAppContext, this).execute();
     }
 
     @Override
@@ -122,7 +66,7 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
         super.onStop();
         // Stop data updater if instantiated
         if(mUpdateHandler != null) {
-            mUpdateHandler.removeCallbacks(updateData);
+            mUpdateHandler.removeCallbacks(updateConsumptionData);
         }
     }
 
@@ -131,74 +75,84 @@ public class ConsumptionFragment extends Fragment implements OnChartValueSelecte
         super.onResume();
         // Start data updater if instantiated
         if(mUpdateHandler != null) {
-            mUpdateHandler.postDelayed(updateData, 10000);
+            mHasUpdated = true;
+            mUpdateHandler.postDelayed(updateConsumptionData, 10000);
         }
     }
 
-    /**** Return point from requests that update consumption data ****/
     @Override
-    public void DataLoaderDidFinish() {
-        try {
-            mChartHelper.generateXValues(mAppContext.getConsumptionData().get(0));
+    public void asyncTaskFinished(boolean result) {
+        mLoadingLayout.setVisibility(View.GONE);
 
-            // Generate the updated data sets
-            for (int z = 0; z < mAppContext.getConsumptionData().size(); z++) {
-                mChartHelper.generateDataSet(mAppContext.getConsumptionData().get(z), z);
+        if(result) {
+            mOnErrorConsumptionDataLayout.setVisibility(View.GONE);
+            mConsumptionDataLayout.setVisibility(View.VISIBLE);
+
+            if(!mHasUpdated) {
+                // Set up the whole chart with data sets and so on with the helper class
+                mConsumptionDataHelper.setup();
+                mConsumptionDataHelper.setLegend(false);
+                mConsumptionDataHelper.generateXValues(mAppContext.getConsumptionData().get(0));
+
+                // Generate the data sets to display
+                for (int i = 0; i < mAppContext.getConsumptionData().size(); i++) {
+                    mConsumptionDataHelper.generateDataSet(mAppContext.getConsumptionData().get(i), i);
+                }
+
+                // Display the chart
+                mConsumptionDataHelper.initChartData();
+                mConsumptionDataHelper.displayAnimated();
+
+                // Instantiate the update handler
+                mUpdateHandler = new Handler();
+
+                // Define device list adapter parameters
+                int layoutResource = R.layout.list_consumption_device;
+                ArrayList<String> listItems = mAppContext.getComponents();
+
+                // Set up the device list
+                mListViewDevices.setAdapter(
+                        new ConsumptionDeviceListAdapter(
+                                getActivity(),
+                                layoutResource,
+                                listItems,
+                                mConsumptionDataHelper
+                        )
+                );
+            } else {
+                mConsumptionDataHelper.generateXValues(mAppContext.getConsumptionData().get(0));
+
+                // Generate the updated data sets
+                for (int z = 0; z < mAppContext.getConsumptionData().size(); z++) {
+                    mConsumptionDataHelper.generateDataSet(mAppContext.getConsumptionData().get(z), z);
+                }
+
+                // Add the data sets to the chart
+                mConsumptionDataHelper.updateChartData();
             }
+        } else {
+            mConsumptionDataLayout.setVisibility(View.GONE);
+            mOnErrorConsumptionDataLayout.setVisibility(View.VISIBLE);
+        }
 
-            // Add the data sets to the chart
-            mChartHelper.updateChartData();
-            // Update the chart on the view
-            mContext.getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mChartHelper.displayNoneAnimated();
-                }
-            });
-        } catch (NullPointerException e) {
-            Log.e(TAG, "Activity/Fragment destroyed or changed while updating.");
+        if(mAppContext.isUpdatingAutomatically() && !mHasUpdated) {
+            mUpdateHandler = new Handler();
+            onResume();
         }
     }
-
-    @Override
-    public void DataLoaderDidFail() {
-        try {
-            mContext.getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                Toast.makeText(
-                    mAppContext.getApplicationContext(),
-                    mAppContext.getString(R.string.toast_chart_update_error),
-                    Toast.LENGTH_SHORT
-                ).show();
-                }
-            });
-        } catch (NullPointerException e) {
-            Log.e(TAG, "Activity/Fragment destroyed or changed while updating.");
-        }
-    }
-    /********/
 
     /**
      * Runnable for updating the chart (every 10 seconds)
      */
-    private final Runnable updateData = new Runnable() {
+    private final Runnable updateConsumptionData = new Runnable() {
         public void run() {
-            DataLoader loader = new DataLoader(mAppContext, mContext);
-            loader.loadConsumptionData("http://" + mAppContext.getIPAdress() + ":" + getString(R.string.webservice_getData));
-            mUpdateHandler.postDelayed(this, 10000);
+            new GetConsumptionDataAsyncTask(
+                mAppContext,
+                getInstance()
+            ).execute();
+            mUpdateHandler.postDelayed(this, mAppContext.getUpdateInterval() * 1000);
         }
     };
 
-    /**** Maybe for future uses ****/
-    @Override
-    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-
-    }
-
-    @Override
-    public void onNothingSelected() {
-
-    }
-    /********/
+    private ConsumptionFragment getInstance() { return this; }
 }

@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
-import ch.fhnw.ip6.powerconsumptionmanager.network.DataLoaderCallback;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.view.startup.InitFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.startup.SplashFragment;
@@ -25,7 +24,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.view.startup.SplashFragment;
  * Activity that is called when the app gets started. Contains some navigation logic and delegates
  * the initial settings logic and the loading/reading of data to fragments.
  */
-public class SplashScreenActivity extends AppCompatActivity implements DataLoaderCallback, AsyncTaskCallback {
+public class SplashScreenActivity extends AppCompatActivity implements AsyncTaskCallback {
     private static final int PERMISSIONS_REQUEST = 0;
 
     private PowerConsumptionManagerAppContext mAppContext;
@@ -91,19 +90,6 @@ public class SplashScreenActivity extends AppCompatActivity implements DataLoade
             }
         }
     }
-
-    @Override
-    public void DataLoaderDidFinish() {
-        mAppContext.setOnline(true);
-        changeToMain();
-    }
-
-    @Override
-    public void DataLoaderDidFail() {
-        mAppContext.setOnline(false);
-        changeToMain();
-    }
-    /********/
 
     /**
      * Transition to main activity

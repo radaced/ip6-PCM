@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.model;
+package ch.fhnw.ip6.powerconsumptionmanager.model.consumptiondata;
 
 import android.util.Log;
 
@@ -9,25 +9,31 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/* TODO: this data should be integrated into the PCMData/PCMComponent model
+ * There is no clear separation as of now by the data received which components should be displayed
+ * on which screen.
+ */
+
+
 /**
  * Holds all value pairs (timestamp, power) for the graph of a single device from a getData-Request
  */
-public class ConsumptionChartDataModel {
+public class ConsumptionComponentModel {
     private static final String TAG = "ConsumptionChartDM";
 
     private String mComponentName;
-    private ArrayList<ComponentChartDataModel> mComponentData = new ArrayList<>();
+    private ArrayList<ConsumptionComponentDataModel> mComponentData = new ArrayList<>();
 
     /**
      * Read device name and store all value pairs in a list
      * @param fullData JSON object that contains all information to a component
      */
-    public ConsumptionChartDataModel(JSONObject fullData){
+    public ConsumptionComponentModel(JSONObject fullData){
         try{
             mComponentName = fullData.getString("Name");
             JSONArray componentDataJSON = fullData.getJSONArray("Data");
             for(int j = 0; j < componentDataJSON.length(); j++){
-                mComponentData.add(new ComponentChartDataModel(componentDataJSON.getJSONObject(j)));
+                mComponentData.add(new ConsumptionComponentDataModel(componentDataJSON.getJSONObject(j)));
             }
         } catch (JSONException e){
             Log.e(TAG, "JSON exception while processing consumption data.");
@@ -38,7 +44,7 @@ public class ConsumptionChartDataModel {
         return mComponentName;
     }
 
-    public List<ComponentChartDataModel> getComponentData() {
+    public List<ConsumptionComponentDataModel> getComponentData() {
         return mComponentData;
     }
 }

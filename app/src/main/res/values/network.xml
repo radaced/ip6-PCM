@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--****** PowerConsumptionManager Software ******-->
-    <string name="webservice_getData">8002/EM/App/getData</string>
+    <string name="webservice_getConsumptionData">8002/EM/App/getData</string>
     <string name="webservice_getComponents">8002/EM/App/getComponents</string>
     <string name="webservice_getChargePlan">8002/EM/App/getLadeplan</string>
     <string name="webservice_putChargePlan">8002/EM/App/putLadePlan</string>

@@ -15,8 +15,6 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 
 
 public class SplashFragment extends Fragment {
-    private static final String TAG = "SplashFragment";
-
     public static SplashFragment newInstance() {
         return new SplashFragment();
     }
@@ -40,7 +38,6 @@ public class SplashFragment extends Fragment {
         PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
 
         new GetCurrentPCMDataAsyncTask(appContext, (AsyncTaskCallback) getActivity()).execute();
-
         new GetConnectedComponentsAsyncTask(appContext, (AsyncTaskCallback) getActivity()).execute();
 
         // Web request to load the consumption and component data (load consumption data includes reading components)

@@ -76,7 +76,7 @@ public class PCMPlan extends PCMSetting {
         FragmentTransaction transaction = ((ComponentSettingsActivity) context).getSupportFragmentManager().beginTransaction();
 
         CaldroidFragment mCaldroidFragment = new CaldroidFragment();
-        PlanCalendarViewHelper mPlanCalendarViewHelper = new PlanCalendarViewHelper(mCaldroidFragment, (ComponentSettingsActivity) context);
+        PlanCalendarViewHelper mPlanCalendarViewHelper = new PlanCalendarViewHelper(mCaldroidFragment, context);
 
         LinearLayout llFragmentContainer = new LinearLayout(context);
         llFragmentContainer.setId(mFragmentContainerId);

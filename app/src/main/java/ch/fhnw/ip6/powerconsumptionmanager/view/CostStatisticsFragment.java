@@ -26,6 +26,7 @@ public class CostStatisticsFragment extends Fragment implements AsyncTaskCallbac
     private CostStatisticsHelper mCostStatisticsHelper;
     private LinearLayout mLoadingLayout;
     private LinearLayout mCostStatisticsLayout;
+    private LinearLayout mOnErrorCostStatisticsLayout;
     private TextView mLoadingInfo;
 
     public static CostStatisticsFragment newInstance() { return new CostStatisticsFragment(); }
@@ -45,6 +46,7 @@ public class CostStatisticsFragment extends Fragment implements AsyncTaskCallbac
 
         mLoadingLayout = (LinearLayout) view.findViewById(R.id.llLoading);
         mCostStatisticsLayout = (LinearLayout) view.findViewById(R.id.llCostStatistics);
+        mOnErrorCostStatisticsLayout = (LinearLayout) view.findViewById(R.id.llOnErrorCostStatistics);
         mLoadingInfo = (TextView) view.findViewById(R.id.tvLoadingInfo);
 
         BarChart sbcStatisticsOverview = (BarChart) view.findViewById(R.id.sbcStatisticsOverview);
@@ -79,8 +81,15 @@ public class CostStatisticsFragment extends Fragment implements AsyncTaskCallbac
     @Override
     public void asyncTaskFinished(boolean result) {
         mLoadingLayout.setVisibility(View.GONE);
-        mCostStatisticsLayout.setVisibility(View.VISIBLE);
 
-        mCostStatisticsHelper.setupStackedBarChartData();
+        if(result) {
+            mOnErrorCostStatisticsLayout.setVisibility(View.GONE);
+            mCostStatisticsLayout.setVisibility(View.VISIBLE);
+
+            mCostStatisticsHelper.setupStackedBarChartData();
+        } else {
+            mCostStatisticsLayout.setVisibility(View.GONE);
+            mOnErrorCostStatisticsLayout.setVisibility(View.VISIBLE);
+        }
     }
 }

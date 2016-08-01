@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.model;
+package ch.fhnw.ip6.powerconsumptionmanager.model.consumptiondata;
 
 import android.util.Log;
 
@@ -7,10 +7,16 @@ import org.json.JSONObject;
 
 import java.util.Locale;
 
+/* TODO: this data should be integrated into the PCMData/PCMComponent model
+ * There is no clear separation as of now by the data received which components should be displayed
+ * on which screen.
+ */
+
+
 /**
  * Holds one value pair (timestamp, power) for the graph of a device from a getData-Request
  */
-public class ComponentChartDataModel {
+public class ConsumptionComponentDataModel {
     private static final String TAG = "ComponentChartDM";
     private static final double SECONDS_DIFFERENCE = 2082844800;
 
@@ -21,7 +27,7 @@ public class ComponentChartDataModel {
      * Read the JSON-Array with the value pair for the graph
      * @param componentDataArray JSON object that holds an array of value pairs (timestamp, kW)
      */
-    public ComponentChartDataModel(JSONObject componentDataArray) {
+    public ConsumptionComponentDataModel(JSONObject componentDataArray) {
         try{
             for(int i = 0; i < componentDataArray.length(); i++) {
                 double timestamp = componentDataArray.getDouble("Zeit");
