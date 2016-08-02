@@ -26,24 +26,20 @@ import ch.fhnw.ip6.powerconsumptionmanager.view.SettingsFragment;
 
 /**
  * The main activity is called after the initial data loading on the splash screen
- * activity. It contains the two pages for displaying the consumption data and the
- * charge plan.
+ * activity. It contains the navigation drawer and its primary task is swapping between
+ * the different screens.
  */
 public class MainActivity extends AppCompatActivity {
-    // Flag if settings have changed
+    // Flag if the settings in the shared preferences file have changed
     public static boolean SETTINGS_UPDATED = false;
 
-    PowerConsumptionManagerAppContext mAppContext;
+    private PowerConsumptionManagerAppContext mAppContext;
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mDrawerNavView;
     private ActionBarDrawerToggle mDrawerToggle;
-
     private CharSequence mTitle;
 
-    /**
-     * Setup main menu
-    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,26 +47,32 @@ public class MainActivity extends AppCompatActivity {
 
         mAppContext = (PowerConsumptionManagerAppContext) getApplicationContext();
 
+        // Set the title and load the layout for the navigation drawer
         mTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerNavView = (NavigationView) findViewById(R.id.navView);
 
-        // Main toolbar
+        // Setup main toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.tbMain);
         setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
         if(actionBar != null) {
+            // Set drawer icon
             actionBar.setHomeAsUpIndicator(R.mipmap.ic_drawer);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // Ties the drawer layout and the action bar together
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
+        // Setup the content that is displayed in the navigation drawer
         setupDrawerContent(mDrawerNavView);
 
+        // On initial startup set the title to overview because this is the first screen to be rendered after startup
         if(savedInstanceState == null) {
             setTitle(R.string.title_frag_overview);
+            // Check if the loading of the initial data was successful and display the according screens
             if (mAppContext.isOnline()) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.flMainContentContainer, new OverviewFragment()).commit();
             } else {
@@ -79,6 +81,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Defines what happens when an item in the navigation drawer is being selected.
+     * @param navigationView The navigation view loaded from a xml file.
+     */
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -89,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Exchanges the screen with the content/screen that the user requested of the navigation drawer menu.
+     * @param menuItem The menu item that has been selected by the user.
+     */
     private void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment;
 
@@ -99,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.this.startActivity(intent);
             MainActivity.this.finish();
         } else {
+            // When the initial loading of data has been successful swap the fragments accordingly
             if(mAppContext.isOnline()) {
                 switch (menuItem.getItemId()) {
                     case R.id.nav_home:
@@ -121,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
             } else {
+                // If the initial data couldn't be loaded only the settings screen can be accessed
                 if(menuItem.getItemId() == R.id.nav_settings) {
                     fragment = SettingsFragment.newInstance();
                 } else {
@@ -153,26 +165,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        // Makes sure that the drawer icon state and the drawer state itself is synced properly after the activity restored
         mDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        // Let the drawer layout now when configurations (e.g. orientation) changed
         mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        SETTINGS_UPDATED = false;
-        mAppContext.setOnline(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        /* Check if the charge plan needs to be synced because changes to the calendar have been made when no connection
+         * to the PCM was available.
+         */
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         ChargePlanSyncChecker.executeSyncIfPending(mAppContext, settings);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Reset the flags for when settings have changed or if the app has connection to the PCM
+        SETTINGS_UPDATED = false;
+        mAppContext.setOnline(true);
     }
 }
