@@ -126,8 +126,6 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncTask
             fragment = InitFragment.newInstance();
         }
 
-        ChargePlanSyncChecker.executeSyncIfPending(mAppContext, settings);
-
         transaction.replace(R.id.flStartupContentContainer, fragment);
         transaction.commitAllowingStateLoss();
     }

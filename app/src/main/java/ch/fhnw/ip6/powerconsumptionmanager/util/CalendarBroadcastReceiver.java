@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -17,7 +20,18 @@ public class CalendarBroadcastReceiver extends BroadcastReceiver implements Asyn
     @Override
     public void onReceive(Context context, Intent intent) {
         mAppContext = (PowerConsumptionManagerAppContext) context.getApplicationContext();
-        new SynchronizeChargePlanAsyncTask(mAppContext, this, null).execute();
+        ConnectivityManager connManager = (ConnectivityManager) mAppContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connManager.getActiveNetworkInfo();
+
+        if(activeNetwork != null) {
+            if(activeNetwork.getType() == ConnectivityManager.TYPE_WIFI && mAppContext.usesGoogleCalendar()) {
+                new SynchronizeChargePlanAsyncTask(mAppContext, this, null).execute();
+            } else {
+                if(intent.getAction().equals(Intent.ACTION_PROVIDER_CHANGED)) {
+                    setChargePlanSyncPending();
+                }
+            }
+        }
     }
 
     @Override
@@ -26,11 +40,14 @@ public class CalendarBroadcastReceiver extends BroadcastReceiver implements Asyn
             Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_sync_ended_success), Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_br_sync_no_connection), Toast.LENGTH_SHORT).show();
-
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mAppContext);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putBoolean("brChargePlanSyncPending", true);
-            editor.apply();
+            setChargePlanSyncPending();
         }
+    }
+
+    private void setChargePlanSyncPending() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mAppContext);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("brChargePlanSyncPending", true);
+        editor.apply();
     }
 }
