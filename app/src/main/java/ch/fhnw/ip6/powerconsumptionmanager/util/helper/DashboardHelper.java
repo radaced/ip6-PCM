@@ -140,15 +140,15 @@ public class DashboardHelper {
     }
 
     public void updateOverview() {
-        PCMData currentData = mAppContext.getPCMData();
+        PCMData pcmData = mAppContext.getPCMData();
 
-        updateSummaryRatio(mOverviewContext.getString(R.string.text_autarchy), currentData.getAutarchy());
-        updateSummaryRatio(mOverviewContext.getString(R.string.text_selfsupply), currentData.getSelfsupply());
+        updateSummaryRatio(mOverviewContext.getString(R.string.text_autarchy), pcmData.getAutarchy());
+        updateSummaryRatio(mOverviewContext.getString(R.string.text_selfsupply), pcmData.getSelfsupply());
         updateSummaryRatio(
             mOverviewContext.getString(R.string.text_consumption),
-            currentData.getConsumption(),
-            currentData.getMinScaleConsumption(),
-            currentData.getMaxScaleConsumption()
+            pcmData.getConsumption(),
+            pcmData.getMinScaleConsumption(),
+            pcmData.getMaxScaleConsumption()
         );
     }
 
@@ -194,11 +194,13 @@ public class DashboardHelper {
         LinkedHashMap<String, PCMComponent> dataMap = mAppContext.getPCMData().getComponentData();
 
         for(Map.Entry<String, PCMComponent> entry : dataMap.entrySet()) {
-            int scaleMin = entry.getValue().getMinArcScale();
-            int scaleMax = entry.getValue().getMaxArcScale();
+            if(entry.getValue().isDisplayedOnDashboard()) {
+                int scaleMin = entry.getValue().getScaleMinArc();
+                int scaleMax = entry.getValue().getScaleMaxArc();
 
-            updatePowerForComponent(entry.getKey(), entry.getValue().getPower() * (100 / (scaleMax - scaleMin)));
-            updatePowerLabel(entry.getKey(), entry.getValue().getPower());
+                updatePowerForComponent(entry.getKey(), entry.getValue().getPower() * (100 / (scaleMax - scaleMin)));
+                updatePowerLabel(entry.getKey(), entry.getValue().getPower());
+            }
         }
 
         displayAnimated();
@@ -245,8 +247,8 @@ public class DashboardHelper {
         arcsv.setStartAngle(135);
         arcsv.setSweepAngle(270);
         this.addComponentView(componentId, arcsv);
-        int scaleMin = componentData.getMinArcScale();
-        int scaleMax = componentData.getMaxArcScale();
+        int scaleMin = componentData.getScaleMinArc();
+        int scaleMax = componentData.getScaleMaxArc();
         this.setPowerForComponent(
             componentId,
             this.generateModelForComponent(
@@ -352,7 +354,7 @@ public class DashboardHelper {
         mBCDailyData.setDescription(null);
         mBCDailyData.setNoDataText(mDailyValuesContext.getString(R.string.chart_no_data));
         mBCDailyData.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
-        mBCDailyData.setMinimumWidth((int) (mAppContext.getComponents().size() * mDensity * 120));
+        mBCDailyData.setMinimumWidth((int) (mAppContext.getPCMData().getComponentData().size() * mDensity * 120));
         mBCDailyData.setHighlightPerTapEnabled(false);
         mBCDailyData.setHighlightPerDragEnabled(false);
 
@@ -393,12 +395,17 @@ public class DashboardHelper {
     }
 
     public void setupDailyBarChartData() {
-        LinkedHashMap<String, PCMComponent> dataMap = mAppContext.getPCMData().getComponentData();
-        ArrayList<String> xValues = new ArrayList<>(dataMap.keySet());
+        LinkedHashMap<String, PCMComponent> componentData = mAppContext.getPCMData().getComponentData();
+        ArrayList<String> xValues = new ArrayList<>();
+        for (Map.Entry<String, PCMComponent> entry : componentData.entrySet()) {
+            if(entry.getValue().isDisplayedOnDashboard()) {
+                xValues.add(entry.getKey());
+            }
+        }
         ArrayList<BarEntry> yValuesEnergy = new ArrayList<>();
         ArrayList<BarEntry> yValuesCost = new ArrayList<>();
 
-        fillDataSets(dataMap, yValuesEnergy, yValuesCost);
+        fillDataSets(componentData, yValuesEnergy, yValuesCost);
 
         BarDataSet energySet, costSet;
         energySet = new BarDataSet(yValuesEnergy, "Energy");
@@ -425,11 +432,11 @@ public class DashboardHelper {
 
     public void updateDailyValues() {
         if(mBCDailyData.getData() != null && mBCDailyData.getData().getDataSetCount() > 0) {
-            LinkedHashMap<String, PCMComponent> dataMap = mAppContext.getPCMData().getComponentData();
+            LinkedHashMap<String, PCMComponent> componentData = mAppContext.getPCMData().getComponentData();
             ArrayList<BarEntry> yValuesEnergy = new ArrayList<>();
             ArrayList<BarEntry> yValuesCost = new ArrayList<>();
 
-            fillDataSets(dataMap, yValuesEnergy, yValuesCost);
+            fillDataSets(componentData, yValuesEnergy, yValuesCost);
 
             BarDataSet energySet, costSet;
             energySet = (BarDataSet) mBCDailyData.getData().getDataSetByIndex(0);
@@ -448,8 +455,10 @@ public class DashboardHelper {
     private void fillDataSets(LinkedHashMap<String, PCMComponent> dataMap, ArrayList<BarEntry> yValuesEnergy, ArrayList<BarEntry> yValuesCost) {
         int i = 0;
         for (Map.Entry<String, PCMComponent> entry : dataMap.entrySet()) {
-            yValuesEnergy.add(new BarEntry((float) entry.getValue().getEnergy(), i));
-            yValuesCost.add(new BarEntry((float) entry.getValue().getCost(), i++));
+            if(entry.getValue().isDisplayedOnDashboard()) {
+                yValuesEnergy.add(new BarEntry((float) entry.getValue().getEnergy(), i));
+                yValuesCost.add(new BarEntry((float) entry.getValue().getCost(), i++));
+            }
         }
     }
 

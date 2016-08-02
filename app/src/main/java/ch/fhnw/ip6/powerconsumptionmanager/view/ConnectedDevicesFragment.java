@@ -18,6 +18,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 
 public class ConnectedDevicesFragment extends ListFragment {
     private PowerConsumptionManagerAppContext mAppContext;
+    private ArrayList<String> mComponentNamesList;
 
     public static ConnectedDevicesFragment newInstance() {
         return new ConnectedDevicesFragment();
@@ -35,22 +36,22 @@ public class ConnectedDevicesFragment extends ListFragment {
         mAppContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
         ListView lvConnectedDevices = (ListView) view.findViewById(android.R.id.list);
         int layoutResource;
-        ArrayList<String> listItems;
+
 
         if(mAppContext.isOnline()) {
             layoutResource = R.layout.list_connected_device;
-            listItems = mAppContext.getComponents();
+            mComponentNamesList = new ArrayList<>(mAppContext.getPCMData().getComponentData().keySet());
         } else {
             layoutResource = R.layout.list_no_device;
-            listItems = new ArrayList<>();
-            listItems.add(getString(R.string.list_device_error));
+            mComponentNamesList = new ArrayList<>();
+            mComponentNamesList.add(getString(R.string.list_device_error));
         }
 
         lvConnectedDevices.setAdapter(
                 new ConnectedDeviceListAdapter(
                         getContext(),
                         layoutResource,
-                        listItems,
+                        mComponentNamesList,
                         mAppContext.isOnline()
                 )
         );
@@ -60,7 +61,7 @@ public class ConnectedDevicesFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Intent intent = new Intent(getActivity(), ComponentSettingsActivity.class);
-        intent.putExtra("component_position", position);
+        intent.putExtra("componentName", mComponentNamesList.get(position));
         getActivity().startActivity(intent);
     }
 }

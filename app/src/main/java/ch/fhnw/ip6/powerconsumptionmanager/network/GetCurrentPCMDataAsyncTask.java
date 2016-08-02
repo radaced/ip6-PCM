@@ -29,7 +29,7 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
         mAppContext = context;
         mCallbackContext = callbackContext;
         mURL = "http://" + mAppContext.getIPAdress() + ":";
-        mPCMData = new PCMData();
+        mPCMData = mAppContext.getPCMData();
     }
 
     @Override
@@ -76,9 +76,6 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
-        if(result) {
-            mAppContext.setCurrentPCMData(mPCMData);
-        }
         mCallbackContext.asyncTaskFinished(result);
     }
 
@@ -112,13 +109,15 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
             for(int i = 0; i < dataJson.length(); i++) {
                 JSONObject dataJsonEntry = (JSONObject) dataJson.get(i);
-                PCMComponent ccdm = new PCMComponent(
-                    dataJsonEntry.getString("Name"),
-                    dataJsonEntry.getJSONObject("Data"),
-                    dataJsonEntry.getInt("Grenze_unten(kW)"),
-                    dataJsonEntry.getInt("Grenze_oben(kW)")
-                );
-                mPCMData.getComponentData().put(dataJsonEntry.getString("Name"), ccdm);
+                PCMComponent component = mPCMData.getComponentData().get(dataJsonEntry.getString("Name"));
+
+                if(component != null) {
+                    component.fillDashboardData(
+                        dataJsonEntry.getJSONObject("Data"),
+                        dataJsonEntry.getInt("Grenze_unten(kW)"),
+                        dataJsonEntry.getInt("Grenze_oben(kW)")
+                    );
+                }
             }
         } catch (JSONException e) {
             Log.e(TAG, "JSON exception while processing current component data.");

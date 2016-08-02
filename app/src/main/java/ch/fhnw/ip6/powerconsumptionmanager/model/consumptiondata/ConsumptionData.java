@@ -16,7 +16,7 @@ import java.util.Locale;
 /**
  * Holds one value pair (timestamp, power) for the graph of a device from a getData-Request
  */
-public class ConsumptionComponentDataModel {
+public class ConsumptionData {
     private static final String TAG = "ComponentChartDM";
     private static final double SECONDS_DIFFERENCE = 2082844800;
 
@@ -27,7 +27,7 @@ public class ConsumptionComponentDataModel {
      * Read the JSON-Array with the value pair for the graph
      * @param componentDataArray JSON object that holds an array of value pairs (timestamp, kW)
      */
-    public ConsumptionComponentDataModel(JSONObject componentDataArray) {
+    public ConsumptionData(JSONObject componentDataArray) {
         try{
             for(int i = 0; i < componentDataArray.length(); i++) {
                 double timestamp = componentDataArray.getDouble("Zeit");

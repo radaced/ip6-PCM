@@ -108,7 +108,7 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
 
                 // Define device list adapter parameters
                 int layoutResource = R.layout.list_consumption_device;
-                ArrayList<String> listItems = mAppContext.getComponents();
+                ArrayList<String> listItems = new ArrayList<>(mAppContext.getPCMData().getComponentData().keySet());
 
                 // Set up the device list
                 mListViewDevices.setAdapter(

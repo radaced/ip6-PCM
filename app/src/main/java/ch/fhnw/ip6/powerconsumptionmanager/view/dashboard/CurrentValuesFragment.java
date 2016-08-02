@@ -48,13 +48,15 @@ public class CurrentValuesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
-        LinkedHashMap<String, PCMComponent> dataMap = appContext.getPCMData().getComponentData();
+        LinkedHashMap<String, PCMComponent> componentData = appContext.getPCMData().getComponentData();
 
-        for (String key : dataMap.keySet()) {
-            mDashboardHelper.generateComponentUIElement(
-                key,
-                ContextCompat.getColor(getContext(), R.color.colorArcProgress)
-            );
+        for (String key : componentData.keySet()) {
+            if(componentData.get(key).isDisplayedOnDashboard()) {
+                mDashboardHelper.generateComponentUIElement(
+                        key,
+                        ContextCompat.getColor(getContext(), R.color.colorArcProgress)
+                );
+            }
         }
 
         mDashboardHelper.displayAnimated();

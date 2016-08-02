@@ -38,7 +38,6 @@ public class PowerConsumptionManagerAppContext extends Application {
 
     /* Consumption data */
     private ArrayList<ConsumptionComponentModel> mConsumptionData = new ArrayList<>();
-    private ArrayList<String> mComponents = new ArrayList<>();
 
     private RouteInformation mRouteInformation;
 
@@ -100,7 +99,7 @@ public class PowerConsumptionManagerAppContext extends Application {
         return mPCMData;
     }
 
-    public void setCurrentPCMData(PCMData mPCMData) {
+    public void setPCMData(PCMData mPCMData) {
         this.mPCMData = mPCMData;
     }
 
@@ -110,14 +109,6 @@ public class PowerConsumptionManagerAppContext extends Application {
 
     public ArrayList<ConsumptionComponentModel> getConsumptionData() {
         return mConsumptionData;
-    }
-
-    public void setComponents(ArrayList<String> mComponents) {
-        this.mComponents = mComponents;
-    }
-
-    public ArrayList<String> getComponents() {
-        return mComponents;
     }
 
     public RouteInformation getRouteInformation() {

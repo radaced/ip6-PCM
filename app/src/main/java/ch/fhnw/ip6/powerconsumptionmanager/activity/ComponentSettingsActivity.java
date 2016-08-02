@@ -45,8 +45,7 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
 
         Bundle extras = this.getIntent().getExtras();
         if(extras != null) {
-            int index = extras.getInt("component_position");
-            mComponentName = mAppContext.getComponents().get(index);
+            mComponentName = extras.getString("componentName");
 
             getSupportActionBar().setTitle(getString(R.string.title_activity_actionbar) + " " + mComponentName);
             new GetComponentSettingsAsyncTask(mAppContext, this, mComponentName).execute();

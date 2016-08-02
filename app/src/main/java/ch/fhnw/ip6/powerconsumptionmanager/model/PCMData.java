@@ -68,7 +68,6 @@ public class PCMData {
     }
 
 
-
     public double getAutarchy() {
         return mAutarchy;
     }
@@ -117,6 +116,10 @@ public class PCMData {
         this.mConsumptionColor = mConsumptionColor;
     }
 
+    public LinkedList<String> getStatisticsDates() {
+        return mStatisticsDates;
+    }
+
     public LinkedList<Double> getSelfSupplyStatisticsValues() {
         return mSelfSupplyStatisticsValues;
     }
@@ -129,11 +132,8 @@ public class PCMData {
         return mSurplusStatisticsValues;
     }
 
-    public LinkedList<String> getStatisticsDates() {
-        return mStatisticsDates;
-    }
-
     public LinkedHashMap<String, PCMComponent> getComponentData() {
         return mPCMComponentData;
     }
+
 }

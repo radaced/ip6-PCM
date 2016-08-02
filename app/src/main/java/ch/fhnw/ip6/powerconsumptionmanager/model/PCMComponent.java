@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.util.LinkedList;
 
+import ch.fhnw.ip6.powerconsumptionmanager.model.consumptiondata.ConsumptionData;
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSetting;
 
 public class PCMComponent {
@@ -14,19 +15,28 @@ public class PCMComponent {
     private double mEnergy;
     private double mCost;
     private int mScaleMinArc, mScaleMaxArc;
+    private boolean mIsDisplayedOnDashboard = false;
     private LinkedList<PCMSetting> mSettings = new LinkedList<>();
     private LinkedList<Double> mStatistics = new LinkedList<>();
+    private LinkedList<ConsumptionData> mConsumptionData = new LinkedList<>();
 
-    public PCMComponent(String name, JSONObject componentData, int minScaleArc, int scaleMaxArc) throws JSONException {
+    public PCMComponent(String name) {
         mName = name;
+        mPower = 0;
+        mEnergy = 0;
+        mCost = 0;
+        mScaleMinArc = 0;
+        mScaleMaxArc = 0;
+    }
+
+    public void fillDashboardData(JSONObject componentData, int minScaleArc, int scaleMaxArc) throws JSONException {
+        mIsDisplayedOnDashboard = true;
         mPower = componentData.getDouble("Leistung");
         mEnergy = componentData.getDouble("Energie");
         mCost = componentData.getDouble("Kosten");
         mScaleMinArc = minScaleArc;
         mScaleMaxArc = scaleMaxArc;
     }
-
-
 
     public void fillStatistics(JSONArray data) throws JSONException {
         for (int i = 0; i < data.length(); i++) {
@@ -53,12 +63,16 @@ public class PCMComponent {
         return mCost;
     }
 
-    public int getMinArcScale() {
+    public int getScaleMinArc() {
         return mScaleMinArc;
     }
 
-    public int getMaxArcScale() {
+    public int getScaleMaxArc() {
         return mScaleMaxArc;
+    }
+
+    public boolean isDisplayedOnDashboard() {
+        return mIsDisplayedOnDashboard;
     }
 
     public LinkedList<PCMSetting> getSettings() {
@@ -67,5 +81,9 @@ public class PCMComponent {
 
     public LinkedList<Double> getStatistics() {
         return mStatistics;
+    }
+
+    public LinkedList<ConsumptionData> getConsumptionData() {
+        return mConsumptionData;
     }
 }

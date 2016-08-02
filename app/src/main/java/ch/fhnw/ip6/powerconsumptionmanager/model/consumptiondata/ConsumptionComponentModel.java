@@ -22,7 +22,7 @@ public class ConsumptionComponentModel {
     private static final String TAG = "ConsumptionChartDM";
 
     private String mComponentName;
-    private ArrayList<ConsumptionComponentDataModel> mComponentData = new ArrayList<>();
+    private ArrayList<ConsumptionData> mComponentData = new ArrayList<>();
 
     /**
      * Read device name and store all value pairs in a list
@@ -33,7 +33,7 @@ public class ConsumptionComponentModel {
             mComponentName = fullData.getString("Name");
             JSONArray componentDataJSON = fullData.getJSONArray("Data");
             for(int j = 0; j < componentDataJSON.length(); j++){
-                mComponentData.add(new ConsumptionComponentDataModel(componentDataJSON.getJSONObject(j)));
+                mComponentData.add(new ConsumptionData(componentDataJSON.getJSONObject(j)));
             }
         } catch (JSONException e){
             Log.e(TAG, "JSON exception while processing consumption data.");
@@ -44,7 +44,7 @@ public class ConsumptionComponentModel {
         return mComponentName;
     }
 
-    public List<ConsumptionComponentDataModel> getComponentData() {
+    public List<ConsumptionData> getComponentData() {
         return mComponentData;
     }
 }
