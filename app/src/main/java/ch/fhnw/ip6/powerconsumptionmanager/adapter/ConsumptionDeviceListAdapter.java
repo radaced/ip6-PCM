@@ -1,13 +1,10 @@
 package ch.fhnw.ip6.powerconsumptionmanager.adapter;
 
 import android.content.Context;
-import android.os.Build;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -23,12 +20,15 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
  * the interaction with the device list.
  */
 public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
+    PowerConsumptionManagerAppContext mAppContext;
+
     private int mLayout;
     private List<String> mDevices;
     private ConsumptionDataHelper mConsumptionDataHelper;
 
     public ConsumptionDeviceListAdapter(Context context, int resource, ArrayList<String> objects, ConsumptionDataHelper chart) {
         super(context, resource, objects);
+        mAppContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
         mLayout = resource;
         mDevices = objects;
         mConsumptionDataHelper = chart;
@@ -67,12 +67,16 @@ public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
                     // Add removed data set index to ignore list
                     mConsumptionDataHelper.getRemovedDataSetIndexes().add(position);
                 } else {
-                    PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
                     // Indicate that graph of certain device is visible again (remove from ignore list
                     mConsumptionDataHelper.getRemovedDataSetIndexes().remove(Integer.valueOf(position));
                     // Generate new data set with the correct consumption data
-                    mConsumptionDataHelper.generateDataSet(appContext.getConsumptionData().get(position - shiftPos), position - shiftPos);
-                    mConsumptionDataHelper.updateChartData();
+                    String device = mDevices.get(position - shiftPos);
+                    mConsumptionDataHelper.generateDataSet(
+                        device,
+                        mAppContext.getPCMData().getComponentData().get(device).getConsumptionData(),
+                        position - shiftPos
+                    );
+                    mConsumptionDataHelper.updateLineChartData();
                     mConsumptionDataHelper.displayNoneAnimated();
                 }
             }
@@ -86,7 +90,7 @@ public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
      * @param position Index of the device-list that has been clicked
      * @return Amount of not shown device-graphs in the chart that have a smaller index in the list view as position
      */
-    public int getShiftPosition(int position) {
+    private int getShiftPosition(int position) {
         int shiftPos = 0;
         for(int i = 0; i < mConsumptionDataHelper.getRemovedDataSetIndexes().size(); i++) {
             if(mConsumptionDataHelper.getRemovedDataSetIndexes().get(i) < position) {

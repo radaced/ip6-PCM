@@ -6,7 +6,6 @@ import org.json.JSONObject;
 
 import java.util.LinkedList;
 
-import ch.fhnw.ip6.powerconsumptionmanager.model.consumptiondata.ConsumptionData;
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSetting;
 
 public class PCMComponent {

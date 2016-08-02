@@ -8,10 +8,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
-import ch.fhnw.ip6.powerconsumptionmanager.model.consumptiondata.ConsumptionComponentModel;
+import ch.fhnw.ip6.powerconsumptionmanager.model.PCMComponent;
+import ch.fhnw.ip6.powerconsumptionmanager.model.ConsumptionData;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -61,24 +62,25 @@ public class GetConsumptionDataAsyncTask  extends AsyncTask<Void, Void, Boolean>
     public boolean handleResponse(Response response) throws IOException {
         boolean success = true;
 
-        // List to hold the loaded consumption data
-        ArrayList<ConsumptionComponentModel> consumptionData = new ArrayList<>();
+        LinkedHashMap<String, PCMComponent> componentData = mAppContext.getPCMData().getComponentData();
 
         try {
             JSONArray dataJson = new JSONArray(response.body().string());
 
-            // Fill model containers with each device and add the data to the list
             for (int i = 0; i < dataJson.length(); i++) {
-                ConsumptionComponentModel usageData = new ConsumptionComponentModel((JSONObject) dataJson.get(i));
-                consumptionData.add(usageData);
+                JSONObject jsonConsumptionDataPerComponent = (JSONObject) dataJson.get(i);
+                JSONArray jsonConsumptionData = jsonConsumptionDataPerComponent.getJSONArray("Data");
+                componentData.get(jsonConsumptionDataPerComponent.getString("Name")).getConsumptionData().clear();
+                for(int j = 0; j < jsonConsumptionData.length(); j++){
+                    componentData.get(jsonConsumptionDataPerComponent.getString("Name")).getConsumptionData().add(
+                        new ConsumptionData(jsonConsumptionData.getJSONObject(j))
+                    );
+                }
             }
         } catch (JSONException e) {
             Log.e(TAG, "JSON exception while processing consumption data.");
             success = false;
         }
-
-        // Make consumption data available for the application through the application context
-        mAppContext.setConsumptionData(consumptionData);
 
         return success;
     }

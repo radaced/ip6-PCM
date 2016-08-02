@@ -2,10 +2,8 @@ package ch.fhnw.ip6.powerconsumptionmanager.util;
 
 import android.app.Application;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import ch.fhnw.ip6.powerconsumptionmanager.model.consumptiondata.ConsumptionComponentModel;
 import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.RouteInformation;
 import ch.fhnw.ip6.powerconsumptionmanager.model.PCMData;
 import okhttp3.OkHttpClient;
@@ -35,9 +33,6 @@ public class PowerConsumptionManagerAppContext extends Application {
 
     /* Data */
     private PCMData mPCMData;
-
-    /* Consumption data */
-    private ArrayList<ConsumptionComponentModel> mConsumptionData = new ArrayList<>();
 
     private RouteInformation mRouteInformation;
 
@@ -101,14 +96,6 @@ public class PowerConsumptionManagerAppContext extends Application {
 
     public void setPCMData(PCMData mPCMData) {
         this.mPCMData = mPCMData;
-    }
-
-    public void setConsumptionData(ArrayList<ConsumptionComponentModel> mConsumptionData) {
-        this.mConsumptionData = mConsumptionData;
-    }
-
-    public ArrayList<ConsumptionComponentModel> getConsumptionData() {
-        return mConsumptionData;
     }
 
     public RouteInformation getRouteInformation() {

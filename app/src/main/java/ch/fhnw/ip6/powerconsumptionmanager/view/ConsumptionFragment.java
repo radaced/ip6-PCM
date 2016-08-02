@@ -57,6 +57,7 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
         LineChart consumptionChart = (LineChart) view.findViewById(R.id.consumptionDataLineChart);
         mListViewDevices = (ListView) view.findViewById(R.id.lvDevices);
         mConsumptionDataHelper = new ConsumptionDataHelper(getContext(), consumptionChart);
+        mConsumptionDataHelper.setup();
 
         new GetConsumptionDataAsyncTask(mAppContext, this).execute();
     }
@@ -89,19 +90,8 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
             mConsumptionDataLayout.setVisibility(View.VISIBLE);
 
             if(!mHasUpdated) {
-                // Set up the whole chart with data sets and so on with the helper class
-                mConsumptionDataHelper.setup();
-                mConsumptionDataHelper.setLegend(false);
-                mConsumptionDataHelper.generateXValues(mAppContext.getConsumptionData().get(0));
-
-                // Generate the data sets to display
-                for (int i = 0; i < mAppContext.getConsumptionData().size(); i++) {
-                    mConsumptionDataHelper.generateDataSet(mAppContext.getConsumptionData().get(i), i);
-                }
-
-                // Display the chart
-                mConsumptionDataHelper.initChartData();
-                mConsumptionDataHelper.displayAnimated();
+                // Set up the whole chart with the helper class and display it
+                mConsumptionDataHelper.setupLineChartData();
 
                 // Instantiate the update handler
                 mUpdateHandler = new Handler();
@@ -120,15 +110,8 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
                         )
                 );
             } else {
-                mConsumptionDataHelper.generateXValues(mAppContext.getConsumptionData().get(0));
-
-                // Generate the updated data sets
-                for (int z = 0; z < mAppContext.getConsumptionData().size(); z++) {
-                    mConsumptionDataHelper.generateDataSet(mAppContext.getConsumptionData().get(z), z);
-                }
-
                 // Add the data sets to the chart
-                mConsumptionDataHelper.updateChartData();
+                mConsumptionDataHelper.updateLineChartData();
             }
         } else {
             mConsumptionDataLayout.setVisibility(View.GONE);

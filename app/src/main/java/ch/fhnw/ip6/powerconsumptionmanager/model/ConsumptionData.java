@@ -1,4 +1,4 @@
-package ch.fhnw.ip6.powerconsumptionmanager.model.consumptiondata;
+package ch.fhnw.ip6.powerconsumptionmanager.model;
 
 import android.util.Log;
 
