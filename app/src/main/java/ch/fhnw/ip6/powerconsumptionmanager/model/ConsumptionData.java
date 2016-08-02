@@ -7,12 +7,6 @@ import org.json.JSONObject;
 
 import java.util.Locale;
 
-/* TODO: this data should be integrated into the PCMData/PCMComponent model
- * There is no clear separation as of now by the data received which components should be displayed
- * on which screen.
- */
-
-
 /**
  * Holds one value pair (timestamp, power) for the graph of a device from a getData-Request
  */

@@ -35,13 +35,6 @@ public class GetStatisticsAsyncTask extends AsyncTask<Void, Void, Boolean> {
         boolean successGeneralStatistics;
         boolean successComponentStatistics;
 
-        /* TODO: Is this wanted? */
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         Request generalStatisticsData = new Request.Builder()
                 .url(mURL + mAppContext.getString(R.string.webservice_getCostStatisticsGeneral) + "?NumDays=" + mAppContext.getCostStatisticsPeriod())
                 .build();

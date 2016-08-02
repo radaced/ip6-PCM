@@ -14,6 +14,8 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Map;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.PCMComponent;
@@ -87,7 +89,12 @@ public class CostStatisticsHelper {
         ArrayList<String> xValues = new ArrayList<>(pcmData.getStatisticsDates());
         ArrayList<BarEntry> yValuesGeneralStatistics = new ArrayList<>();
         ArrayList<BarEntry> yValuesComponentsStatistics = new ArrayList<>();
-        int amountOfComponents = pcmData.getComponentData().size() - 2;
+        LinkedList<String> components = new LinkedList<>();
+        for (Map.Entry<String, PCMComponent> entry : pcmData.getComponentData().entrySet()) {
+            if(!(entry.getKey().equals("Photovoltaik") || entry.getKey().equals("VerbrauchTot")) && entry.getValue().isDisplayedOnDashboard()) {
+                components.add(entry.getKey());
+            }
+        }
 
         for(int i = 0; i < xValues.size(); i++) {
             yValuesGeneralStatistics.add(
@@ -101,11 +108,11 @@ public class CostStatisticsHelper {
                 )
             );
 
-            float[] componentValuesPerDate = new float[amountOfComponents];
+            float[] componentValuesPerDate = new float[components.size()];
             int j = 0;
             for (PCMComponent componentData : pcmData.getComponentData().values()) {
                 // Ignores the components Photovoltaik and VerbrauchTot because they are not listed in the cost statistics
-                if(componentData.getStatistics().size() != 0) {
+                if(componentData.getStatistics().size() != 0 && componentData.isDisplayedOnDashboard()) {
                     componentValuesPerDate[j] = componentData.getStatistics().get(i).floatValue();
                     j++;
                 }
@@ -123,16 +130,8 @@ public class CostStatisticsHelper {
         generalStatisticsSet.setValueTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
 
         componentStatisticsSet = new BarDataSet(yValuesComponentsStatistics, "");
-        componentStatisticsSet.setColors(getColors(amountOfComponents));
-        String[] components = new String[amountOfComponents];
-        int i = 0;
-        for (String component : pcmData.getComponentData().keySet()) {
-            if(!(component.equals("Photovoltaik") || component.equals("VerbrauchTot"))) {
-                components[i] = component;
-                i++;
-            }
-        }
-        componentStatisticsSet.setStackLabels(components);
+        componentStatisticsSet.setColors(getColors(components.size()));
+        componentStatisticsSet.setStackLabels(components.toArray(new String[components.size()]));
         componentStatisticsSet.setValueFormatter(new CostStatisticsFormatter(false, " CHF", 2));
         componentStatisticsSet.setValueTextColor(ContextCompat.getColor(mContext, R.color.colorTextPrimary));
 
