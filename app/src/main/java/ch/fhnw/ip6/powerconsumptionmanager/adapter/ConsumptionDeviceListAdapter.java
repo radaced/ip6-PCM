@@ -20,48 +20,57 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
  * the interaction with the device list.
  */
 public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
+
     PowerConsumptionManagerAppContext mAppContext;
 
     private int mLayout;
     private List<String> mDevices;
     private ConsumptionDataHelper mConsumptionDataHelper;
 
-    public ConsumptionDeviceListAdapter(Context context, int resource, ArrayList<String> objects, ConsumptionDataHelper chart) {
+    /**
+     * Constructor to initialize the consumption device list.
+     * @param context Context of the list.
+     * @param resource XML layout of the list item.
+     * @param objects A list of strings that will be the labels per list item.
+     * @param consumptionDataHelper A helper class instance for the consumption data.
+     */
+    public ConsumptionDeviceListAdapter(Context context, int resource, ArrayList<String> objects, ConsumptionDataHelper consumptionDataHelper) {
         super(context, resource, objects);
         mAppContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
         mLayout = resource;
         mDevices = objects;
-        mConsumptionDataHelper = chart;
+        mConsumptionDataHelper = consumptionDataHelper;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
+        // Sets the layout of the list items from the xml
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(mLayout, parent, false);
         }
 
-        // Check if devices/data could be loaded
-
+        // View of one list item
         final ViewHolder vh = new ViewHolder();
 
+        // Populate device names as a label per list item
         vh.tvDevice = (TextView) convertView.findViewById(R.id.tvDevice);
         vh.tvDevice.setText(mDevices.get(position));
 
-        // Set color indicator to see which device is connected to each graph
+        // Set color indicator to see which device is connected to which graph in the consumption data line chart
         vh.vGraphColor = convertView.findViewById(R.id.vGraphColor);
         vh.vGraphColor.setBackgroundColor(mConsumptionDataHelper.getGraphColor(position));
 
+        // Define the switch button logic that is on every list item
         vh.swDevice = (Switch) convertView.findViewById(R.id.swDevice);
         vh.swDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int shiftPos = getShiftPosition(position);
                 if (!vh.swDevice.isChecked()) {
-                        /* Data sets are managed in a list and as soon one device graph is not shown in the chart anymore
-                         * the indices are out of sync
-                         */
+                    /* Data sets are managed in a list and as soon as one device graph is not shown in the chart anymore
+                     * the indices are out of sync
+                     */
                     mConsumptionDataHelper.getChart().getLineData().removeDataSet(position - shiftPos);
                     mConsumptionDataHelper.displayNoneAnimated();
                     // Add removed data set index to ignore list
@@ -76,8 +85,8 @@ public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
                         mAppContext.getPCMData().getComponentData().get(device).getConsumptionData(),
                         position - shiftPos
                     );
+                    // Update
                     mConsumptionDataHelper.updateLineChartData();
-                    mConsumptionDataHelper.displayNoneAnimated();
                 }
             }
         });
@@ -87,8 +96,9 @@ public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
     }
 
     /**
-     * @param position Index of the device-list that has been clicked
-     * @return Amount of not shown device-graphs in the chart that have a smaller index in the list view as position
+     * Used to determine which line data sets need to be shown and which can be ignored.
+     * @param position Index of the device-list that has been clicked.
+     * @return Amount of not shown device-graphs in the chart that have a smaller index in the list view as position.
      */
     private int getShiftPosition(int position) {
         int shiftPos = 0;

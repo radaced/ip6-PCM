@@ -44,7 +44,7 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        // Load the different layouts from the xml
+        // Load the different layouts from the XML
         mLoadingLayout = (LinearLayout) findViewById(R.id.llLoading);
         mComponentSettingsLayout = (LinearLayout) findViewById(R.id.llComponentSettings);
         mOnErrorComponentSettingsLayout = (LinearLayout) findViewById(R.id.llOnErrorComponentSettings);

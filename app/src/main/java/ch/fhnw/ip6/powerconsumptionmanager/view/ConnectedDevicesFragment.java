@@ -37,23 +37,15 @@ public class ConnectedDevicesFragment extends ListFragment {
         ListView lvConnectedDevices = (ListView) view.findViewById(android.R.id.list);
         int layoutResource;
 
-
-        if(mAppContext.isOnline()) {
-            layoutResource = R.layout.list_connected_device;
-            mComponentNamesList = new ArrayList<>(mAppContext.getPCMData().getComponentData().keySet());
-        } else {
-            layoutResource = R.layout.list_no_device;
-            mComponentNamesList = new ArrayList<>();
-            mComponentNamesList.add(getString(R.string.list_device_error));
-        }
+        layoutResource = R.layout.list_connected_device;
+        mComponentNamesList = new ArrayList<>(mAppContext.getPCMData().getComponentData().keySet());
 
         lvConnectedDevices.setAdapter(
-                new ConnectedDeviceListAdapter(
-                        getContext(),
-                        layoutResource,
-                        mComponentNamesList,
-                        mAppContext.isOnline()
-                )
+            new ConnectedDeviceListAdapter(
+                getContext(),
+                layoutResource,
+                mComponentNamesList
+            )
         );
     }
 

@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Defines what happens when an item in the navigation drawer is being selected.
-     * @param navigationView The navigation view loaded from a xml file.
+     * @param navigationView The navigation view loaded from a XML file.
      */
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

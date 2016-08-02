@@ -172,7 +172,7 @@ public class ConsumptionDataHelper {
 
         mLCConsumption.getData().notifyDataChanged();
         mLCConsumption.notifyDataSetChanged();
-        mLCConsumption.invalidate();
+        displayNoneAnimated();
     }
 
 
