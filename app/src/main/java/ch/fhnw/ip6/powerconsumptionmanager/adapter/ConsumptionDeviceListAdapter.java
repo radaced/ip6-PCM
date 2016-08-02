@@ -111,7 +111,7 @@ public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
     }
 
     /**
-     * View holder contains all ui elements on a list item
+     * View holder contains all ui elements on a list item.
      */
     static class ViewHolder {
         TextView tvDevice;

@@ -3,7 +3,7 @@ package ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan;
 import java.util.Date;
 
 /**
- * Holds the necessary information to a tesla trip instance (from calendar.instance table)
+ * Holds the necessary information to an emobil trip instance (from the calendar.instance table (google calendar)).
  */
 public class CalendarEntry {
     private String mTitle;
@@ -12,6 +12,14 @@ public class CalendarEntry {
     private Date mBegin;
     private Date mEnd;
 
+    /**
+     * Constructor to build a new calendar entry object with the necessary information from the google calendar.
+     * @param title The title of the calendar instance.
+     * @param eventLocation The event location of the calendar instance.
+     * @param description The description of the calendar instance.
+     * @param begin The exact date when the calendar instance begins.
+     * @param end The exact date when the calendar instance ends.
+     */
     public CalendarEntry(String title, String eventLocation, String description, Date begin, Date end) {
         this.mTitle = title;
         this.mEventLocation = eventLocation;
@@ -20,6 +28,9 @@ public class CalendarEntry {
         this.mEnd = end;
     }
 
+    /***********************
+     * GETTERS AND SETTERS *
+     ***********************/
     public String getTitle() {
         return mTitle;
     }
