@@ -116,7 +116,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncTask
         if(settings.contains("IP")) {
             // Load preferences from file into application context for easier access
             mAppContext.setGoogleCalendar(settings.getBoolean("googleCalendar", false));
-            mAppContext.setUpdatingAutomatically(settings.getBoolean("updateAutomatically", true));
+            mAppContext.setUpdatingAutomatically(settings.getBoolean("updateAutomatically", false));
             mAppContext.setUpdateInterval(settings.getInt("updateInterval", 10));
             mAppContext.setCostStatisticsPeriod(settings.getInt("costStatisticsPeriod", 7));
             mAppContext.setIPAdress(settings.getString("IP", "192.168.0.1"));

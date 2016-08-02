@@ -61,16 +61,25 @@ public class InitFragment extends Fragment {
                 }
 
                 if (correct) {
-                    // When input was correct load preference file and set the key-value pair for IP
+                    // When input was correct load preference file and set the key-value pair for IP and other settings
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     SharedPreferences.Editor editor = settings.edit();
                     String ip = ip1.getText().toString() + "." + ip2.getText().toString() + "." + ip3.getText().toString() + "." + ip4.getText().toString();
                     editor.putString("IP", ip);
+                    editor.putBoolean("googleCalendar", false);
+                    editor.putBoolean("updateAutomatically", false);
+                    editor.putInt("updateInterval", 10);
+                    editor.putInt("costStatisticsPeriod", 7);
                     editor.apply();
 
-                    // Set the IP in the application context for easier access
+                    // Set settings in the application context for easier access
                     PowerConsumptionManagerAppContext context = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
                     context.setIPAdress(ip);
+                    context.setGoogleCalendar(false);
+                    context.setUpdatingAutomatically(false);
+                    context.setUpdateInterval(10);
+                    context.setCostStatisticsPeriod(7);
+                    context.setIPAdress(settings.getString("IP", "192.168.0.1"));
 
                     // Change to loading fragment
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
