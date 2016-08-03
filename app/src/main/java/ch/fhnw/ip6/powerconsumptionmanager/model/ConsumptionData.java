@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import java.util.Locale;
 
 /**
- * Holds one value pair (timestamp, power) for the graph of a device from a getData-Request
+ * Holds the power consumption at a certain point of time as consumption data for the line chart
  */
 public class ConsumptionData {
     private static final String TAG = "ComponentChartDM";
@@ -18,23 +18,24 @@ public class ConsumptionData {
     private double mPowerkW;
 
     /**
-     * Read the JSON-Array with the value pair for the graph
-     * @param componentDataArray JSON object that holds an array of value pairs (timestamp, kW)
+     * Read the JSON with the timestamp and the power of a component.
+     * @param consumptionData JSON object that holds the power consumption of a component at a certain time.
      */
-    public ConsumptionData(JSONObject componentDataArray) {
+    public ConsumptionData(JSONObject consumptionData) {
         try{
-            for(int i = 0; i < componentDataArray.length(); i++) {
-                double timestamp = componentDataArray.getDouble("Zeit");
-                // Convert from lab view timestamp (01.01.1904) to unix timestamp (01.01.1970)
-                timestamp -= SECONDS_DIFFERENCE;
-                mTimestamp = String.format(Locale.getDefault(), "%.0f", timestamp);
-                mPowerkW = componentDataArray.getDouble("Leistung");
-            }
+            double timestamp = consumptionData.getDouble("Zeit");
+            timestamp -= SECONDS_DIFFERENCE; // Convert from lab view timestamp (01.01.1904) to unix timestamp (01.01.1970)
+
+            mTimestamp = String.format(Locale.getDefault(), "%.0f", timestamp);
+            mPowerkW = consumptionData.getDouble("Leistung");
         } catch (JSONException e){
             Log.e(TAG, "JSON exception while processing component data.");
         }
     }
 
+    /***********************
+     * GETTERS AND SETTERS *
+     ***********************/
     public String getTimestamp() {
         return mTimestamp;
     }

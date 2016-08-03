@@ -49,7 +49,7 @@ public class PCMSlider extends PCMSetting {
     public void inflateLayout(Context context, LinearLayout container) {
         super.inflateLayout(context, container);
 
-        // Defines that the number has minimum one digit after the comma
+        // Defines that the number displayed in the pin of the range bar has minimum one digit after the comma
         final NumberFormat numberFormat = NumberFormat.getInstance();
         numberFormat.setMinimumFractionDigits(1);
 
@@ -111,8 +111,9 @@ public class PCMSlider extends PCMSetting {
         container.addView(mRangebar);
     }
 
+    /* TODO: putComfortSettings */
     @Override
-    public String executeSaveOrGenerateSaveJson(Context context) {
+    public String executeSaveOrGenerateJson(Context context) {
         return "";
     }
 }

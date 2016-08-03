@@ -26,7 +26,7 @@ public abstract class PCMSetting {
     /**
      * Renders the layout per setting and adds it to the main layout container where all settings then are displayed.
      * @param context Context of the to be generated widget.
-     * @param container The main layout container where the generated ui elements per setting are added.
+     * @param container The main layout container where the generated UI elements per setting are added.
      */
     public void inflateLayout(Context context, LinearLayout container) {
         LinearLayout.LayoutParams tvLayoutParams = new LinearLayout.LayoutParams(
@@ -50,7 +50,7 @@ public abstract class PCMSetting {
      * @param context Context of the save action.
      * @return The generated JSON to save the setting or empty string "" when directly executed.
      */
-    public abstract String executeSaveOrGenerateSaveJson(Context context);
+    public abstract String executeSaveOrGenerateJson(Context context);
 
     /***********************
      * GETTERS AND SETTERS *

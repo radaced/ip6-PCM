@@ -17,15 +17,23 @@ public class PCMData {
     private int mScaleMinConsumption, mScaleMaxConsumption;
     private int mConsumptionColor;
 
+    // Lists for statistics
     private LinkedList<String> mStatisticsDates = new LinkedList<>();
     private LinkedList<Double> mSelfSupplyStatisticsValues = new LinkedList<>();
     private LinkedList<Double> mConsumptionStatisticsValues = new LinkedList<>();
     private LinkedList<Double> mSurplusStatisticsValues = new LinkedList<>();
 
+    // Holds all connected components in a map with the name of the component as the key
     private LinkedHashMap<String, PCMComponent> mPCMComponentData = new LinkedHashMap<>();
 
-
-
+    /**
+     * Fills the general statistic lists and the statistic dates list with the data that has been loaded.
+     * @param name Name of the general statistics list to fill.
+     * @param data Statistics data as a JSONArray with the cost statistic per day.
+     * @param ignoreStatisticsDates Flag to determine if the dates from when the statistics are need to be stored in the
+     *                              mStatisticsDates list. Usually only on the first fillStatistics call necessary.
+     * @throws JSONException when an error occurred while processing the JSON.
+     */
     public void fillStatistics(String name, JSONArray data, boolean ignoreStatisticsDates) throws JSONException {
         if(!ignoreStatisticsDates) {
             for (int i = 0; i < data.length(); i++) {
@@ -56,6 +64,9 @@ public class PCMData {
         }
     }
 
+    /**
+     * Clears the statistics of all connected components and all general statistics.
+     */
     public void clearStatistics() {
         mStatisticsDates.clear();
         mSelfSupplyStatisticsValues.clear();
@@ -67,7 +78,9 @@ public class PCMData {
         }
     }
 
-
+    /***********************
+     * GETTERS AND SETTERS *
+     ***********************/
     public double getAutarchy() {
         return mAutarchy;
     }

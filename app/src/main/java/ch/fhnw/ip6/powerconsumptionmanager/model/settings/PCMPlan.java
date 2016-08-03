@@ -70,7 +70,7 @@ public class PCMPlan extends PCMSetting {
     }
 
     @Override
-    public String executeSaveOrGenerateSaveJson(Context context) {
+    public String executeSaveOrGenerateJson(Context context) {
         // Call the synchronize charge plan task depending on the users preference to manage the charge plan
         if(mUsesGoogleCalendar) {
             new SynchronizeChargePlanAsyncTask((PowerConsumptionManagerAppContext) context.getApplicationContext(), null).execute();
@@ -128,12 +128,12 @@ public class PCMPlan extends PCMSetting {
      * @param layoutParams Layout parameters for the main layout container.
      */
     private void loadPCMPlanView(Context context, LinearLayout container, LinearLayout.LayoutParams layoutParams) {
-        // Horizontal container for ui elements to edit the charge plan (1)
+        // Horizontal container for UI elements to edit the charge plan (1)
         LinearLayout llPCMPlan = new LinearLayout(context);
         llPCMPlan.setOrientation(LinearLayout.HORIZONTAL);
         llPCMPlan.setLayoutParams(layoutParams);
 
-        // Generate the number picker ui to switch between the different weekdays
+        // Generate the number picker UI to switch between the different weekdays
         LinearLayout.LayoutParams npLayoutParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -161,7 +161,7 @@ public class PCMPlan extends PCMSetting {
         llTimePickers.setOrientation(LinearLayout.VERTICAL);
         llTimePickers.setLayoutParams(llTimePickersLayoutParams);
 
-        // Layout parameters for the ui elements to display start and end time of a trip
+        // Layout parameters for the UI elements to display start and end time of a trip
         LinearLayout.LayoutParams llTimeContainers = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -192,7 +192,7 @@ public class PCMPlan extends PCMSetting {
         tvDeparture.setGravity(Gravity.CENTER);
         tvDeparture.setLayoutParams(tvLayoutParams);
 
-        // Add ui element to (3)
+        // Add UI element to (3)
         llDeparture.addView(tvDeparture);
 
         // Departure timepicker
@@ -202,7 +202,7 @@ public class PCMPlan extends PCMSetting {
         tpDeparture.setCurrentMinute(mChargePlanData.get(mDayIndex).getDepartureMinute());
         tpDeparture.setLayoutParams(tpLayoutParams);
 
-        // Add ui element to (3)
+        // Add UI element to (3)
         llDeparture.addView(tpDeparture);
 
         // Add departure container (3) to (2)
@@ -257,7 +257,7 @@ public class PCMPlan extends PCMSetting {
         tvKm.setText(context.getString(R.string.unit_km));
         tvKm.setLayoutParams(tvKmLayoutParams);
 
-        // Add ui element to (4)
+        // Add UI element to (4)
         llKm.addView(tvKm);
 
         LinearLayout.LayoutParams etLayoutParams = new LinearLayout.LayoutParams(
@@ -266,7 +266,7 @@ public class PCMPlan extends PCMSetting {
         );
         etLayoutParams.setMargins(15, 0, 0, 0);
 
-        // Edittext ui element to edit the amount of kilometers
+        // Edittext UI element to edit the amount of kilometers
         final EditText etKm = new EditText(context);
         etKm.setBackgroundResource(android.R.color.white);
         etKm.setTextColor(ContextCompat.getColor(context.getApplicationContext(), R.color.colorTextPrimaryInverse));
@@ -279,7 +279,7 @@ public class PCMPlan extends PCMSetting {
         etKm.setLayoutParams(etLayoutParams);
         etKm.setPadding(0, 0, 0, 0);
 
-        // Add ui element to (4)
+        // Add UI element to (4)
         llKm.addView(etKm);
 
         // Add container layout to edit the kilometers to the horizontal main container
