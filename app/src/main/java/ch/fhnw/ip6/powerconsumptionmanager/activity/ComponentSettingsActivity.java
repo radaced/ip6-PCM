@@ -83,7 +83,7 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
 
                 // Generate the json or execute the save action for every setting of this component
                 for (PCMSetting setting : mAppContext.getPCMData().getComponentData().get(mComponentName).getSettings()) {
-                    json = json + setting.generateSaveJson(this);
+                    json = json + setting.executeSaveOrGenerateSaveJson(this);
                 }
 
                 /* TODO: Implement PUT method with async task to save settings */

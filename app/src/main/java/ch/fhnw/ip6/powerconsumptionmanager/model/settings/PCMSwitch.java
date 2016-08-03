@@ -69,7 +69,7 @@ public class PCMSwitch extends PCMSetting {
     }
 
     @Override
-    public String generateSaveJson(Context context) {
+    public String executeSaveOrGenerateSaveJson(Context context) {
         return "";
     }
 }

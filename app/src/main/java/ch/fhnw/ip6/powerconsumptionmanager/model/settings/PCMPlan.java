@@ -26,14 +26,21 @@ import ch.fhnw.ip6.powerconsumptionmanager.network.SynchronizeChargePlanAsyncTas
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.util.helper.PlanCalendarViewHelper;
 
+/**
+ * Represents a charge plan setting from the PCM.
+ */
 public class PCMPlan extends PCMSetting {
     private boolean mUsesGoogleCalendar;
     private int mFragmentContainerId;
-
     private LinkedHashMap<Integer, PCMPlanEntry> mChargePlanData = new LinkedHashMap<>();
     private int mDayIndex = 0;
     private boolean mIgnoreChange = false;
 
+    /**
+     * Constructor to create a new charge plan setting.
+     * @param name Name of the setting.
+     * @param usesGoogleCalendar Boolean if the user uses the google calendar to manage the charge plan.
+     */
     public PCMPlan(String name, boolean usesGoogleCalendar) {
         super(name);
         mUsesGoogleCalendar = usesGoogleCalendar;
@@ -54,6 +61,7 @@ public class PCMPlan extends PCMSetting {
         );
         llLayoutParams.setMargins(0, 0, 0, (int) (MARGIN_BOTTOM * density));
 
+        // Depending on the users preference to view the calendar load the according layout
         if(mUsesGoogleCalendar) {
             loadCalendarView(context, container, llLayoutParams);
         } else {
@@ -62,27 +70,38 @@ public class PCMPlan extends PCMSetting {
     }
 
     @Override
-    public String generateSaveJson(Context context) {
+    public String executeSaveOrGenerateSaveJson(Context context) {
+        // Call the synchronize charge plan task depending on the users preference to manage the charge plan
         if(mUsesGoogleCalendar) {
             new SynchronizeChargePlanAsyncTask((PowerConsumptionManagerAppContext) context.getApplicationContext(), null).execute();
         } else {
             new SynchronizeChargePlanAsyncTask((PowerConsumptionManagerAppContext) context.getApplicationContext(), mChargePlanData).execute();
         }
 
+        // JSON is generated and already sent to the PCM in another task
         return "";
     }
 
+    /**
+     * Generates the layout for when the user uses the google calendar to manage the charge plan.
+     * @param context Context of the widget to create.
+     * @param container The layout where the generated view is added to.
+     * @param layoutParams Layout parameters for the main layout container.
+     */
     private void loadCalendarView(Context context, LinearLayout container, LinearLayout.LayoutParams layoutParams) {
         FragmentTransaction transaction = ((ComponentSettingsActivity) context).getSupportFragmentManager().beginTransaction();
 
+        // New caldroid fragment and helper class instance
         CaldroidFragment mCaldroidFragment = new CaldroidFragment();
         PlanCalendarViewHelper mPlanCalendarViewHelper = new PlanCalendarViewHelper(mCaldroidFragment, context);
 
+        // Format and set the id for the container that holds the caldroid fragment
         LinearLayout llFragmentContainer = new LinearLayout(context);
         llFragmentContainer.setId(mFragmentContainerId);
         llFragmentContainer.setOrientation(LinearLayout.VERTICAL);
         llFragmentContainer.setLayoutParams(layoutParams);
 
+        // Setup the caldroid fragment
         Calendar cal = Calendar.getInstance();
         int month = cal.get(Calendar.MONTH);
         int year = cal.get(Calendar.YEAR);
@@ -95,15 +114,26 @@ public class PCMPlan extends PCMSetting {
         mPlanCalendarViewHelper.markDays();
         mPlanCalendarViewHelper.generateListener();
 
+        // Attach the fragment to the container
         transaction.replace(mFragmentContainerId, mPlanCalendarViewHelper.getCaldroid()).commit();
+
+        // Add the generated layout to the main layout container
         container.addView(llFragmentContainer);
     }
 
+    /**
+     * Generates the layout for when the user is not using the google calendar to manage the charge plan.
+     * @param context Context of the widget to create.
+     * @param container The layout where the generated view is added to.
+     * @param layoutParams Layout parameters for the main layout container.
+     */
     private void loadPCMPlanView(Context context, LinearLayout container, LinearLayout.LayoutParams layoutParams) {
+        // Horizontal container for ui elements to edit the charge plan (1)
         LinearLayout llPCMPlan = new LinearLayout(context);
         llPCMPlan.setOrientation(LinearLayout.HORIZONTAL);
         llPCMPlan.setLayoutParams(layoutParams);
 
+        // Generate the number picker ui to switch between the different weekdays
         LinearLayout.LayoutParams npLayoutParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -117,6 +147,7 @@ public class PCMPlan extends PCMSetting {
         npWeekdays.setDisplayedValues(context.getResources().getStringArray(R.array.weekdays));
         npWeekdays.setLayoutParams(npLayoutParams);
 
+        // Add to horizontal container (1)
         llPCMPlan.addView(npWeekdays);
 
         LinearLayout.LayoutParams llTimePickersLayoutParams = new LinearLayout.LayoutParams(
@@ -125,10 +156,12 @@ public class PCMPlan extends PCMSetting {
             4
         );
 
+        // Vertical container for the start and end time of a trip (2)
         LinearLayout llTimePickers = new LinearLayout(context);
         llTimePickers.setOrientation(LinearLayout.VERTICAL);
         llTimePickers.setLayoutParams(llTimePickersLayoutParams);
 
+        // Layout parameters for the ui elements to display start and end time of a trip
         LinearLayout.LayoutParams llTimeContainers = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -146,10 +179,12 @@ public class PCMPlan extends PCMSetting {
             2
         );
 
+        // Horizontal layout to display departure label and time picker next to each other (3)
         LinearLayout llDeparture = new LinearLayout(context);
         llDeparture.setOrientation(LinearLayout.HORIZONTAL);
         llDeparture.setLayoutParams(llTimeContainers);
 
+        // Departure label
         TextView tvDeparture = new TextView(context);
         tvDeparture.setText(context.getString(R.string.text_departure_time));
         tvDeparture.setTextSize(14);
@@ -157,18 +192,23 @@ public class PCMPlan extends PCMSetting {
         tvDeparture.setGravity(Gravity.CENTER);
         tvDeparture.setLayoutParams(tvLayoutParams);
 
+        // Add ui element to (3)
         llDeparture.addView(tvDeparture);
 
+        // Departure timepicker
         final TimePicker tpDeparture = new TimePicker(context, null, 1); // Use this constructor to display the time picker as a spinner!
         tpDeparture.setIs24HourView(true);
         tpDeparture.setCurrentHour(mChargePlanData.get(mDayIndex).getDepartureHour());
         tpDeparture.setCurrentMinute(mChargePlanData.get(mDayIndex).getDepartureMinute());
         tpDeparture.setLayoutParams(tpLayoutParams);
 
+        // Add ui element to (3)
         llDeparture.addView(tpDeparture);
 
+        // Add departure container (3) to (2)
         llTimePickers.addView(llDeparture);
 
+        // Analog for the arrival label and time picker
         LinearLayout llArrival = new LinearLayout(context);
         llArrival.setOrientation(LinearLayout.HORIZONTAL);
         llArrival.setLayoutParams(llTimeContainers);
@@ -192,6 +232,7 @@ public class PCMPlan extends PCMSetting {
 
         llTimePickers.addView(llArrival);
 
+        // Add the layout container to edit the trip times (2) to the horizontal main container (1)
         llPCMPlan.addView(llTimePickers);
 
         LinearLayout.LayoutParams llKmLayoutParams = new LinearLayout.LayoutParams(
@@ -201,6 +242,7 @@ public class PCMPlan extends PCMSetting {
         );
         llKmLayoutParams.gravity = Gravity.CENTER;
 
+        // Horizontal layout to display the amount of kilometers to drive (4)
         LinearLayout llKm = new LinearLayout(context);
         llKm.setOrientation(LinearLayout.HORIZONTAL);
         llKm.setLayoutParams(llKmLayoutParams);
@@ -210,10 +252,12 @@ public class PCMPlan extends PCMSetting {
             LinearLayout.LayoutParams.WRAP_CONTENT
         );
 
+        // Kilometer label
         TextView tvKm = new TextView(context);
         tvKm.setText(context.getString(R.string.unit_km));
         tvKm.setLayoutParams(tvKmLayoutParams);
 
+        // Add ui element to (4)
         llKm.addView(tvKm);
 
         LinearLayout.LayoutParams etLayoutParams = new LinearLayout.LayoutParams(
@@ -222,6 +266,7 @@ public class PCMPlan extends PCMSetting {
         );
         etLayoutParams.setMargins(15, 0, 0, 0);
 
+        // Edittext ui element to edit the amount of kilometers
         final EditText etKm = new EditText(context);
         etKm.setBackgroundResource(android.R.color.white);
         etKm.setTextColor(ContextCompat.getColor(context.getApplicationContext(), R.color.colorTextPrimaryInverse));
@@ -234,11 +279,15 @@ public class PCMPlan extends PCMSetting {
         etKm.setLayoutParams(etLayoutParams);
         etKm.setPadding(0, 0, 0, 0);
 
+        // Add ui element to (4)
         llKm.addView(etKm);
 
+        // Add container layout to edit the kilometers to the horizontal main container
         llPCMPlan.addView(llKm);
 
-        /* Set on-value-change listeners */
+        /* Set on-value-change listeners for the number picker (weekday), the time pickers (arrival, departure)
+         * and the edit text to modify the kilometers
+         */
         npWeekdays.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -296,9 +345,13 @@ public class PCMPlan extends PCMSetting {
             }
         });
 
+        // Add the generated layout to the main layout container
         container.addView(llPCMPlan);
     }
 
+    /***********************
+     * GETTERS AND SETTERS *
+     ***********************/
     public LinkedHashMap<Integer, PCMPlanEntry> getChargePlanData() {
         return mChargePlanData;
     }
