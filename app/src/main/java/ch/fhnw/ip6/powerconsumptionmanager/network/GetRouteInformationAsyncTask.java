@@ -10,6 +10,9 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.RouteProcessor;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Gets the route information to two locations over the google maps API.
+ */
 public class GetRouteInformationAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "GetRouteInfoAsyncTask";
 
@@ -17,8 +20,14 @@ public class GetRouteInformationAsyncTask extends AsyncTask<Void, Void, Boolean>
     private AsyncTaskCallback mCallbackContext;
     private String mURL;
 
-    public GetRouteInformationAsyncTask(PowerConsumptionManagerAppContext context, AsyncTaskCallback callbackContext, String url) {
-        mAppContext = context;
+    /**
+     * Constructor to create a new task to request route information to two locations over the google maps API.
+     * @param appContext Application context.
+     * @param callbackContext Context of the callback.
+     * @param url The exact URL to request on the google maps API.
+     */
+    public GetRouteInformationAsyncTask(PowerConsumptionManagerAppContext appContext, AsyncTaskCallback callbackContext, String url) {
+        mAppContext = appContext;
         mCallbackContext = callbackContext;
         mURL = url;
     }
@@ -32,6 +41,7 @@ public class GetRouteInformationAsyncTask extends AsyncTask<Void, Void, Boolean>
                 .build();
 
         try {
+            // Request and process the route information
             Response response = mAppContext.getOkHTTPClient().newCall(request).execute();
             if(!response.isSuccessful()) {
                 Log.e(TAG, "Response for route information not successful.");

@@ -24,7 +24,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Background task to build and send the json for synchronizing the PCM charge plan
+ * Background task to build and send the JSON for synchronizing the google calendar with the PCM or save the changed charge plan.
  */
 public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private static final String TAG = "SyncChargePlanAsyncTask";
@@ -36,25 +36,36 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
     private StringBuilder mJsonString;
     private String[] mWeekToSync = new String[7];
 
-    public SynchronizeChargePlanAsyncTask(PowerConsumptionManagerAppContext context, LinkedHashMap<Integer, PCMPlanEntry> chargePlanData) {
-        mAppContext = context;
+    /**
+     * Construct a new synchronization task.
+     * @param appContext Application context.
+     * @param chargePlanData Linked hash map with the charge plan data of the PCM.
+     */
+    public SynchronizeChargePlanAsyncTask(PowerConsumptionManagerAppContext appContext, LinkedHashMap<Integer, PCMPlanEntry> chargePlanData) {
+        mAppContext = appContext;
         mChargePlanData = chargePlanData;
         mJsonString = new StringBuilder(1000);
     }
 
+    /**
+     * Construct a new synchronization task with a callback context.
+     * @param appContext Application context.
+     * @param callbackContext Context of the callback.
+     * @param chargePlanData Linked hash map with the charge plan data of the PCM.
+     */
     public SynchronizeChargePlanAsyncTask(
-            PowerConsumptionManagerAppContext context,
+            PowerConsumptionManagerAppContext appContext,
             AsyncTaskCallback callbackContext,
             LinkedHashMap<Integer, PCMPlanEntry> chargePlanData) {
-        this(context, chargePlanData);
+        this(appContext, chargePlanData);
         mCallbackContext = callbackContext;
     }
 
     /**
      * Task is executed in background (necessary because no network activity can be run on the UI- or
      * main thread) and generates the string for the synchronization.
-     * @param params No params needed
-     * @return String for the put-Request
+     * @param params No params needed.
+     * @return String for the PUT-request.
      */
     @Override
     protected Boolean doInBackground(Void... params) {
@@ -70,8 +81,7 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
             int syncStartDay = calendar.get(Calendar.DAY_OF_WEEK_IN_MONTH) - 1;
             long lowerRangeEnd = calendar.getTimeInMillis();
 
-            /*
-             * Get all the days that are being synchronized (needed because the keys in the hashmap are the
+            /* Get all the days that are being synchronized (needed because the keys in the hash map are the
              * days where the calendar instance takes place)
              */
             int[] dayKeys = new int[7];
@@ -96,7 +106,7 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
             // Build the actual JSON that is being sent
             mJsonString.append("[");
             for (int i = 0; i < 7; i++) {
-                // Check if a calendar instance exists to a day that needs to be synched
+                // Check if a calendar instance exists to a day that needs to be synced
                 if (instances.containsKey(dayKeys[i])) {
                     CalendarEntry pem = instances.get(dayKeys[i]);
                     String[] locations = pem.getEventLocation().split("/");
@@ -188,17 +198,18 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
         }
 
 
-
         if(!mJsonString.toString().equals("")) {
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             RequestBody requestBody = RequestBody.create(JSON, mJsonString.toString());
-            // Make the put request
+
+            // Make the PUT-request
             Request request = new Request.Builder()
                     .url("http://" + mAppContext.getIPAdress() + ":" + mAppContext.getString(R.string.webservice_putChargePlan))
                     .put(requestBody)
                     .build();
 
             try {
+                // Execute the request
                 Response response = mAppContext.getOkHTTPClient().newCall(request).execute();
                 success = response.isSuccessful();
             } catch (IOException e) {
@@ -216,6 +227,7 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
 
+        // Check if the task had a callback and notify accordingly
         if(mCallbackContext != null) {
             mCallbackContext.asyncTaskFinished(result, mAppContext.OP_TYPES[0]);
         } else {
@@ -227,29 +239,50 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
         }
     }
 
+    /**
+     * Determines the index of a weekday by the weekdays shortcut.
+     * @param weekday The shortcut of the weekday.
+     * @return The index of the weekday in the week (monday = 0, sunday = 6). -1 when an error happens.
+     */
     private int getWeekdayNumber(String weekday) {
         int weekdayNumber;
 
         // Get the weekday shortcut of the day that has no data to sync
-        if (weekday.equals("Mo")) {
-            weekdayNumber = 0;
-        } else if (weekday.equals("Di")) {
-            weekdayNumber = 1;
-        } else if (weekday.equals("Mi")) {
-            weekdayNumber = 2;
-        } else if (weekday.equals("Do")) {
-            weekdayNumber = 3;
-        } else if (weekday.equals("Fr")) {
-            weekdayNumber = 4;
-        } else if (weekday.equals("Sa")) {
-            weekdayNumber = 5;
-        } else {
-            weekdayNumber = 6;
+        switch (weekday) {
+            case "Mo":
+                weekdayNumber = 0;
+                break;
+            case "Di":
+                weekdayNumber = 1;
+                break;
+            case "Mi":
+                weekdayNumber = 2;
+                break;
+            case "Do":
+                weekdayNumber = 3;
+                break;
+            case "Fr":
+                weekdayNumber = 4;
+                break;
+            case "Sa":
+                weekdayNumber = 5;
+                break;
+            case "So":
+                weekdayNumber = 6;
+                break;
+            default:
+                weekdayNumber = -1;
+                break;
         }
 
         return weekdayNumber;
     }
 
+    /**
+     * Appends a JSON (charge plan data of one weekday) to the "whole" JSON string.
+     * @param jsonPart The JSON to append.
+     * @param numberOfDay Number of the day in a week (monday = 0, sunday = 6).
+     */
     private void appendDayToJson(String jsonPart, int numberOfDay) {
         mJsonString.append(jsonPart);
         if (numberOfDay != 6) {
@@ -257,6 +290,11 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
         }
     }
 
+    /**
+     * Sets a 0 in front of one digit numeric values.
+     * @param number Numeric value.
+     * @return The numeric value with two digits (e.g. 01, 07, 10, 12).
+     */
     private String leftPad2(int number) {
         return String.format("%0" + 2 + "d", number);
     }

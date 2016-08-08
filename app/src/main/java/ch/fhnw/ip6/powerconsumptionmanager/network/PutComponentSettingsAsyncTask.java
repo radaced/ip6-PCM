@@ -12,6 +12,9 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+/**
+ * Async task to save the component settings of a component.
+ */
 public class PutComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     private static final String TAG = "PlanSyncStringBuilder";
@@ -21,8 +24,15 @@ public class PutComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
     private String mJsonString;
     private String mComponentName;
 
-    public PutComponentSettingsAsyncTask(PowerConsumptionManagerAppContext context, AsyncTaskCallback callbackContext, String json, String component) {
-        mAppContext = context;
+    /**
+     * Constructs a new async task to save the settings of a component.
+     * @param appContext Application context.
+     * @param callbackContext Context of the callback.
+     * @param json The JSON to send via PUT-request.
+     * @param component The component of which the settings are being saved.
+     */
+    public PutComponentSettingsAsyncTask(PowerConsumptionManagerAppContext appContext, AsyncTaskCallback callbackContext, String json, String component) {
+        mAppContext = appContext;
         mCallbackContext = callbackContext;
         mJsonString = json;
         mComponentName = component;
@@ -32,19 +42,20 @@ public class PutComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
     protected Boolean doInBackground(Void... params) {
         boolean success;
 
-        /* TODO: Saving settings only works for putProgramSettings yet */
+        /* TODO: Saving settings only works for putProgramSettings yet (Zogg Energy Control)*/
         String[] jsonParts = mJsonString.split("\\[\\[ProgramSettings\\]\\]");
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(JSON, jsonParts[1].substring(0, jsonParts[1].length()-1));
 
-        // Create the put request
+        // Create the PUT-request
         Request request = new Request.Builder()
                 .url("http://" + mAppContext.getIPAdress() + ":" + mAppContext.getString(R.string.webservice_putProgramSettings) + mComponentName)
                 .put(requestBody)
                 .build();
 
         try {
+            // Execute request
             Response response = mAppContext.getOkHTTPClient().newCall(request).execute();
             success = response.isSuccessful();
         } catch (IOException e) {

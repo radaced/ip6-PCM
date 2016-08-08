@@ -87,6 +87,7 @@ public class PCMSwitch extends PCMSetting {
         // String builder to build JSON
         StringBuilder jsonStringBuilder = new StringBuilder(1000);
 
+        /* TODO: [[ProgramSettings]] as "flag" to determine where the JSON for the putProgramSettings request starts (Zogg Energy Control) */
         // Build JSON with switch state
         String jsonString = "[[ProgramSettings]]{\"Niedertarif\": " + mSwitch.isChecked() + "}";
 
