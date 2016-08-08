@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
+import ch.fhnw.ip6.powerconsumptionmanager.model.PCMComponent;
 import ch.fhnw.ip6.powerconsumptionmanager.model.PCMData;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import okhttp3.Request;
@@ -107,7 +108,10 @@ public class GetStatisticsAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
             for(int i = 0; i < dataJson.length(); i++) {
                 JSONObject dataJsonEntry = (JSONObject) dataJson.get(i);
-                mPCMData.getComponentData().get(dataJsonEntry.getString("Name")).fillStatistics(dataJsonEntry.getJSONArray("Data"));
+                PCMComponent component = mPCMData.getComponentData().get(dataJsonEntry.getString("Name"));
+                if(component != null) {
+                    component.fillStatistics(dataJsonEntry.getJSONArray("Data"));
+                }
             }
         } catch (JSONException e) {
             Log.e(TAG, "JSON exception while processing component statistics data.");

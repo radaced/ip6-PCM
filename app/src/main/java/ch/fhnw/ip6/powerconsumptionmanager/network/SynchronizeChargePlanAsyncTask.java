@@ -91,7 +91,7 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
             String weekday;
             String start;
             String end;
-            int kilometer;
+            int kilometer = 0;
 
             // Build the actual JSON that is being sent
             mJsonString.append("[");
@@ -129,11 +129,11 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
                     end = time.format(pem.getEnd());
 
                     RouteInformation rim = mAppContext.getRouteInformation();
-                    if (rim.getDistanceText().equals("")) {
-                        kilometer = 0;
-                    } else {
-                        String[] withMeasurement = rim.getDistanceText().split(" ");
-                        kilometer = (int) Double.parseDouble(withMeasurement[0]);
+                    if (rim != null) {
+                        if (!rim.getDistanceText().equals("")) {
+                            String[] withMeasurement = rim.getDistanceText().split(" ");
+                            kilometer = (int) Double.parseDouble(withMeasurement[0]);
+                        }
                     }
 
                     // Build string for one day

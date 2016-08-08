@@ -149,22 +149,25 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                 if(dataJsonEntry.has("Typ") && !"".equals(name)) {
                     switch (dataJsonEntry.getString("Typ")) {
                         case "slider":
-                            /*
-                             * TODO: receive unit in a json key-value pair "unit"
+                            /* TODO: receive unit in a json key-value pair "unit"
                              * throws error now because not all settings have their unit stored in the setting name
                              * String unit = dataJsonEntry.getString("Signal").split("\\(")[1].split("\\)")[0];
+                             *
+                             * Also ignored Raumtemp. Absenk setting because the values are not transferred correctly yet
                              */
-                            settingList.add(
-                                new PCMSlider(
-                                    name,
-                                    "",
-                                    (float) dataJsonEntry.getDouble("Grenze_unten"),
-                                    (float) dataJsonEntry.getDouble("Grenze_oben"),
-                                    (float) dataJsonEntry.getDouble("Min"),
-                                    (float) dataJsonEntry.getDouble("Max"),
-                                    dataJsonEntry.getBoolean("isRange")
-                                )
-                            );
+                            if(!name.equals("Raumtemp. Absenk (°C)")) {
+                                settingList.add(
+                                        new PCMSlider(
+                                                name,
+                                                "",
+                                                (float) dataJsonEntry.getDouble("Grenze_unten"),
+                                                (float) dataJsonEntry.getDouble("Grenze_oben"),
+                                                (float) dataJsonEntry.getDouble("Min"),
+                                                (float) dataJsonEntry.getDouble("Max"),
+                                                dataJsonEntry.getBoolean("isRange")
+                                        )
+                                );
+                            }
                             break;
 
                         case "plan":

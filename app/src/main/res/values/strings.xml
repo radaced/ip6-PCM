@@ -79,6 +79,8 @@
     <string name="text_pref_update_interval_summary">Update data every</string>
     <string name="text_pref_cost_statistics_period_title">Cost statistics</string>
     <string name="text_pref_cost_statistics_period_summary">Load statistics from last</string>
+    <string name="text_pref_complete_restart_title">Restart app to load new components</string>
+    <string name="text_pref_complete_restart_to_load_new_components">Restarting app to load newly connected components…</string>
     <string name="text_pref_ip_title">IP address</string>
     <string name="text_pref_sync_title">Synchronize charging plan</string>
     <string name="text_pref_sync_summary">Tap to synchronize your tesla trips with the server component.</string>

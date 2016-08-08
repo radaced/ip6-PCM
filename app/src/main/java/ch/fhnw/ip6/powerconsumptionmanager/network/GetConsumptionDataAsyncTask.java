@@ -70,11 +70,15 @@ public class GetConsumptionDataAsyncTask  extends AsyncTask<Void, Void, Boolean>
             for (int i = 0; i < dataJson.length(); i++) {
                 JSONObject jsonConsumptionDataPerComponent = (JSONObject) dataJson.get(i);
                 JSONArray jsonConsumptionData = jsonConsumptionDataPerComponent.getJSONArray("Data");
-                componentData.get(jsonConsumptionDataPerComponent.getString("Name")).getConsumptionData().clear();
-                for(int j = 0; j < jsonConsumptionData.length(); j++){
-                    componentData.get(jsonConsumptionDataPerComponent.getString("Name")).getConsumptionData().add(
-                        new ConsumptionData(jsonConsumptionData.getJSONObject(j))
-                    );
+                PCMComponent component = componentData.get(jsonConsumptionDataPerComponent.getString("Name"));
+
+                if(component != null) {
+                    component.getConsumptionData().clear();
+                    for(int j = 0; j < jsonConsumptionData.length(); j++){
+                        componentData.get(jsonConsumptionDataPerComponent.getString("Name")).getConsumptionData().add(
+                                new ConsumptionData(jsonConsumptionData.getJSONObject(j))
+                        );
+                    }
                 }
             }
         } catch (JSONException e) {

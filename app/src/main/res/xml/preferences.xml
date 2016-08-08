@@ -22,6 +22,10 @@
             android:key="costStatisticsPeriod"
             android:title="@string/text_pref_cost_statistics_period_title"/>
 
+        <Preference
+            android:key="completeRestart"
+            android:title="@string/text_pref_complete_restart_title"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory

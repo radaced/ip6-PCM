@@ -1,6 +1,7 @@
 package ch.fhnw.ip6.powerconsumptionmanager.view;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +20,7 @@ import java.util.StringTokenizer;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.activity.MainActivity;
+import ch.fhnw.ip6.powerconsumptionmanager.activity.SplashScreenActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
@@ -70,6 +72,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         // Setup cost statistics period preference
         final Preference costStatisticsPeriod = findPreference("costStatisticsPeriod");
         setupCostStatisticsPeriodDialog(costStatisticsPeriod);
+
+        // Setup complete restart preference
+        final Preference completeRestart = findPreference("completeRestart");
+        setupCompleteRestartPreference(completeRestart);
 
         // Setup ip dialog preference
         final Preference ipDialog = findPreference("IP");
@@ -284,6 +290,23 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 builder.setNegativeButton("Cancel", null);
                 builder.show();
 
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Reloads the app to load data of newly connected components.
+     * @param completeRestart The preference for this setting from the preferences.xml.
+     */
+    private void setupCompleteRestartPreference(Preference completeRestart) {
+        completeRestart.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(getActivity(), SplashScreenActivity.class);
+                intent.putExtra("status_info", getString(R.string.text_pref_complete_restart_to_load_new_components));
+                getActivity().startActivity(intent);
+                getActivity().finish();
                 return true;
             }
         });
