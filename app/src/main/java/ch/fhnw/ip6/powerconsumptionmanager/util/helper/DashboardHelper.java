@@ -493,10 +493,6 @@ public class DashboardHelper {
         mBCDailyData.setDragEnabled(true);
         mBCDailyData.setScaleEnabled(true);
         mBCDailyData.setPinchZoom(true);
-
-        // Set marker view
-        //MarkerView mv = new BarChartMarkerView(mDailyValuesContext, R.layout.barchart_markerview);
-        //mBCDailyData.setMarkerView(mv);
     }
 
     /**

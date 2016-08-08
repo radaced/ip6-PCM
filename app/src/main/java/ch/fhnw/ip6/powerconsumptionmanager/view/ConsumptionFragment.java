@@ -21,11 +21,9 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.helper.ConsumptionDataHelper;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
- * This Fragment shows usage data in a chart and connected devices in a list
+ * This fragment shows the consumption data of components in a chart and all connected devices in a list.
  */
 public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
-    private static final String TAG = "ConsumptionFragment";
-
     private Handler mUpdateHandler;
     private ConsumptionDataHelper mConsumptionDataHelper;
     private PowerConsumptionManagerAppContext mAppContext;
@@ -33,6 +31,7 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
     private LinearLayout mLoadingLayout;
     private LinearLayout mConsumptionDataLayout;
     private LinearLayout mOnErrorConsumptionDataLayout;
+
     private ListView mListViewDevices;
     private boolean mHasUpdated = false;
 
@@ -50,10 +49,12 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
         super.onViewCreated(view, savedInstanceState);
         mAppContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
 
+        // Load the different layouts into member fields for easier access
         mLoadingLayout = (LinearLayout) view.findViewById(R.id.llLoading);
         mConsumptionDataLayout = (LinearLayout) view.findViewById(R.id.llConsumptionData);
         mOnErrorConsumptionDataLayout = (LinearLayout) view.findViewById(R.id.llOnErrorConsumptionData);
 
+        // Set up the helper class, the line chart and load the consumption data
         LineChart consumptionChart = (LineChart) view.findViewById(R.id.consumptionDataLineChart);
         mListViewDevices = (ListView) view.findViewById(R.id.lvDevices);
         mConsumptionDataHelper = new ConsumptionDataHelper(getContext(), consumptionChart);
@@ -81,11 +82,17 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
         }
     }
 
+    /**
+     *  Return point from requests that load the consumption data.
+     *  @param result Status if the data could be loaded successfully or not.
+     */
     @Override
     public void asyncTaskFinished(boolean result) {
+        // Hide the loading layout
         mLoadingLayout.setVisibility(View.GONE);
 
         if(result) {
+            // Display the line chart with the consumption data
             mOnErrorConsumptionDataLayout.setVisibility(View.GONE);
             mConsumptionDataLayout.setVisibility(View.VISIBLE);
 
@@ -102,22 +109,24 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
 
                 // Set up the device list
                 mListViewDevices.setAdapter(
-                        new ConsumptionDeviceListAdapter(
-                                getActivity(),
-                                layoutResource,
-                                listItems,
-                                mConsumptionDataHelper
-                        )
+                    new ConsumptionDeviceListAdapter(
+                        getActivity(),
+                        layoutResource,
+                        listItems,
+                        mConsumptionDataHelper
+                    )
                 );
             } else {
                 // Add the data sets to the chart
                 mConsumptionDataHelper.updateLineChartData();
             }
         } else {
+            // Display an error message to the user
             mConsumptionDataLayout.setVisibility(View.GONE);
             mOnErrorConsumptionDataLayout.setVisibility(View.VISIBLE);
         }
 
+        // Instantiate the automatic update handler if needed
         if(mAppContext.isUpdatingAutomatically() && !mHasUpdated) {
             mUpdateHandler = new Handler();
             onResume();
@@ -125,7 +134,7 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
     }
 
     /**
-     * Runnable for updating the chart (every 10 seconds)
+     * Task to execute every few seconds (depending on settings) to load new consumption data.
      */
     private final Runnable updateConsumptionData = new Runnable() {
         public void run() {

@@ -16,8 +16,10 @@ import ch.fhnw.ip6.powerconsumptionmanager.activity.ComponentSettingsActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.adapter.ConnectedDeviceListAdapter;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
+/**
+ * Displays all connected components/devices in a list.
+ */
 public class ConnectedDevicesFragment extends ListFragment {
-    private PowerConsumptionManagerAppContext mAppContext;
     private ArrayList<String> mComponentNamesList;
 
     public static ConnectedDevicesFragment newInstance() {
@@ -33,13 +35,15 @@ public class ConnectedDevicesFragment extends ListFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAppContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
+        PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getContext().getApplicationContext();
         ListView lvConnectedDevices = (ListView) view.findViewById(android.R.id.list);
         int layoutResource;
 
         layoutResource = R.layout.list_connected_device;
-        mComponentNamesList = new ArrayList<>(mAppContext.getPCMData().getComponentData().keySet());
+        // Create a list of all connected devices with their name
+        mComponentNamesList = new ArrayList<>(appContext.getPCMData().getComponentData().keySet());
 
+        // Setup the list
         lvConnectedDevices.setAdapter(
             new ConnectedDeviceListAdapter(
                 getContext(),
@@ -52,6 +56,7 @@ public class ConnectedDevicesFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+        // Create a new intent to open the component settings activity to load the settings of the clicked item in the list
         Intent intent = new Intent(getActivity(), ComponentSettingsActivity.class);
         intent.putExtra("componentName", mComponentNamesList.get(position));
         getActivity().startActivity(intent);

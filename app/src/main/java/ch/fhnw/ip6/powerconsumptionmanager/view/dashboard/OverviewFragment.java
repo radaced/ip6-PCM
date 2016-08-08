@@ -187,7 +187,7 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     }
 
     /**
-     * Update task to execute every few seconds (depending on settings)
+     * Task to execute every few seconds (depending on settings) to load new current data.
      */
     private final Runnable updateCurrentPCMData = new Runnable() {
         public void run() {

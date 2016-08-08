@@ -20,13 +20,18 @@ import ch.fhnw.ip6.powerconsumptionmanager.network.GetStatisticsAsyncTask;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.util.helper.CostStatisticsHelper;
 
+/**
+ * This fragment shows the cost statistics data of components in two stacked bar charts.
+ */
 public class CostStatisticsFragment extends Fragment implements AsyncTaskCallback {
 
     private PowerConsumptionManagerAppContext mAppContext;
     private CostStatisticsHelper mCostStatisticsHelper;
+
     private LinearLayout mLoadingLayout;
     private LinearLayout mCostStatisticsLayout;
     private LinearLayout mOnErrorCostStatisticsLayout;
+
     private TextView mLoadingInfo;
 
     public static CostStatisticsFragment newInstance() { return new CostStatisticsFragment(); }
@@ -44,11 +49,13 @@ public class CostStatisticsFragment extends Fragment implements AsyncTaskCallbac
         super.onViewCreated(view, savedInstanceState);
         mAppContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
 
+        // Load the different layouts into member fields for easier access
         mLoadingLayout = (LinearLayout) view.findViewById(R.id.llLoading);
         mCostStatisticsLayout = (LinearLayout) view.findViewById(R.id.llCostStatistics);
         mOnErrorCostStatisticsLayout = (LinearLayout) view.findViewById(R.id.llOnErrorCostStatistics);
         mLoadingInfo = (TextView) view.findViewById(R.id.tvLoadingInfo);
 
+        // Set up the helper class and load the statistics data
         BarChart sbcStatisticsOverview = (BarChart) view.findViewById(R.id.sbcStatisticsOverview);
         BarChart sbcComponentOverview = (BarChart) view.findViewById(R.id.sbcStatisticsComponent);
         mCostStatisticsHelper = new CostStatisticsHelper(getContext(), sbcStatisticsOverview, sbcComponentOverview);
@@ -65,6 +72,7 @@ public class CostStatisticsFragment extends Fragment implements AsyncTaskCallbac
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // Refresh the cost statistics data when the options menu item was pressed
             case R.id.action_refresh:
                 mCostStatisticsLayout.setVisibility(View.GONE);
                 mLoadingInfo.setText(getString(R.string.text_refreshing_cost_statistics));
@@ -78,16 +86,23 @@ public class CostStatisticsFragment extends Fragment implements AsyncTaskCallbac
         return true;
     }
 
+    /**
+     *  Return point from requests that load the cost statistics data.
+     *  @param result Status if the data could be loaded successfully or not.
+     */
     @Override
     public void asyncTaskFinished(boolean result) {
+        // Hide the loading layout
         mLoadingLayout.setVisibility(View.GONE);
 
         if(result) {
+            // Display the stacked bar charts with the loaded data
             mOnErrorCostStatisticsLayout.setVisibility(View.GONE);
             mCostStatisticsLayout.setVisibility(View.VISIBLE);
 
             mCostStatisticsHelper.setupStackedBarChartData();
         } else {
+            // Display an error message to the user
             mCostStatisticsLayout.setVisibility(View.GONE);
             mOnErrorCostStatisticsLayout.setVisibility(View.VISIBLE);
         }

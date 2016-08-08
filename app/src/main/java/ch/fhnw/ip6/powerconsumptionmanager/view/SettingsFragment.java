@@ -25,8 +25,6 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
  * Holds the different settings in a preference fragment and displays them accordingly.
  */
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final String TAG = "SettingsFragment";
-
     private PowerConsumptionManagerAppContext mAppContext;
 
     private SharedPreferences mSharedPreferences;
@@ -92,7 +90,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        // Update summaries of preferences
+        // Update summaries of preferences when they are changed
         switch (key) {
             case "updateAutomatically":
                 findPreference("updateInterval").setEnabled(mSharedPreferences.getBoolean("updateAutomatically", false));
@@ -122,6 +120,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         }
     }
 
+    /**
+     * Sets and displays the preference if the user wants to use his google calendar to manage the charge plan.
+     * @param googleCalendarPreference The check box preference for this setting from the preferences.xml.
+     */
     private void setupGoogleCalendarPreference(CheckBoxPreference googleCalendarPreference) {
         googleCalendarPreference.setChecked(mSharedPreferences.getBoolean("googleCalendar", false));
         googleCalendarPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -139,6 +141,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         });
     }
 
+    /**
+     * Sets and displays the preference if the user wants the app to update certain data (current data and consumption data)
+     * automatically or not.
+     * @param updateAutomaticallyPreference The check box preference for this setting from the preferences.xml.
+     */
     private void setupUpdateAutomaticallyPreference(CheckBoxPreference updateAutomaticallyPreference) {
         updateAutomaticallyPreference.setChecked(mSharedPreferences.getBoolean("updateAutomatically", false));
         updateAutomaticallyPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -156,7 +163,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         });
     }
 
+    /**
+     * Sets and displays a custom seek bar dialog for the user to specify the update interval.
+     * @param updateIntervalDialog The preference for this setting from the preferences.xml.
+     */
     private void setupUpdateIntervalDialog(Preference updateIntervalDialog) {
+        // Set summary with actual preference data and if this preference is enabled (only when updating data automatically is wanted)
         updateIntervalDialog.setSummary(
             getString(R.string.text_pref_update_interval_summary) +
             " " +
@@ -165,6 +177,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         );
         updateIntervalDialog.setEnabled(mSharedPreferences.getBoolean("updateAutomatically", true));
 
+        // Set the on click listener of the preference to display a custom seek bar dialog
         updateIntervalDialog.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -181,6 +194,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 mUpdateInterval = (SeekBar) updateIntervalDialogView.findViewById(R.id.sbUpdateInterval);
                 mUpdateIntervalLabel = (TextView) updateIntervalDialogView.findViewById(R.id.tvUpdateIntervalLabel);
 
+                // Set the change listener for the seekbar
                 mUpdateInterval.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -202,6 +216,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 mUpdateInterval.setProgress((updateInterval / 5) - 1);
                 mUpdateIntervalLabel.setText(Integer.toString(updateInterval) + "s");
 
+                // Edit shared preferences when dialog has been closed with the OK action
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -221,7 +236,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         });
     }
 
+    /**
+     * Sets and displays a custom number picker dialog for the user to specify the amount of days to load when loading the
+     * cost statistics.
+     * @param costStatisticsPeriodDialog The preference for this setting from the preferences.xml.
+     */
     private void setupCostStatisticsPeriodDialog(Preference costStatisticsPeriodDialog) {
+        // Set summary with actual preference data
         costStatisticsPeriodDialog.setSummary(
             getString(R.string.text_pref_cost_statistics_period_summary) +
             " " +
@@ -229,6 +250,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             " days"
         );
 
+        // Set the on click listener of the preference to display a custom number picker dialog
         costStatisticsPeriodDialog.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -239,7 +261,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 View costStatisticsPeriodDialogView = layoutInflater.inflate(R.layout.dialog_cost_statistics_period_settings, null);
                 builder.setView(costStatisticsPeriodDialogView);
 
-                // Get the previously stored update interval
+                // Get the previously stored amount of days to load
                 int costStatisticsPeriod = mSharedPreferences.getInt("costStatisticsPeriod", 10);
 
                 mCostStatisticsPeriod = (NumberPicker) costStatisticsPeriodDialogView.findViewById(R.id.npCostStatistics);
@@ -249,6 +271,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 // Fill layout with stored values
                 mCostStatisticsPeriod.setValue(costStatisticsPeriod);
 
+                // Edit shared preferences when dialog has been closed with the OK action
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -266,9 +289,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         });
     }
 
+    /**
+     * Sets and displays a custom dialog for the user to specify the IP to connect to the PCM.
+     * @param ipDialog The preference for this setting from the preferences.xml.
+     */
     private void setupIPDialog(Preference ipDialog) {
+        // Set summary with actual preference data
         ipDialog.setSummary(mSharedPreferences.getString("IP", "192.168.0.1"));
 
+        // Set the on click listener of the preference to display a custom dialog
         ipDialog.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -279,7 +308,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 View ipDialogView = layoutInflater.inflate(R.layout.dialog_ip_settings, null);
                 builder.setView(ipDialogView);
 
-                // Get the previously stored ip
+                // Get the previously stored IP
                 String ip = mSharedPreferences.getString("IP", "192.168.0.1");
 
                 mIP1 = (EditText) ipDialogView.findViewById(R.id.etIP1);
@@ -294,11 +323,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 mIP3.setText(token.nextToken());
                 mIP4.setText(token.nextToken());
 
+                // Edit shared preferences when dialog has been closed with the OK action
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(isValidIPNumber(mIP1) && isValidIPNumber(mIP2) && isValidIPNumber(mIP3) && isValidIPNumber(mIP4)) {
-                            // ... edit preference file and update the ip address
+                            // Update the IP address
                             String ip = mIP1.getText().toString() + "." +
                                     mIP2.getText().toString() + "." +
                                     mIP3.getText().toString() + "." +
@@ -328,7 +358,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     /**
      * Error detection for IP
-     * @param ip The textfield where the content needs to be checked
+     * @param ip The text field where the content needs to be checked
      * @return true when ip number is valid, false otherwise
      */
     private boolean isValidIPNumber(EditText ip) {

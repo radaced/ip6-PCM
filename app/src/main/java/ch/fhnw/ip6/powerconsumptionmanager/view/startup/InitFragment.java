@@ -93,7 +93,7 @@ public class InitFragment extends Fragment {
 
     /**
      * Error detection for IP.
-     * @param ip The textfield where the content needs to be checked.
+     * @param ip The text field where the content needs to be checked.
      * @return True when IP number is valid, false otherwise.
      */
     private boolean isValidIPNumber(EditText ip) {

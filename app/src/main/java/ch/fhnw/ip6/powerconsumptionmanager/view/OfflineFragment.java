@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.activity.SplashScreenActivity;
 
+/**
+ * This fragment is shown when no connection to the PCM could be established and no initial data could be loaded.
+ */
 public class OfflineFragment extends Fragment {
 
     public static OfflineFragment newInstance() {
@@ -36,6 +39,7 @@ public class OfflineFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // Try and restart the application
             case R.id.action_retry:
                 Intent intent = new Intent(getActivity(), SplashScreenActivity.class);
                 intent.putExtra("status_info", getString(R.string.text_splash_retry_connecting));
