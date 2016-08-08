@@ -36,6 +36,9 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.EnergyValueFormatter;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
+/**
+ * Helper class to handle and modify all UI elements that are displayed on the dashboard.
+ */
 public class DashboardHelper {
     private static DashboardHelper mInstance;
 
@@ -44,9 +47,11 @@ public class DashboardHelper {
     private Context mCurrentValuesContext;
     private Context mDailyValuesContext;
 
+    // Hash maps that hold references to the displayed UI elements
     private HashMap<String, ArcProgressStackView> mComponentViews = new HashMap<>();
     private HashMap<String, TextView> mComponentPowerLabels = new HashMap<>();
     private HashMap<String, WaveLoadingView> mSummaryViews = new HashMap<>();
+
     private DecimalFormat mOneDigitAfterCommaFormat = new DecimalFormat("#.#");
     private float mDensity;
 
@@ -54,13 +59,14 @@ public class DashboardHelper {
     private int mDynamicLayoutContainerWidth = 0;
     private int mDynamicLayoutContainerHeight = 0;
 
+    // The bar chart that displays the daily values
     private BarChart mBCDailyData;
 
     public DashboardHelper() {}
 
-
     /**
-     * SINGLETON
+     * Constructor. Use this class as a singleton.
+     * @return The single instance of this helper class.
      */
     public static synchronized DashboardHelper getInstance() {
         if(mInstance == null) {
@@ -70,10 +76,12 @@ public class DashboardHelper {
         return mInstance;
     }
 
-
-
+    //////////////////////////////
+    // CONTEXTS
+    //////////////////////////////
     /**
-     * CONTEXTS
+     * Set the overview context and other important members of this helper instance.
+     * @param c The context of UI elements in the overview fragment.
      */
     public void initOverviewContext(Context c) {
         mOverviewContext = c;
@@ -82,18 +90,30 @@ public class DashboardHelper {
         mOneDigitAfterCommaFormat.setRoundingMode(RoundingMode.HALF_UP);
     }
 
+    /**
+     * Set the context for the current values fragment.
+     * @param c The context of UI elements in the current values fragment.
+     */
     public void initCurrentValuesContext(Context c) {
         mCurrentValuesContext = c;
     }
 
+    /**
+     * Set the context for the daily values fragment.
+     * @param c The context of UI elements in the daily values fragment.
+     */
     public void initDailyValuesContext(Context c) {
         mDailyValuesContext = c;
     }
 
-
-
+    //////////////////////////////
+    // OVERVIEW FRAGMENT
+    //////////////////////////////
     /**
-     * OVERVIEW FRAGMENT
+     * Add a summary view / wave loading view to the mSummaryViews hash map.
+     * @param key The key or id to reference this summary view / wave loading view.
+     * @param wlv The wave loading view widget.
+     * @param unit The unit of the values that the wave loading view displays.
      */
     public void addSummaryView(String key, WaveLoadingView wlv, String unit) {
         wlv.setTopTitle(key);
@@ -101,6 +121,11 @@ public class DashboardHelper {
         mSummaryViews.put(key, wlv);
     }
 
+    /**
+     * Modifies the ratio (filling of circle) of a summary view / wave loading view.
+     * @param key The key or id of the summary view / wave loading view to modify.
+     * @param ratio The ratio to set to the summary view / wave loading view.
+     */
     public void setSummaryRatio(String key, double ratio) {
         WaveLoadingView wlv = mSummaryViews.get(key);
         double progress = Math.round(ratio);
@@ -108,6 +133,14 @@ public class DashboardHelper {
         wlv.setCenterTitle(String.valueOf((int) Math.round(ratio)));
     }
 
+    /**
+     * Modifies the ratio (filling of circle) of a summary view / wave loading view with custom a custom
+     * scale (standard is 0 to 100).
+     * @param key The key or id of the summary view / wave loading view to modify.
+     * @param ratio The ratio to set to the summary view / wave loading view.
+     * @param scaleMin Minimum of the scale.
+     * @param scaleMax Maximum of the scale.
+     */
     public void setSummaryRatio(String key, double ratio, int scaleMin, int scaleMax) {
         WaveLoadingView wlv = mSummaryViews.get(key);
         wlv.setWaveColor(mAppContext.getPCMData().getConsumptionColor());
@@ -131,14 +164,30 @@ public class DashboardHelper {
         wlv.setCenterTitle(String.valueOf((int) Math.round(ratio)));
     }
 
+    /**
+     * Updates the ratio (filling of circle) of a summary view / wave loading view.
+     * @param key The key or id of the summary view / wave loading view to modify.
+     * @param ratio The ratio to set to the summary view / wave loading view.
+     */
     public void updateSummaryRatio(String key, double ratio) {
         this.setSummaryRatio(key, ratio);
     }
 
+    /**
+     * Updates the ratio (filling of circle) of a summary view / wave loading view with custom a custom
+     * scale (standard is 0 to 100).
+     * @param key The key or id of the summary view / wave loading view to modify.
+     * @param ratio The ratio to set to the summary view / wave loading view.
+     * @param scaleMin Minimum of the scale.
+     * @param scaleMax Maximum of the scale.
+     */
     public void updateSummaryRatio(String key, double ratio, int scaleMin, int scaleMax) {
         this.setSummaryRatio(key, ratio, scaleMin, scaleMax);
     }
 
+    /**
+     * Update all UI elements that are on the overview fragment and display them.
+     */
     public void updateOverview() {
         PCMData pcmData = mAppContext.getPCMData();
 
@@ -152,32 +201,57 @@ public class DashboardHelper {
         );
     }
 
-
-
+    //////////////////////////////
+    // CURRENT VALUES FRAGMENT
+    //////////////////////////////
     /**
-     * CURRENTVALUES FRAGMENT
+     * Add an arc progress view to the mComponentViews hash map.
+     * @param key The key or id to reference this arc progress view.
+     * @param apsv The arc progress view reference.
      */
     public void addComponentView(String key, ArcProgressStackView apsv) {
         mComponentViews.put(key, apsv);
     }
 
+    /**
+     * Add a power label (text view) to the mComponentPowerLabels hash map.
+     * @param key The key or id to reference this text view.
+     * @param tv The text view reference.
+     */
     public void addComponentPowerLabel(String key, TextView tv) {
         mComponentPowerLabels.put(key, tv);
     }
 
+    /**
+     * Sets the arc progress view values. In this implementation an arc progress view always only has one model
+     * (see also generateModelForComponent).
+     * @param key The key or id of the arc progress view to modify.
+     * @param apsvModels The array list with generated models to add to the arc progress view.
+     */
     public void setPowerForComponent(String key, ArrayList<Model> apsvModels) {
         mComponentViews.get(key).setModels(apsvModels);
     }
 
+    /**
+     * Updates the arc progress view values (see also generateModelForComponent).
+     * @param key The key or id of the arc progress view to modify its models.
+     * @param power The new progress (current power consumption/generation of component) of the arc progress view.
+     */
     public void updatePowerForComponent(String key, double power) {
         for(ArcProgressStackView.Model model : mComponentViews.get(key).getModels()) {
             model.setProgress((int) power);
         }
     }
 
+    /**
+     * Updates the power label (text view) with the current consumption/generation of a component.
+     * @param key The key or id of the text view to modify.
+     * @param power The current power consumption/generation of the component.
+     */
     public void updatePowerLabel(final String key, double power) {
         TextView powerLabel = mComponentPowerLabels.get(key);
 
+        // Value animator to animate changes of the value
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(Float.parseFloat(powerLabel.getText().toString()), (float) power);
         valueAnimator.setDuration(2000);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -190,22 +264,14 @@ public class DashboardHelper {
         valueAnimator.start();
     }
 
-    public void updateCurrentValues() {
-        LinkedHashMap<String, PCMComponent> dataMap = mAppContext.getPCMData().getComponentData();
-
-        for(Map.Entry<String, PCMComponent> entry : dataMap.entrySet()) {
-            if(entry.getValue().isDisplayedOnDashboard()) {
-                int scaleMin = entry.getValue().getScaleMinArc();
-                int scaleMax = entry.getValue().getScaleMaxArc();
-
-                updatePowerForComponent(entry.getKey(), entry.getValue().getPower() * (100 / (scaleMax - scaleMin)));
-                updatePowerLabel(entry.getKey(), entry.getValue().getPower());
-            }
-        }
-
-        displayAnimated();
-    }
-
+    /**
+     * Generates ONE (!) model for every arc progress view that represents the current values of a component.
+     * @param description Description to display on the arc progress view.
+     * @param progress Progress of the arc progress view.
+     * @param bgProgressColor Back ground color of the arc progress bar.
+     * @param progressColor Color of the arc progress bar.
+     * @return Model to add to the arc progress view (framework offers possibility to add multiple).
+     */
     public ArrayList<Model> generateModelForComponent(String description, int progress, int bgProgressColor, int progressColor) {
         Model m = new Model(description, progress, bgProgressColor, progressColor);
         ArrayList<Model> models = new ArrayList<>();
@@ -213,26 +279,35 @@ public class DashboardHelper {
         return models;
     }
 
+    /**
+     * Animated display of the progress of the arc progress views.
+     */
     public void displayAnimated() {
         for (ArcProgressStackView apsv : mComponentViews.values()) {
             apsv.animateProgress();
         }
     }
 
+    /**
+     * Generates a widget to display the current values of a component.
+     * @param componentId The id/name of the component.
+     * @param color The color of the arc progress bar for this component.
+     */
     public void generateComponentUIElement(String componentId, int color) {
         PCMComponent componentData = mAppContext.getPCMData().getComponentData().get(componentId);
 
-        // RelativeLayout container
-        RelativeLayout rlContainer = new RelativeLayout(mCurrentValuesContext);
         LinearLayout.LayoutParams rlContainerLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
         );
+
+        // Relative layout container (1)
+        RelativeLayout rlContainer = new RelativeLayout(mCurrentValuesContext);
         rlContainer.setLayoutParams(rlContainerLayoutParams);
 
         mDynamicLayoutContainer.addView(rlContainer);
 
-        // ArcProgressStackView
+        // Generate arc progress view
         ArcProgressStackView arcsv = new ArcProgressStackView(mCurrentValuesContext);
         // If shadowing is enabled this can result in nasty performance issues!
         arcsv.setIsShadowed(false);
@@ -260,8 +335,8 @@ public class DashboardHelper {
         );
 
         /**
-         * LayoutParams for the ArcProgressStackView are set after layout dimensions for parent container
-         * have been set. See setupViewTreeObserver in OverviewFragment.
+         * LayoutParams for the arc progress view are set after layout dimensions for parent container
+         * have been set. See setupViewTreeObserver in overview fragment.
          */
         if(mDynamicLayoutContainerWidth != 0 && mDynamicLayoutContainerHeight != 0) {
             RelativeLayout.LayoutParams arcsvLayoutParams = new RelativeLayout.LayoutParams(
@@ -274,41 +349,44 @@ public class DashboardHelper {
             arcsv.setLayoutParams(arcsvLayoutParams);
         }
 
+        // Add the arc progress view to (1)
         rlContainer.addView(arcsv);
 
-        // LinearLayout for labels
         RelativeLayout.LayoutParams llLabelContainerLayoutParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
         );
         llLabelContainerLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 
+        // Vertical linear layout container for labels (2)
         LinearLayout llLabelContainer = new LinearLayout(mCurrentValuesContext);
         llLabelContainer.setOrientation(LinearLayout.VERTICAL);
         llLabelContainer.setGravity(Gravity.CENTER);
         llLabelContainer.setLayoutParams(llLabelContainerLayoutParams);
 
+        // Add label container to (1)
         rlContainer.addView(llLabelContainer);
 
-        // LinearLayout for power values
         LinearLayout.LayoutParams llValueLabelContainerLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 
+        // Horizontal linear layout container for value labels (3)
         LinearLayout llValueLabelContainer = new LinearLayout(mCurrentValuesContext);
         llValueLabelContainer.setOrientation(LinearLayout.HORIZONTAL);
         llValueLabelContainer.setLayoutParams(llValueLabelContainerLayoutParams);
 
+        // Add value label container to (2)
         llLabelContainer.addView(llValueLabelContainer);
 
-        // Textviews for values
         LinearLayout.LayoutParams tvValueLabelLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         tvValueLabelLayoutParams.gravity = Gravity.BOTTOM;
 
+        // Text view to display power of component
         TextView tvValue = new TextView(mCurrentValuesContext);
         tvValue.setText(mOneDigitAfterCommaFormat.format(componentData.getPower()));
         tvValue.setTextSize(40);
@@ -316,35 +394,60 @@ public class DashboardHelper {
         tvValue.setLayoutParams(tvValueLabelLayoutParams);
         this.addComponentPowerLabel(componentId, tvValue);
 
+        // Add text view to (3)
         llValueLabelContainer.addView(tvValue);
 
+        // Text view to display unit
         TextView tvValueUnit = new TextView(mCurrentValuesContext);
         tvValueUnit.setText(mAppContext.getString(R.string.unit_kw));
         tvValueUnit.setTextSize(10);
         tvValueUnit.setTextColor(ContextCompat.getColor(mCurrentValuesContext, R.color.colorTextPrimary));
         tvValueUnit.setLayoutParams(tvValueLabelLayoutParams);
 
+        // Add text view to (3)
         llValueLabelContainer.addView(tvValueUnit);
 
-        // Textview for component description
         LinearLayout.LayoutParams tvComponentDescLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         tvComponentDescLayoutParams.gravity = Gravity.CENTER_HORIZONTAL;
 
+        // Text view for component description
         TextView tvComponent = new TextView(mCurrentValuesContext);
         tvComponent.setText(componentId);
         tvComponent.setTextSize(14);
         tvComponent.setTextColor(ContextCompat.getColor(mCurrentValuesContext, R.color.colorTextPrimary));
         tvComponent.setLayoutParams(tvComponentDescLayoutParams);
+
+        // Add text view to (2)
         llLabelContainer.addView(tvComponent);
     }
 
-
-
     /**
-     * DAILYVALUES FRAGMENT
+     * Update all UI elements that are on the current values fragment and display them.
+     */
+    public void updateCurrentValues() {
+        LinkedHashMap<String, PCMComponent> dataMap = mAppContext.getPCMData().getComponentData();
+
+        for(Map.Entry<String, PCMComponent> entry : dataMap.entrySet()) {
+            if(entry.getValue().isDisplayedOnDashboard()) {
+                int scaleMin = entry.getValue().getScaleMinArc();
+                int scaleMax = entry.getValue().getScaleMaxArc();
+
+                updatePowerForComponent(entry.getKey(), entry.getValue().getPower() * (100 / (scaleMax - scaleMin)));
+                updatePowerLabel(entry.getKey(), entry.getValue().getPower());
+            }
+        }
+
+        displayAnimated();
+    }
+
+    //////////////////////////////
+    // DAILY VALUES FRAGMENT
+    //////////////////////////////
+    /**
+     * Set up look and feel of the daily bar chart.
      */
     public void setupDailyBarChartStyle() {
         // Set looks
@@ -358,6 +461,7 @@ public class DashboardHelper {
         mBCDailyData.setHighlightPerTapEnabled(false);
         mBCDailyData.setHighlightPerDragEnabled(false);
 
+        // Modify axis
         YAxis leftAxis = mBCDailyData.getAxisLeft();
         leftAxis.setDrawAxisLine(false);
         leftAxis.setDrawGridLines(false);
@@ -377,6 +481,7 @@ public class DashboardHelper {
         xAxis.setTextColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
         xAxis.setTextSize(12f);
 
+        // Modify chart legend
         Legend l = mBCDailyData.getLegend();
         l.setPosition(Legend.LegendPosition.ABOVE_CHART_LEFT);
         l.setForm(Legend.LegendForm.CIRCLE);
@@ -394,31 +499,42 @@ public class DashboardHelper {
         //mBCDailyData.setMarkerView(mv);
     }
 
+    /**
+     * Prepares and displays all daily data.
+     */
     public void setupDailyBarChartData() {
         LinkedHashMap<String, PCMComponent> componentData = mAppContext.getPCMData().getComponentData();
+        // Generate X-axis values
         ArrayList<String> xValues = new ArrayList<>();
         for (Map.Entry<String, PCMComponent> entry : componentData.entrySet()) {
             if(entry.getValue().isDisplayedOnDashboard()) {
                 xValues.add(entry.getKey());
             }
         }
+        // Lists to hold the Y-axis of both bars for energy and costs
         ArrayList<BarEntry> yValuesEnergy = new ArrayList<>();
         ArrayList<BarEntry> yValuesCost = new ArrayList<>();
 
+        // Fill the above lists
         fillDataSets(componentData, yValuesEnergy, yValuesCost);
 
+        // Setup the two bar chart data sets
         BarDataSet energySet, costSet;
+
+        // Add the Y-axis value list to the bar data set and modify the looks
         energySet = new BarDataSet(yValuesEnergy, "Energy");
         energySet.setColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorChartEnergyBar));
         energySet.setValueFormatter(new EnergyValueFormatter());
         energySet.setValueTextColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
         energySet.setValueTextSize(10f);
+
         costSet = new BarDataSet(yValuesCost, "Costs");
         costSet.setColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorChartCostBar));
         costSet.setValueFormatter(new CostValueFormatter());
         costSet.setValueTextColor(ContextCompat.getColor(mDailyValuesContext, R.color.colorTextPrimary));
         costSet.setValueTextSize(10f);
 
+        // Add both data sets to one list
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(energySet);
         dataSets.add(costSet);
@@ -426,11 +542,16 @@ public class DashboardHelper {
         BarData data = new BarData(xValues, dataSets);
         data.setGroupSpace(50f);
 
+        // Add the data to the bar chart and display it
         mBCDailyData.setData(data);
         mBCDailyData.animateY(3000);
     }
 
+    /**
+     * Updates the daily values of every component and displays the data accordingly.
+     */
     public void updateDailyValues() {
+        // Check if data already exists in the bar chart
         if(mBCDailyData.getData() != null && mBCDailyData.getData().getDataSetCount() > 0) {
             LinkedHashMap<String, PCMComponent> componentData = mAppContext.getPCMData().getComponentData();
             ArrayList<BarEntry> yValuesEnergy = new ArrayList<>();
@@ -439,11 +560,13 @@ public class DashboardHelper {
             fillDataSets(componentData, yValuesEnergy, yValuesCost);
 
             BarDataSet energySet, costSet;
+            // Update the data sets
             energySet = (BarDataSet) mBCDailyData.getData().getDataSetByIndex(0);
             costSet = (BarDataSet) mBCDailyData.getData().getDataSetByIndex(1);
             energySet.setYVals(yValuesEnergy);
             costSet.setYVals(yValuesCost);
 
+            // Notify chart that its data has changed
             mBCDailyData.getData().notifyDataChanged();
             mBCDailyData.notifyDataSetChanged();
             mBCDailyData.invalidate();
@@ -452,6 +575,12 @@ public class DashboardHelper {
         }
     }
 
+    /**
+     * Fill the Y-axis value lists for energy and costs of a component.
+     * @param dataMap The linked hash map with all connected components.
+     * @param yValuesEnergy The list to hold all Y-axis values for the energy of a component.
+     * @param yValuesCost The list to hold all Y-axis values for the costs of a component.
+     */
     private void fillDataSets(LinkedHashMap<String, PCMComponent> dataMap, ArrayList<BarEntry> yValuesEnergy, ArrayList<BarEntry> yValuesCost) {
         int i = 0;
         for (Map.Entry<String, PCMComponent> entry : dataMap.entrySet()) {
@@ -462,11 +591,9 @@ public class DashboardHelper {
         }
     }
 
-
-
-    /**
-     * HELPER FUNCTIONS
-     */
+    /***********************
+     * GETTERS AND SETTERS *
+     ***********************/
     public void setDynamicLayoutContainer(LinearLayout ll) {
         this.mDynamicLayoutContainer = ll;
     }

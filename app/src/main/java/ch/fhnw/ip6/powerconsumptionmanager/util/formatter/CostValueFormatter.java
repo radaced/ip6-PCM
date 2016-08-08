@@ -7,6 +7,9 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
+/**
+ * Formats the cost labels in the bar chart that shows the daily values in the overview section.
+ */
 public class CostValueFormatter implements ValueFormatter {
 
     @Override

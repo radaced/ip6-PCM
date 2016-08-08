@@ -93,7 +93,7 @@ public class PCMPlan extends PCMSetting {
 
         // New caldroid fragment and helper class instance
         CaldroidFragment mCaldroidFragment = new CaldroidFragment();
-        PlanCalendarViewHelper mPlanCalendarViewHelper = new PlanCalendarViewHelper(mCaldroidFragment, context);
+        PlanCalendarViewHelper mPlanCalendarViewHelper = new PlanCalendarViewHelper(context, mCaldroidFragment);
 
         // Format and set the id for the container that holds the caldroid fragment
         LinearLayout llFragmentContainer = new LinearLayout(context);

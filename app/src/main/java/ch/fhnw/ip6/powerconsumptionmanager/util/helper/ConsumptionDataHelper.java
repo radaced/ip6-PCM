@@ -23,23 +23,28 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContex
 import ch.fhnw.ip6.powerconsumptionmanager.util.formatter.XAxisTimeFormatter;
 
 /**
- * Helper class to handle and modify the chart
+ * Helper class to handle and modify the line chart that holds the consumption data of each component.
  */
 public class ConsumptionDataHelper {
 
     private PowerConsumptionManagerAppContext mAppContext;
     private Context mContext;
 
+    // Reference to the line chart
     private LineChart mLCConsumption;
     // Holds all data sets from the chart
     private HashMap<Integer, LineDataSet> mConsumptionDataSet;
-    // Holds the unselected dataset indices
+    // Holds the unselected data set indices
     private ArrayList<Integer> mRemovedDataSetIndexes;
-    // Members to modify colors
+
     private int[] mGraphColors;
     private String mFirstComponent;
 
-
+    /**
+     * Constructs a helper class object to easily setup and modify the look and feel of the consumption data chart.
+     * @param context Context of the consumption data.
+     * @param chart Reference to the line chart element.
+     */
     public ConsumptionDataHelper(Context context, LineChart chart) {
         mContext = context;
         mAppContext = (PowerConsumptionManagerAppContext) mContext.getApplicationContext();
@@ -52,7 +57,7 @@ public class ConsumptionDataHelper {
     }
 
     /**
-     * Inital settings for the chart
+     * Initial settings for the chart
      */
     public void setup() {
         // Set looks
@@ -64,7 +69,7 @@ public class ConsumptionDataHelper {
         mLCConsumption.getLegend().setEnabled(false);
         mLCConsumption.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(mContext, R.color.colorTextPrimaryInverse));
 
-        // Define which axis to display
+        // Define which axis to display and how
         mLCConsumption.getAxisLeft().setDrawAxisLine(true);
         mLCConsumption.getAxisLeft().setDrawGridLines(true);
         mLCConsumption.getAxisLeft().setGridColor(Color.BLACK);
@@ -82,9 +87,13 @@ public class ConsumptionDataHelper {
         mLCConsumption.setPinchZoom(true);
     }
 
+    /**
+     * Sets up the whole consumption data of every component and display the data.
+     */
     public void setupLineChartData() {
         LinkedHashMap<String, PCMComponent> componentData = mAppContext.getPCMData().getComponentData();
         mFirstComponent = (String) componentData.keySet().toArray()[0];
+        // X-axis values are the same for all the components so take the X-axis values of any component
         ArrayList<String> xValues = generateXValues(componentData.get(mFirstComponent).getConsumptionData());
 
         // Generate the data sets to display
@@ -93,13 +102,14 @@ public class ConsumptionDataHelper {
             generateDataSet(component.getName(), component.getConsumptionData(), i++);
         }
 
+        // Set the data to the chart and display it
         setDataForChart(xValues);
         displayAnimated();
     }
 
     /**
-     * Generates the x values of the chart (amount of x and y values need to be equal)
-     * @param data Loaded consumption data of a single device
+     * Generates the X-axis values of the chart.
+     * @param data Loaded consumption data of a component.
      */
     public ArrayList<String> generateXValues(LinkedList<ConsumptionData> data) {
         ArrayList<String> xValues = new ArrayList<>();
@@ -112,9 +122,10 @@ public class ConsumptionDataHelper {
     }
 
     /**
-     * Generates a single data set and adds it to the hash map that holds all data sets to display
-     * @param data Loaded consumption data of a single device
-     * @param colorCode Array index to set color for the graph (data set)
+     * Generates a single data set and adds it to the hash map that holds all data sets to display.
+     * @param componentName The name of the component that the data set is generated for.
+     * @param data Loaded consumption data of a single device.
+     * @param colorCode Array index to set color for the graph (data set).
      */
     public void generateDataSet(String componentName, LinkedList<ConsumptionData> data, int colorCode) {
         ArrayList<Entry> values = new ArrayList<>();
@@ -127,14 +138,17 @@ public class ConsumptionDataHelper {
         lds.setLineWidth(1.5f);
         lds.setCircleRadius(2f);
 
-        // Set the graph colors as they appear in the server component
+        // Set the graph colors
         lds.setColor(getGraphColor(colorCode));
         lds.setCircleColor(getGraphColor(colorCode));
+
+        // Save the data set in the hash map that holds all data sets to display
         mConsumptionDataSet.put(colorCode, lds);
     }
 
     /**
-     * Set data for the line chart
+     * Set the data for the line chart.
+     * @param xValues The string array list with the X-axis values.
      */
     private void setDataForChart(ArrayList<String> xValues) {
         ArrayList<ILineDataSet> list = new ArrayList<>();
@@ -147,18 +161,19 @@ public class ConsumptionDataHelper {
     }
 
     /**
-     * Show only data sets where the toggle button for each device is active. Pass a parameter (list
-     * that holds the indices to ignore)
+     * Updates the whole consumption data of every component and displays the data accordingly.
      */
     public void updateLineChartData() {
         LinkedHashMap<String, PCMComponent> componentData = mAppContext.getPCMData().getComponentData();
         ArrayList<String> xValues = generateXValues(componentData.get(mFirstComponent).getConsumptionData());
 
+        // Generate/update data sets with updated values for all components
         int i = 0;
         for (PCMComponent component : componentData.values()) {
             generateDataSet(component.getName(), component.getConsumptionData(), i++);
         }
 
+        // Setup data set list with only data sets where the toggle button of a component is on active
         ArrayList<ILineDataSet> list = new ArrayList<>();
         for(int j = 0; j < mConsumptionDataSet.size(); j++) {
             if(mRemovedDataSetIndexes.contains(j)) {
@@ -170,6 +185,7 @@ public class ConsumptionDataHelper {
         LineData data = new LineData(xValues, list);
         mLCConsumption.setData(data);
 
+        // Notify the chart that its data changed
         mLCConsumption.getData().notifyDataChanged();
         mLCConsumption.notifyDataSetChanged();
         displayNoneAnimated();
@@ -177,19 +193,22 @@ public class ConsumptionDataHelper {
 
 
     /**
-     * Display chart data animated (chart data fades in from bottom to top)
+     * Display chart data animated (chart data fades in from bottom to top).
      */
     private void displayAnimated() {
         mLCConsumption.animateY(2000);
     }
 
     /**
-     * Display without animation
+     * Display without animation.
      */
     public void displayNoneAnimated() {
         mLCConsumption.invalidate();
     }
 
+    /***********************
+     * GETTERS AND SETTERS *
+     ***********************/
     public LineChart getChart() {
         return mLCConsumption;
     }

@@ -29,14 +29,15 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.CalendarInstanceReader;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
- * Helper class to handle and modify caldroid
+ * Helper class to handle and modify the caldroid widget.
  */
 public class PlanCalendarViewHelper implements AsyncTaskCallback {
-    // The caldroid fragment itself
-    private CaldroidFragment mCaldroid;
-    // Contexts
+
     private Context mContext;
     private PowerConsumptionManagerAppContext mAppContext;
+
+    private CaldroidFragment mCaldroid;
+
     // Calendar instance to make date operations
     private Calendar mCalendar;
     // Holds the read instances from the calendar.instances table of one month
@@ -49,22 +50,27 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
     private TextView mInfoRouteInformation;
     private TextView mInfoDescription;
 
-    public PlanCalendarViewHelper(CaldroidFragment caldroid, Context context) {
-        mCaldroid = caldroid;
+    /**
+     * Constructs a helper class to easily modify and setup a caldroid widget.
+     * @param context The context of the caldroid.
+     * @param caldroid The reference to the caldroid.
+     */
+    public PlanCalendarViewHelper(Context context, CaldroidFragment caldroid) {
         mContext = context;
         mAppContext = (PowerConsumptionManagerAppContext) mContext.getApplicationContext();
+        mCaldroid = caldroid;
         mInstances = new HashMap<>();
         mCalendar = Calendar.getInstance();
     }
 
     /**
-     * Initial settings for the caldroid fragment (when rotated don't set month and year)
-     * @param cal Calendar object with the month and year to set
+     * Initial settings for the caldroid fragment (when rotated don't set month and year).
+     * @param calendar Calendar object with the month and year to set.
      */
-    public void setup(Calendar cal) {
+    public void setup(Calendar calendar) {
         Bundle args = new Bundle();
-        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+        args.putInt(CaldroidFragment.MONTH, calendar.get(Calendar.MONTH) + 1);
+        args.putInt(CaldroidFragment.YEAR, calendar.get(Calendar.YEAR));
         args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
         args.putInt(CaldroidFragment.THEME_RESOURCE, R.style.CustomCaldroidTheme);
         args.putBoolean(CaldroidFragment.SHOW_NAVIGATION_ARROWS, false);
@@ -74,10 +80,10 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
     }
 
     /**
-     * Generates the lower range from the range the calendar.instances table should be read (start of month)
-     * @param year Year
-     * @param month Month
-     * @return First day of month
+     * Generates the lower range from the range where the calendar.instances table should be read (start of month).
+     * @param year Year.
+     * @param month Month.
+     * @return First day of month.
      */
     public long getMonthStart(int year, int month) {
         mCalendar = Calendar.getInstance();
@@ -85,10 +91,11 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
         return mCalendar.getTimeInMillis();
     }
 
-    /** Generates the upper range from the range the calendar.instances table should be read (end of month)
-     * @param year Year
-     * @param month Month
-     * @return Last day of month
+    /**
+     * Generates the upper range from the range where the calendar.instances table should be read (end of month).
+     * @param year Year.
+     * @param month Month.
+     * @return Last day of month.
      */
     public long getMonthEnd(int year, int month) {
         mCalendar = Calendar.getInstance();
@@ -98,9 +105,9 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
     }
 
     /**
-     * Reads all planned tesla trips between two dates from the calendar.instances table
-     * @param lowerRangeEnd Lower end of the dates to read in calendar.instances table
-     * @param upperRangeEnd Upper end of the dates to read in calendar.instances table
+     * Reads all planned trips between two dates from the calendar.instances table.
+     * @param lowerRangeEnd Lower end of the dates to read in calendar.instances table.
+     * @param upperRangeEnd Upper end of the dates to read in calendar.instances table.
      */
     public void readPlannedTrips(long lowerRangeEnd, long upperRangeEnd) {
         CalendarInstanceReader cir = new CalendarInstanceReader(mCalendar, mContext);
@@ -108,22 +115,22 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
     }
 
     /**
-     * Mark all dates in the caldroid fragment that have a tesla trip instance
+     * Mark all dates in the caldroid fragment that have a emobil trip instance.
      */
     public void markDays() {
-        // Iterate through all read calendar instances
+        // Iterate through all read calendar instances.
         for (Map.Entry pair : mInstances.entrySet()) {
             CalendarEntry pem = (CalendarEntry) pair.getValue();
             mCalendar.setTime(pem.getBegin());
             mCaldroid.setSelectedDate(mCalendar.getTime());
         }
 
-        // Update caldroid fragment
+        // Update the caldroid fragment.
         mCaldroid.refreshView();
     }
 
     /**
-     * Define the listener for the caldroid fragment
+     * Define the listener for the caldroid fragment.
      */
     public void generateListener() {
         // Date format masks to display dates
@@ -170,8 +177,8 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
                     // Time range of instance
                     String time = timeRangeFormat.format(pem.getBegin()) + " - " + timeRangeFormat.format(pem.getEnd());
                     mInfoTimerange.setText(time);
-                    /*
-                     * Display route and load distance and duration to reach destination between two given
+
+                    /* Display route and load distance and duration to reach destination between two given
                      * locations from the instance
                      */
                     String[] locations = pem.getEventLocation().split("/");
@@ -201,8 +208,7 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
 
             @Override
             public void onChangeMonth(int month, int year) {
-                /*
-                 * Read calendar.instances table with new range and mark days that contain an instance
+                /* Read calendar.instances table with new range and mark days that contain an instance
                  * -1 because caldroid calculates months from 1-12 and Calendar.class does it with 0-11
                  */
                 long startMonth = getMonthStart(year, month-1);
@@ -216,6 +222,9 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
         mCaldroid.setCaldroidListener(listener);
     }
 
+    /***********************
+     * GETTERS AND SETTERS *
+     ***********************/
     public CaldroidFragment getCaldroid() {
         return mCaldroid;
     }
@@ -230,6 +239,7 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
 
     @Override
     public void asyncTaskFinished(boolean result) {
+        // Display the results of the requested route
         Handler handler = new android.os.Handler(Looper.getMainLooper());
         if(result) {
            handler.post(new Runnable() {
@@ -242,9 +252,9 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
                         displayRouteInformation(mInfoRouteInformation, mContext.getString(R.string.text_route_information_no_route), "");
                     } else {
                         displayRouteInformation(
-                                mInfoRouteInformation,
-                                mContext.getString(R.string.text_route_information_distance) + " " + rim.getDistanceText(),
-                                mContext.getString(R.string.text_route_information_duration) + " " + rim.getDurationText()
+                            mInfoRouteInformation,
+                            mContext.getString(R.string.text_route_information_distance) + " " + rim.getDistanceText(),
+                            mContext.getString(R.string.text_route_information_duration) + " " + rim.getDurationText()
                         );
                     }
                 }
@@ -261,9 +271,9 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
 
     /**
      * Call google.maps API with the origin and destination location to find out distance and duration
-     * of the planned trip
-     * @param origin The origin of the route
-     * @param destination The destination of the route
+     * of the planned trip.
+     * @param origin The origin of the route.
+     * @param destination The destination of the route.
      */
     private void calculateDistance(String origin, String destination) {
         new GetRouteInformationAsyncTask(
@@ -278,9 +288,9 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
 
     /**
      * Displays the route information (error, no route available or loaded information).
-     * @param routeInformation Textview widget to display the route information on
-     * @param distance Distance of the route
-     * @param duration Duration of the route
+     * @param routeInformation Text view widget to display the route information on.
+     * @param distance Distance of the route.
+     * @param duration Duration of the route.
      */
     private void displayRouteInformation(TextView routeInformation, String distance, String duration) {
         String information;

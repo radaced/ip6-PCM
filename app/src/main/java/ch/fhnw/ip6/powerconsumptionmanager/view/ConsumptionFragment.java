@@ -90,7 +90,7 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
             mConsumptionDataLayout.setVisibility(View.VISIBLE);
 
             if(!mHasUpdated) {
-                // Set up the whole chart with the helper class and display it
+                // Set up the whole chart data with the helper class and display it
                 mConsumptionDataHelper.setupLineChartData();
 
                 // Instantiate the update handler

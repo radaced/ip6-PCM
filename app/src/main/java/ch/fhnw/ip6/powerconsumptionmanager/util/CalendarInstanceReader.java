@@ -15,7 +15,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.CalendarEntry;
 
 /**
- * Class to read instances from the calendar.instance table
+ * Class to read instances from the calendar.instance table.
  */
 public class CalendarInstanceReader {
     // Projection array holding values to read from the instances table
@@ -38,6 +38,11 @@ public class CalendarInstanceReader {
     private Context mContext;
     private HashMap<Integer, CalendarEntry> mInstances;
 
+    /**
+     * Constructor to create a new calendar instance reader.
+     * @param calendar A calendar instance.
+     * @param context The context of the calendar instance reader.
+     */
     public CalendarInstanceReader(Calendar calendar, Context context) {
         mCalendar = calendar;
         mContext = context;
@@ -46,11 +51,11 @@ public class CalendarInstanceReader {
 
     /**
      * Reads all the instances in the calendar.instances table. and returns the information according to
-     * the projection array in a hashmap where the key is the day on which the instance is
-     * @param lowerRangeEnd Lower end of the dates to read in calendar.instances table
-     * @param upperRangeEnd Upper end of the dates to read in calendar.instances table
-     * @return Hashmap that contains information according to the projection array (key is the day where
-     * the instance occures)
+     * the projection array in a hashmap where the key is the day on which the instance is.
+     * @param lowerRangeEnd Lower end of the dates to read in calendar.instances table.
+     * @param upperRangeEnd Upper end of the dates to read in calendar.instances table.
+     * @return Hash map that contains information according to the projection array (key is the day where
+     *         the instance occurred).
      */
     public HashMap<Integer, CalendarEntry> readInstancesBetweenTimestamps(long lowerRangeEnd, long upperRangeEnd) {
         ContentResolver cr = mContext.getApplicationContext().getContentResolver();

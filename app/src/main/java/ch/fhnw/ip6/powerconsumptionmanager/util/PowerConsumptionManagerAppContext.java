@@ -12,32 +12,30 @@ import okhttp3.OkHttpClient;
  * Application context (storage of global app data and data received from web requests)
  */
 public class PowerConsumptionManagerAppContext extends Application {
-
-    /* HTTP client for web requests */
+    // HTTP client for web requests
     private final OkHttpClient mOkHTTPClient = new OkHttpClient().newBuilder()
             .connectTimeout(5, TimeUnit.SECONDS)
             .readTimeout(5, TimeUnit.SECONDS)
             .writeTimeout(5, TimeUnit.SECONDS)
             .build();
 
-
-    /* Status */
+    // Status
     private boolean mIsOnline = true;
 
-    /* Preferences */
+    // Preferences
     private boolean mUseGoogleCalendar;
     private boolean mIsUpdatingAutomatically;
     private int mUpdateInterval;
     private int mCostStatisticsPeriod;
     private String mIPAdress;
 
-    /* Data */
+    // Data
     private PCMData mPCMData;
-
     private RouteInformation mRouteInformation;
 
-
-
+    /***********************
+     * GETTERS AND SETTERS *
+     ***********************/
     public OkHttpClient getOkHTTPClient() {
         return mOkHTTPClient;
     }

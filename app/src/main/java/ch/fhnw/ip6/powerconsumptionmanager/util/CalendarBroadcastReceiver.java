@@ -37,9 +37,9 @@ public class CalendarBroadcastReceiver extends BroadcastReceiver implements Asyn
     @Override
     public void asyncTaskFinished(boolean result) {
         if(result) {
-            Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_sync_ended_success), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_sync_ended_success), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_br_sync_no_connection), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_br_sync_no_connection), Toast.LENGTH_SHORT).show();
             setChargePlanSyncPending();
         }
     }

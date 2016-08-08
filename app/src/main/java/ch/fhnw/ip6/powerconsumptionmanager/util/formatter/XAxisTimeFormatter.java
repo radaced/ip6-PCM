@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * Formats all x value time stamps into a readable date
+ * Formats the X-axis values from timestamp to an actual time.
  */
 public class XAxisTimeFormatter implements XAxisValueFormatter {
     @Override

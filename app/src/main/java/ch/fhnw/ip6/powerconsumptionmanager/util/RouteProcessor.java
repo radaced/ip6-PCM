@@ -12,14 +12,18 @@ import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.chargeplan.RouteInformation;
 import okhttp3.Response;
 
+/**
+ * Processes the route information for two locations and stores the loaded information in the application context
+ * for further use.
+ */
 public class RouteProcessor {
     private static final String TAG = "RouteProcessor";
 
     /**
-     * Processes the route information to two locations and stores the loaded information for further use
-     * @param response The response from the OkHttp request
-     * @param appContext The application context
-     * @return true when no successful, false when errors occured
+     * Processes the route information to two locations and stores the loaded information for further use.
+     * @param response The response from the OkHttp request.
+     * @param appContext The application context.
+     * @return true when no successful, false when errors occurred.
      * @throws IOException
      */
     public static boolean processRoutes(Response response, PowerConsumptionManagerAppContext appContext) throws IOException {
