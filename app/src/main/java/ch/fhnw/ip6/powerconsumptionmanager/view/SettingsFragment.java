@@ -114,7 +114,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                     getString(R.string.text_pref_cost_statistics_period_summary) +
                     " " +
                     mSharedPreferences.getInt("costStatisticsPeriod", 10) +
-                    " days"
+                    " " +
+                    getString(R.string.text_pref_cost_statistics_period_summary)
                 );
                 break;
             case "IP":

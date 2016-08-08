@@ -1,9 +1,15 @@
 <resources>
-    <!-- App -->
+    <!--****** App ******-->
     <string name="app_name">Eigenverbrauchsmanager</string>
     <string name="title_activity_main">Eigenverbrauchsmanager</string>
 
-    <!-- Main activity -->
+    <!--****** Units ******-->
+    <string name="unit_km">km</string>
+    <string name="unit_kw">kW</string>
+    <string name="unit_percentage">%</string>
+    <string name="unit_kwh">kWh</string>
+
+    <!--****** Activity main activity ******-->
     <string name="drawer_header">Eigenverbrauchsmanager</string>
     <string name="drawer_menu1">Übersicht</string>
     <string name="drawer_menu2">Angeschlossene Geräte</string>
@@ -13,17 +19,33 @@
     <string name="drawer_open">Navigation geöffnet</string>
     <string name="drawer_close">Navigation geschlossen</string>
 
-    <!-- Fragment consumption data -->
+    <!--****** Fragment offline ******-->
+    <string name="text_offline">Der Eigenverbrauchsmanager scheint nicht erreichbar zu sein. Bitte gehen Sie zu <i>Einstellungen</i>
+        und überprüfen Sie, ob Sie im gleichen Netzwerk sind und die richtige IP-Adresse eingestellt haben.</string>
+    <string name="menu_retry">Erneut Versuchen</string>
+
+    <!--****** Fragment overview ******-->
+    <string name="title_frag_overview">Übersicht</string>
+    <string name="text_autarchy">Autarkie</string>
+    <string name="text_selfsupply">Eigenverbrauch</string>
+    <string name="text_consumption">Bezug</string>
+    <string name="menu_daily">Täglich</string>
+    <string name="menu_now">Jetzt</string>
+    <string name="toast_dashboard_update_error">Fehler während dem Aktualisieren der Cockpit-Daten</string>
+
+    <!--****** Fragment consumption data ******-->
     <string name="title_frag_consumption">Verbrauch</string>
     <string name="chart_connection_error_title">Verbindungsproblem.</string>
     <string name="chart_connection_error_description">Überprüfen Sie die angegebene IP-Adresse.</string>
     <string name="chart_no_data">Keine Daten verfügbar.</string>
     <string name="list_device_error">Keine Geräte gefunden.</string>
     <string name="toast_chart_update_error">Fehler beim Updaten von Verbrauchsdaten</string>
+    <string name="text_loading_consumption_data">Verbrauchsdaten werden geladen…</string>
+    <string name="text_error_loading_consumption_data">Fehler während dem Laden der Verbrauchsdaten…</string>
 
-    <!-- Fragment charge plan -->
+    <!--****** Fragment charge plan ******-->
     <string name="title_frag_plan">Ladeplan</string>
-    <string name="instance_title">Tesla Fahrt</string>
+    <string name="instance_title">Emobil</string>
     <string name="text_route_information_route_to">nach</string>
     <string name="text_route_information_distance">Distanz: </string>
     <string name="text_route_information_duration">Dauer: </string>
@@ -34,13 +56,41 @@
     <string name="format_caldroid_info_title">dd. MMMM yyyy</string>
     <string name="format_caldroid_info_timerange">HH:mm</string>
 
-    <!-- Fragment tesla -->
-    <string name="title_frag_tesla">Tesla</string>
-    <string name="text_login_username">Benutzername:</string>
-    <string name="text_login_password">Passwort:</string>
-    <string name="button_connect_tesla">Mit Tesla verbinden</string>
+    <!--****** Fragment cost statistics ******-->
+    <array name="general_statistics_labels">
+        <item>Überschuss</item>
+        <item>Eigenverbrauch</item>
+        <item>Netzbezug</item>
+    </array>
+    <string name="menu_refresh">Aktualisieren</string>
+    <string name="text_loading_cost_statistics">Kostenstatistiken werden geladen…</string>
+    <string name="text_error_loading_cost_statistics">Fehler beim Laden der Kostenstatistiken…</string>
+    <string name="text_refreshing_cost_statistics">Kostenstatistiken werden aktualisiert…</string>
 
-    <!-- Activity Splash-Screen -->
+    <!--****** Fragment settings ******-->
+    <string name="category_general">Allgemein</string>
+    <string name="category_network">Netzwerk Konfiguration</string>
+    <string name="category_help">Hilfe</string>
+    <string name="text_pref_calendar_title">Google Kalender</string>
+    <string name="text_pref_calendar_summary">Verwenden den Google Kalender um Ladeplan zu verwalten</string>
+    <string name="text_pref_update_automatically_title">Daten automatisch aktualisieren</string>
+    <string name="text_pref_update_interval_title">Aktualisierungsintervall</string>
+    <string name="text_pref_update_interval_summary">Aktualisiere Daten alle</string>
+    <string name="text_pref_cost_statistics_period_title">Kostenstatistiken</string>
+    <string name="text_pref_cost_statistics_period_summary">Lade Statistiken von den letzten</string>
+    <string name="text_pref_cost_statistics_period_summary_days">Tagen</string>
+    <string name="text_pref_complete_restart_title">Neustart um neu angeschlossene Geräte zu laden</string>
+    <string name="text_pref_complete_restart_to_load_new_components">Starte App neu um neu angeschlossene Geräte zu laden…</string>
+    <string name="text_pref_ip_title">IP-Adresse</string>
+    <string name="text_pref_help_title">Brauchen Sie Hilfe?</string>
+    <string name="text_pref_help_summary">Kontaktieren Sie Herr Prof. Zogg unter david.zogg@fhnw.ch</string>
+    <string name="toast_ip_invalid">IP-Adresse ungültig</string>
+    <string name="toast_sync_started">Synchronisiere…</string>
+    <string name="toast_sync_ended_success">Synchronisation beendet</string>
+    <string name="toast_sync_ended_error_interrupted">Synchronisation unterbrochen</string>
+    <string name="toast_sync_ended_error_loading">Synchronisation fehlgeschlagen</string>
+
+    <!--****** Activity splash screen ******-->
     <string name="title_activity_splash">Eigenverbrauchsmanager</string>
     <string name="text_splash_info">Eigenverbrauchsmanager lädt…</string>
     <string name="text_splash_settings_changed">Eigenverbrauchsmanager lädt mit neuen Einstellungen…</string>
@@ -52,21 +102,38 @@
     <string name="button_continue">Fortfahren</string>
     <string name="image_content_description">Progressbar</string>
 
-    <!-- Activity Settings-Screen -->
-    <string name="title_activity_settings">Einstellungen</string>
-    <string name="category_network">Netzwerk Konfiguration</string>
-    <string name="category_charge_plan">Ladeplan</string>
-    <string name="category_help">Hilfe</string>
-    <string name="text_pref_ip_title">IP Adresse</string>
-    <string name="text_pref_sync_title">Synchronisiere Ladeplan</string>
-    <string name="text_pref_sync_summary">Antippen um Tesla Trips mit der Serverkomponente zu synchronisieren.</string>
-    <string name="text_pref_help_title">Benötigen Sie Hilfe?</string>
-    <string name="text_pref_help_summary">Kontaktieren Sie Herr Prof. Zogg unter david.zogg@fhnw.ch</string>
+    <!--****** Activity component settings ******-->
+    <string name="menu_save_component_settings">Speichern</string>
+    <string name="title_activity_component_settings">Geräteeinstellungen</string>
+    <string name="title_activity_actionbar">Einstellungen für</string>
+    <string name="text_loading_component_settings">Laden Einstellungen für Gerät…</string>
+    <string name="text_error_loading_component_settings">Fehler beim Laden der Geräteeinstellungen</string>
+    <string name="toast_save_component_settings_info">Einstellungen werden gespeichert…</string>
+    <string name="toast_save_component_settings_status">Speichern erfolgreich</string>
+    <string name="toast_error_save_component_settings_status">Fehler beim Speichern der Geräteeinstellungen</string>
+    <string name="dialog_button_close">Schliessen</string>
+
+    <!--****** Setting PCMPlan ****** -->
+    <array name="weekdays">
+        <item>Mo</item>
+        <item>Di</item>
+        <item>Mi</item>
+        <item>Do</item>
+        <item>Fr</item>
+        <item>Sa</item>
+        <item>So</item>
+    </array>
+    <string name="text_departure_time">Abfahrt</string>
+    <string name="text_arrival_time">Ankunft</string>
+    <string name="text_charged_energy">Geladene Energie</string>
+    <string name="text_distance_reachable">Reichweite</string>
+    <string name="text_plugged">Stromquelle angeschlossen</string>
+    <string name="text_plugged_true">Ja</string>
+    <string name="text_plugged_false">Nein</string>
+    <string name="text_charge_state_emobil">Ladestand des Emobils</string>
+
+    <!--****** Calendar broadcast receiver ******-->
+    <string name="toast_br_sync_success">Synchronisation mit EVM beendet</string>
+    <string name="toast_br_sync_no_connection">Synchronisation mit EVM momentan nicht möglich</string>
     <string name="action_settings">Einstellungen</string>
-    <string name="toast_ip_updated">IP aktualisiert</string>
-    <string name="toast_ip_invalid">IP ungültig</string>
-    <string name="toast_sync_started">Synchronisiert…</string>
-    <string name="toast_sync_ended_success">Synchronisation beendet</string>
-    <string name="toast_sync_ended_error_interrupted">Synchronisation wurde unterbrochen</string>
-    <string name="toast_sync_ended_error_loading">Synchronisation fehlgeschlagen (Fehler beim Erstellen des Datenpakets)</string>
 </resources>

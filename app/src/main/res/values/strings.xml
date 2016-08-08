@@ -9,7 +9,6 @@
     <string name="unit_percentage">%</string>
     <string name="unit_kwh">kWh</string>
 
-
     <!--****** Activity main activity ******-->
     <string name="drawer_header">Power Consumption Manager</string>
     <string name="drawer_menu1">Overview</string>
@@ -79,11 +78,10 @@
     <string name="text_pref_update_interval_summary">Update data every</string>
     <string name="text_pref_cost_statistics_period_title">Cost statistics</string>
     <string name="text_pref_cost_statistics_period_summary">Load statistics from last</string>
+    <string name="text_pref_cost_statistics_period_summary_days">days</string>
     <string name="text_pref_complete_restart_title">Restart app to load new components</string>
     <string name="text_pref_complete_restart_to_load_new_components">Restarting app to load newly connected components…</string>
     <string name="text_pref_ip_title">IP address</string>
-    <string name="text_pref_sync_title">Synchronize charging plan</string>
-    <string name="text_pref_sync_summary">Tap to synchronize your tesla trips with the server component.</string>
     <string name="text_pref_help_title">Do you need help?</string>
     <string name="text_pref_help_summary">Contact Mr. Prof. Zogg under david.zogg@fhnw.ch</string>
     <string name="toast_ip_invalid">IP invalid</string>
@@ -107,7 +105,6 @@
 
     <!--****** Activity component settings ******-->
     <string name="menu_save_component_settings">Save</string>
-
     <string name="title_activity_component_settings">Component settings</string>
     <string name="title_activity_actionbar">Settings for</string>
     <string name="text_loading_component_settings">Loading settings for component…</string>
@@ -138,6 +135,7 @@
 
     <!--****** Calendar broadcast receiver ******-->
     <string name="toast_br_sync_success">Synchronisation with PCM finished</string>
-    <string name="toast_br_sync_no_connection">Could not synchronize with PCM, trying again on next startup of app</string>
+    <string name="toast_br_sync_no_connection">Synchronisation with PCM currently not possible</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
