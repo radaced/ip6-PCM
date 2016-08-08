@@ -14,12 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import org.bouncycastle.crypto.util.Pack;
-
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
-import ch.fhnw.ip6.powerconsumptionmanager.network.SynchronizeChargePlanAsyncTask;
-import ch.fhnw.ip6.powerconsumptionmanager.util.ChargePlanSyncChecker;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.view.startup.InitFragment;
 import ch.fhnw.ip6.powerconsumptionmanager.view.startup.SplashFragment;
@@ -90,10 +86,11 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncTask
     /**
      *  Return point from requests that load the initial data for the app. This is the loading of all devices
      *  that are connected to the PCM and the current data of the devices that are being displayed on the dashboard.
-     *  @param result Status if the data could be loaded successfully or not.
+     * @param result Status if the data could be loaded successfully or not.
+     * @param opType Type of operation that has completed.
      */
     @Override
-    public void asyncTaskFinished(boolean result) {
+    public void asyncTaskFinished(boolean result, String opType) {
         // Lock this section because two different async task load the initial data
         synchronized (mAsyncTaskFinishedLock) {
             if(mAppContext.isOnline()) {

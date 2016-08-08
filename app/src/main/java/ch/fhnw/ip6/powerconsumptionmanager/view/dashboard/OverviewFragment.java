@@ -156,9 +156,10 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
      * Return point when the current data of the PCM has finished loading from the webservice
      * and now can be displayed/rendered.
      * @param result Status if the data could be loaded successfully or not
+     * @param opType Type of operation that has completed.
      */
     @Override
-    public void asyncTaskFinished(boolean result) {
+    public void asyncTaskFinished(boolean result, String opType) {
         if(result) {
             // Update all UI elements currently displayed on the overview screen
             mDashboardHelper.updateOverview();

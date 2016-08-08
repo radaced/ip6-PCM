@@ -57,7 +57,7 @@ public class GetConnectedComponentsAsyncTask extends AsyncTask<Void, Void, Boole
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
         mAppContext.setPCMData(mPCMData);
-        mCallbackContext.asyncTaskFinished(result);
+        mCallbackContext.asyncTaskFinished(result, mAppContext.OP_TYPES[0]);
         new GetCurrentPCMDataAsyncTask(mAppContext, mCallbackContext).execute();
     }
 

@@ -27,7 +27,7 @@ import okhttp3.Response;
  * Background task to build and send the json for synchronizing the PCM charge plan
  */
 public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolean> {
-    private static final String TAG = "PlanSyncStringBuilder";
+    private static final String TAG = "SyncChargePlanAsyncTask";
     private static final String[] WEEKDAY_SHORTCUTS = { "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So" };
 
     private PowerConsumptionManagerAppContext mAppContext;
@@ -217,7 +217,7 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
         super.onPostExecute(result);
 
         if(mCallbackContext != null) {
-            mCallbackContext.asyncTaskFinished(result);
+            mCallbackContext.asyncTaskFinished(result, mAppContext.OP_TYPES[0]);
         } else {
             if(result) {
                 Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_sync_ended_success), Toast.LENGTH_SHORT).show();

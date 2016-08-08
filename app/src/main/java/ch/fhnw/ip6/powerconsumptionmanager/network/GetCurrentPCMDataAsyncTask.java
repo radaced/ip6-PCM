@@ -76,7 +76,7 @@ public class GetCurrentPCMDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
-        mCallbackContext.asyncTaskFinished(result);
+        mCallbackContext.asyncTaskFinished(result, mAppContext.OP_TYPES[0]);
     }
 
     public boolean handleCurrentStatisticsResponse(Response response) throws IOException {

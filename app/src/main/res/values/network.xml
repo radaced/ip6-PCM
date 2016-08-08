@@ -11,6 +11,7 @@
     <string name="webservice_getCostStatisticsComponents">8002/EM/App/getCostStatisticsComponents</string>
     <string name="webservice_getComfortSettings">8002/EM/App/getComfortSettings?Name=</string>
     <string name="webservice_getProgramSettings">8002/EM/App/getProgramSettings?Name=</string>
+    <string name="webservice_putProgramSettings">8002/EM/App/putProgramSettings?Name=</string>
     <string name="webservice_getStatusEmobil">8002/EM/App/getStatusEmobil</string>
 
     <!--****** Google ******-->

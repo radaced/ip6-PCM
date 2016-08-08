@@ -6,11 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
-import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
 import ch.fhnw.ip6.powerconsumptionmanager.network.SynchronizeChargePlanAsyncTask;
 
@@ -35,7 +32,7 @@ public class CalendarBroadcastReceiver extends BroadcastReceiver implements Asyn
     }
 
     @Override
-    public void asyncTaskFinished(boolean result) {
+    public void asyncTaskFinished(boolean result, String opType) {
         if(result) {
             //Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_sync_ended_success), Toast.LENGTH_SHORT).show();
         } else {

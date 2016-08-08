@@ -106,15 +106,18 @@
     <string name="image_content_description">Progressbar</string>
 
     <!--****** Activity component settings ******-->
+    <string name="menu_save_component_settings">Save</string>
+
     <string name="title_activity_component_settings">Component settings</string>
     <string name="title_activity_actionbar">Settings for</string>
     <string name="text_loading_component_settings">Loading settings for component…</string>
-    <string name="text_error_loading_component_settings">Error while loading component settings…</string>
+    <string name="text_error_loading_component_settings">Error while loading component settings</string>
+    <string name="toast_save_component_settings_info">Saving your settings...</string>
+    <string name="toast_save_component_settings_status">Saving of component settings successful</string>
+    <string name="toast_error_save_component_settings_status">Error while saving component settings</string>
     <string name="dialog_button_close">Close</string>
 
     <!--****** Setting PCMPlan ****** -->
-    <string name="menu_save_component_settings">Save</string>
-    <string name="toast_save_component_settings">Saving your settings...</string>
     <array name="weekdays">
         <item>Mo</item>
         <item>Tu</item>

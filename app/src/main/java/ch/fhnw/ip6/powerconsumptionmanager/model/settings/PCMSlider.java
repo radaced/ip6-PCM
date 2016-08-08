@@ -66,7 +66,7 @@ public class PCMSlider extends PCMSetting {
          */
         mRangebar = new RangeBar(context, null);
 
-        // The range bar library can't handle negative values so create to maps that map the range bar and PCM setting values
+        // The range bar library can't handle negative values so create two maps that map the range bar and PCM setting values
         for (int i = 0; i <= mMaxScale - mMinScale; i++) {
             mPCMValueToRangeBarValue.put(mMinScale + i, (float) i);
             mPCMValueToRangeBarValue.put((float) (mMinScale + i + 0.5), (float) (i + 0.5));
@@ -111,9 +111,41 @@ public class PCMSlider extends PCMSetting {
         container.addView(mRangebar);
     }
 
-    /* TODO: putComfortSettings */
     @Override
     public String executeSaveOrGenerateJson(Context context) {
-        return "";
+        // String builder to build JSON
+        StringBuilder jsonStringBuilder = new StringBuilder(1000);
+        String minValue, maxValue;
+        String isRangeThenMax = "";
+
+        // Get the correct values from the range bar
+        if(mIsRange) {
+            if(mStartsNegative) {
+                Float minFloat = mRangeBarValueToPCMValue.get(Float.parseFloat(mRangebar.getLeftPinValue()));
+                Float maxFloat = mRangeBarValueToPCMValue.get(Float.parseFloat(mRangebar.getRightPinValue()));
+                minValue = minFloat.toString();
+                maxValue = maxFloat.toString();
+            } else {
+                minValue = mRangebar.getLeftPinValue();
+                maxValue = mRangebar.getRightPinValue();
+            }
+            isRangeThenMax = ", \"Max\": \"" + maxValue  + "\"";
+        } else {
+            if (mStartsNegative) {
+                Float minFloat = mRangeBarValueToPCMValue.get(Float.parseFloat(mRangebar.getRightPinValue()));
+                minValue = minFloat.toString();
+            } else {
+                minValue = mRangebar.getRightPinValue();
+            }
+        }
+
+        // Build JSON with the new values
+        String sliderData = "{" +
+                            "\"Signal\": \"" + super.getName() + "\"," +
+                            "\"Min\": \"" + minValue + "\"" +
+                            isRangeThenMax +
+                            "}";
+
+        return jsonStringBuilder.append(sliderData).toString();
     }
 }

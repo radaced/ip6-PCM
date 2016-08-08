@@ -14,6 +14,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSetting;
 import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
 import ch.fhnw.ip6.powerconsumptionmanager.network.GetComponentSettingsAsyncTask;
+import ch.fhnw.ip6.powerconsumptionmanager.network.PutComponentSettingsAsyncTask;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
@@ -78,15 +79,19 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
                 break;
             // Save the settings
             case R.id.action_save_settings:
-                String json = "";
-                Toast.makeText(this, getString(R.string.toast_save_component_settings), Toast.LENGTH_SHORT).show();
+                String json = "[";
+                Toast.makeText(this, getString(R.string.toast_save_component_settings_info), Toast.LENGTH_SHORT).show();
 
                 // Generate the json or execute the save action for every setting of this component
                 for (PCMSetting setting : mAppContext.getPCMData().getComponentData().get(mComponentName).getSettings()) {
-                    json = json + setting.executeSaveOrGenerateJson(this);
+                    json = json + setting.executeSaveOrGenerateJson(this) + ",";
                 }
 
-                /* TODO: Implement PUT method with async task to save settings */
+                json = json.substring(0, json.length()-1);
+                json = json + "]";
+
+                // Save the settings
+                new PutComponentSettingsAsyncTask(mAppContext, this, json, mComponentName).execute();
                 break;
         }
 
@@ -96,22 +101,31 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
     /**
      * Return point when the settings of the component have finished loading from the webservice
      * and now can be displayed/rendered on the activity.
-     * @param result Status if the data could be loaded successfully or not
+     * @param result Status if the data could be loaded successfully or not.
+     * @param opType Type of operation that has completed.
      */
     @Override
-    public void asyncTaskFinished(boolean result) {
+    public void asyncTaskFinished(boolean result, String opType) {
         // Hide the loading section
         mLoadingLayout.setVisibility(View.GONE);
 
-        // Inflate all the layouts of the loaded settings for the component or display an error message
-        if(result) {
-            for (PCMSetting setting : mAppContext.getPCMData().getComponentData().get(mComponentName).getSettings()) {
-                setting.inflateLayout(this, mSettingsContainer);
+        // Check if the callback is from getting the component settings or the saving of the component settings
+        if(opType.equals(mAppContext.OP_TYPES[0])) {
+            // Inflate all the layouts of the loaded settings for the component or display an error message
+            if(result) {
+                for (PCMSetting setting : mAppContext.getPCMData().getComponentData().get(mComponentName).getSettings()) {
+                    setting.inflateLayout(this, mSettingsContainer);
+                }
+                mComponentSettingsLayout.setVisibility(View.VISIBLE);
+            } else {
+                mOnErrorComponentSettingsLayout.setVisibility(View.VISIBLE);
             }
-
-            mComponentSettingsLayout.setVisibility(View.VISIBLE);
         } else {
-            mOnErrorComponentSettingsLayout.setVisibility(View.VISIBLE);
+            if(result) {
+                Toast.makeText(getApplicationContext(), R.string.toast_save_component_settings_status, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.toast_error_save_component_settings_status, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

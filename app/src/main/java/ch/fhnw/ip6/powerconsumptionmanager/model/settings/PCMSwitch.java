@@ -82,9 +82,14 @@ public class PCMSwitch extends PCMSetting {
         container.addView(llHorizontal);
     }
 
-    /* TODO: putProgramSettings */
     @Override
     public String executeSaveOrGenerateJson(Context context) {
-        return "";
+        // String builder to build JSON
+        StringBuilder jsonStringBuilder = new StringBuilder(1000);
+
+        // Build JSON with switch state
+        String jsonString = "[[ProgramSettings]]{\"Niedertarif\": " + mSwitch.isChecked() + "}";
+
+        return jsonStringBuilder.append(jsonString).toString();
     }
 }

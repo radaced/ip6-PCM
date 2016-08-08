@@ -84,10 +84,11 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
 
     /**
      *  Return point from requests that load the consumption data.
-     *  @param result Status if the data could be loaded successfully or not.
+     * @param result Status if the data could be loaded successfully or not.
+     * @param opType Type of operation that has completed.
      */
     @Override
-    public void asyncTaskFinished(boolean result) {
+    public void asyncTaskFinished(boolean result, String opType) {
         // Hide the loading layout
         mLoadingLayout.setVisibility(View.GONE);
 

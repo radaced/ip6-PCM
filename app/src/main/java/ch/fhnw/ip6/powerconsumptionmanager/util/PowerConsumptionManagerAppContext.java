@@ -12,6 +12,8 @@ import okhttp3.OkHttpClient;
  * Application context (storage of global app data and data received from web requests)
  */
 public class PowerConsumptionManagerAppContext extends Application {
+    public final String[] OP_TYPES = new String[] {"GET", "PUT", "POST", "DELETE"};
+
     // HTTP client for web requests
     private final OkHttpClient mOkHTTPClient = new OkHttpClient().newBuilder()
             .connectTimeout(5, TimeUnit.SECONDS)
