@@ -60,6 +60,7 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
         mConsumptionDataHelper = new ConsumptionDataHelper(getContext(), consumptionChart);
         mConsumptionDataHelper.setup();
 
+        // Restore the list with the indices of data sets from components that the user doesn't want to see
         if(savedInstanceState != null) {
             mConsumptionDataHelper.setRemovedDataSetIndices(savedInstanceState.getIntegerArrayList("REMOVED_DATASET_INDICES"));
         }
@@ -88,6 +89,7 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        // Save the list with the indices of data sets from components that the user doesn't want to see
         outState.putIntegerArrayList("REMOVED_DATASET_INDICES", mConsumptionDataHelper.getRemovedDataSetIndices());
         super.onSaveInstanceState(outState);
     }

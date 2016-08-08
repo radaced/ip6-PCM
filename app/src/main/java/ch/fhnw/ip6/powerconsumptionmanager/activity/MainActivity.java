@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         // Setup the content that is displayed in the navigation drawer
         setupDrawerContent(mDrawerNavView);
 
-        // On initial startup set the title to overview because this is the first screen to be rendered after startup
+        // On initial startup set the title to overview because this is the first screen to be shown after startup
         if(savedInstanceState == null) {
             getSupportActionBar().setTitle(R.string.title_frag_overview);
             // Check if the loading of the initial data was successful and display the according screens
@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.flMainContentContainer, new OfflineFragment()).commit();
             }
         } else {
+            // Restore the toolbar title
             getSupportActionBar().setTitle(savedInstanceState.getCharSequence("TOOLBAR_TITLE"));
         }
     }
@@ -165,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         if(getSupportActionBar() != null) {
+            // Save the toolbar title
             outState.putCharSequence("TOOLBAR_TITLE", getSupportActionBar().getTitle());
         }
         super.onSaveInstanceState(outState);
