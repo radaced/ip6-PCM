@@ -52,8 +52,14 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Set mode and setup helper instance
-        mMode = Mode.NOW;
+        // Set mode from saved instance or new
+        if(savedInstanceState != null) {
+            mMode = (Mode) savedInstanceState.getSerializable("OVERVIEW_MODE");
+        } else {
+            mMode = Mode.NOW;
+        }
+
+        // Setup helper class for overview
         mDashboardHelper = DashboardHelper.getInstance();
         mDashboardHelper.initOverviewContext(getContext());
 
@@ -85,7 +91,11 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
 
         // Load the correct fragment into the container
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.dynamic_content_fragment, CurrentValuesFragment.newInstance());
+        if(mMode == Mode.NOW) {
+            transaction.replace(R.id.dynamic_content_fragment, CurrentValuesFragment.newInstance());
+        } else {
+            transaction.replace(R.id.dynamic_content_fragment, DailyValuesFragment.newInstance());
+        }
         transaction.commit();
 
         // Instantiate the update handler
@@ -150,6 +160,13 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
         if(mUpdateHandler != null) {
             mUpdateHandler.postDelayed(updateCurrentPCMData, mAppContext.getUpdateInterval() * 1000);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // When screen rotates save the mode
+        outState.putSerializable("OVERVIEW_MODE", mMode);
+        super.onSaveInstanceState(outState);
     }
 
     /**

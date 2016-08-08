@@ -35,7 +35,7 @@ public class ConsumptionDataHelper {
     // Holds all data sets from the chart
     private HashMap<Integer, LineDataSet> mConsumptionDataSet;
     // Holds the unselected data set indices
-    private ArrayList<Integer> mRemovedDataSetIndexes;
+    private ArrayList<Integer> mRemovedDataSetIndices;
 
     private int[] mGraphColors;
     private String mFirstComponent;
@@ -51,7 +51,7 @@ public class ConsumptionDataHelper {
 
         mLCConsumption = chart;
         mConsumptionDataSet = new HashMap<>();
-        mRemovedDataSetIndexes = new ArrayList<>();
+        mRemovedDataSetIndices = new ArrayList<>();
 
         mGraphColors = context.getResources().getIntArray(R.array.colorsGraph);
     }
@@ -104,7 +104,17 @@ public class ConsumptionDataHelper {
 
         // Set the data to the chart and display it
         setDataForChart(xValues);
-        displayAnimated();
+    }
+
+    /**
+     * Updates the whole consumption data of every component and displays the data accordingly.
+     */
+    public void updateLineChartData() {
+        setupLineChartData();
+
+        // Notify the chart that its data changed
+        mLCConsumption.getData().notifyDataChanged();
+        mLCConsumption.notifyDataSetChanged();
     }
 
     /**
@@ -153,6 +163,10 @@ public class ConsumptionDataHelper {
     private void setDataForChart(ArrayList<String> xValues) {
         ArrayList<ILineDataSet> list = new ArrayList<>();
         for(int i = 0; i < mConsumptionDataSet.size(); i++) {
+            // Ignore data sets from unselected components in the list
+            if(mRemovedDataSetIndices.contains(i)) {
+                continue;
+            }
             list.add(mConsumptionDataSet.get(i));
         }
 
@@ -161,41 +175,9 @@ public class ConsumptionDataHelper {
     }
 
     /**
-     * Updates the whole consumption data of every component and displays the data accordingly.
-     */
-    public void updateLineChartData() {
-        LinkedHashMap<String, PCMComponent> componentData = mAppContext.getPCMData().getComponentData();
-        ArrayList<String> xValues = generateXValues(componentData.get(mFirstComponent).getConsumptionData());
-
-        // Generate/update data sets with updated values for all components
-        int i = 0;
-        for (PCMComponent component : componentData.values()) {
-            generateDataSet(component.getName(), component.getConsumptionData(), i++);
-        }
-
-        // Setup data set list with only data sets where the toggle button of a component is on active
-        ArrayList<ILineDataSet> list = new ArrayList<>();
-        for(int j = 0; j < mConsumptionDataSet.size(); j++) {
-            if(mRemovedDataSetIndexes.contains(j)) {
-                continue;
-            }
-            list.add(mConsumptionDataSet.get(j));
-        }
-
-        LineData data = new LineData(xValues, list);
-        mLCConsumption.setData(data);
-
-        // Notify the chart that its data changed
-        mLCConsumption.getData().notifyDataChanged();
-        mLCConsumption.notifyDataSetChanged();
-        displayNoneAnimated();
-    }
-
-
-    /**
      * Display chart data animated (chart data fades in from bottom to top).
      */
-    private void displayAnimated() {
+    public void displayAnimated() {
         mLCConsumption.animateY(2000);
     }
 
@@ -213,8 +195,12 @@ public class ConsumptionDataHelper {
         return mLCConsumption;
     }
 
-    public ArrayList<Integer> getRemovedDataSetIndexes() {
-        return mRemovedDataSetIndexes;
+    public ArrayList<Integer> getRemovedDataSetIndices() {
+        return mRemovedDataSetIndices;
+    }
+
+    public void setRemovedDataSetIndices(ArrayList<Integer> mRemovedDataSetIndices) {
+        this.mRemovedDataSetIndices = mRemovedDataSetIndices;
     }
 
     public int getGraphColor(int index) {

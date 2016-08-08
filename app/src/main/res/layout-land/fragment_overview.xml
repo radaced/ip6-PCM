@@ -1,9 +1,99 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".view.dashboard.OverviewFragment">
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.dashboard.OverviewFragment"
+    android:baselineAligned="false"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
+    <LinearLayout
+        android:baselineAligned="false"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:layout_marginLeft="@dimen/space_horizontal_margin"
+        android:layout_marginStart="@dimen/space_horizontal_margin"
+        android:layout_marginRight="@dimen/space_horizontal_margin"
+        android:layout_marginEnd="@dimen/space_horizontal_margin"
+        android:layout_marginTop="@dimen/space_vertical_margin"
+        android:gravity="center"
+        android:orientation="horizontal">
 
+        <me.itangqi.waveloadingview.WaveLoadingView
+            android:id="@+id/wlvAutarchy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="@dimen/double_space_horizontal_margin"
+            android:layout_marginEnd="@dimen/double_space_horizontal_margin"
+            app:wlv_borderColor="@color/colorProgressBorder"
+            app:wlv_borderWidth="@dimen/wlv_border_width"
+            app:wlv_shapeType="circle"
+            app:wlv_titleTopColor="@color/colorTextPrimary"
+            app:wlv_titleTopSize="@dimen/wlv_desc_value_size"
+            app:wlv_titleCenterColor="@color/colorTextPrimary"
+            app:wlv_titleCenterSize="@dimen/wlv_main_value_size"
+            app:wlv_titleBottomColor="@color/colorTextPrimary"
+            app:wlv_titleBottomSize="@dimen/wlv_desc_value_size"
+            app:wlv_waveAmplitude="30"
+            app:wlv_waveColor="@color/colorProgressAutarchy"/>
 
-</FrameLayout>
+        <me.itangqi.waveloadingview.WaveLoadingView
+            android:id="@+id/wlvConsumption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/double_space_horizontal_margin"
+            android:layout_marginStart="@dimen/double_space_horizontal_margin"
+            android:layout_marginRight="@dimen/double_space_horizontal_margin"
+            android:layout_marginEnd="@dimen/double_space_horizontal_margin"
+            app:wlv_borderColor="@color/colorProgressBorder"
+            app:wlv_borderWidth="@dimen/wlv_border_width"
+            app:wlv_shapeType="circle"
+            app:wlv_titleTopColor="@color/colorTextPrimary"
+            app:wlv_titleTopSize="@dimen/wlv_desc_value_size"
+            app:wlv_titleCenterColor="@color/colorTextPrimary"
+            app:wlv_titleCenterSize="@dimen/wlv_main_value_size"
+            app:wlv_titleBottomColor="@color/colorTextPrimary"
+            app:wlv_titleBottomSize="@dimen/wlv_desc_value_size"
+            app:wlv_waveAmplitude="30"/>
+
+        <me.itangqi.waveloadingview.WaveLoadingView
+            android:id="@+id/wlvSelfsupply"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/double_space_horizontal_margin"
+            android:layout_marginStart="@dimen/double_space_horizontal_margin"
+            app:wlv_borderColor="@color/colorProgressBorder"
+            app:wlv_borderWidth="@dimen/wlv_border_width"
+            app:wlv_shapeType="circle"
+            app:wlv_titleTopColor="@color/colorTextPrimary"
+            app:wlv_titleTopSize="@dimen/wlv_desc_value_size"
+            app:wlv_titleCenterColor="@color/colorTextPrimary"
+            app:wlv_titleCenterSize="@dimen/wlv_main_value_size"
+            app:wlv_titleBottomColor="@color/colorTextPrimary"
+            app:wlv_titleBottomSize="@dimen/wlv_desc_value_size"
+            app:wlv_waveAmplitude="30"
+            app:wlv_waveColor="@color/colorProgressPowerConsumption"/>
+
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:scrollbarSize="@dimen/scroll_components_container">
+
+        <LinearLayout
+            android:id="@+id/dynamic_content_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/double_space_vertical_margin"
+            android:orientation="horizontal"/>
+
+    </HorizontalScrollView>
+
+</LinearLayout>

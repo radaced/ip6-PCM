@@ -63,6 +63,7 @@ public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
 
         // Define the switch button logic that is on every list item
         vh.swDevice = (Switch) convertView.findViewById(R.id.swDevice);
+        vh.swDevice.setChecked(!mConsumptionDataHelper.getRemovedDataSetIndices().contains(position));
         vh.swDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,11 +74,13 @@ public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
                      */
                     mConsumptionDataHelper.getChart().getLineData().removeDataSet(position - shiftPos);
                     mConsumptionDataHelper.displayNoneAnimated();
+
                     // Add removed data set index to ignore list
-                    mConsumptionDataHelper.getRemovedDataSetIndexes().add(position);
+                    mConsumptionDataHelper.getRemovedDataSetIndices().add(position);
                 } else {
                     // Indicate that graph of certain device is visible again (remove from ignore list
-                    mConsumptionDataHelper.getRemovedDataSetIndexes().remove(Integer.valueOf(position));
+                    mConsumptionDataHelper.getRemovedDataSetIndices().remove(Integer.valueOf(position));
+
                     // Generate new data set with the correct consumption data
                     String device = mDevices.get(position - shiftPos);
                     mConsumptionDataHelper.generateDataSet(
@@ -85,8 +88,10 @@ public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
                         mAppContext.getPCMData().getComponentData().get(device).getConsumptionData(),
                         position - shiftPos
                     );
-                    // Update
+
+                    // Update the data displayed in the line chart
                     mConsumptionDataHelper.updateLineChartData();
+                    mConsumptionDataHelper.displayNoneAnimated();
                 }
             }
         });
@@ -102,8 +107,8 @@ public class ConsumptionDeviceListAdapter extends ArrayAdapter<String> {
      */
     private int getShiftPosition(int position) {
         int shiftPos = 0;
-        for(int i = 0; i < mConsumptionDataHelper.getRemovedDataSetIndexes().size(); i++) {
-            if(mConsumptionDataHelper.getRemovedDataSetIndexes().get(i) < position) {
+        for(int i = 0; i < mConsumptionDataHelper.getRemovedDataSetIndices().size(); i++) {
+            if(mConsumptionDataHelper.getRemovedDataSetIndices().get(i) < position) {
                 shiftPos++;
             }
         }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -38,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private NavigationView mDrawerNavView;
     private ActionBarDrawerToggle mDrawerToggle;
-    private CharSequence mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         mAppContext = (PowerConsumptionManagerAppContext) getApplicationContext();
 
-        // Set the title and load the layout for the navigation drawer
-        mTitle = getTitle();
+        // Load the layout for the navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerNavView = (NavigationView) findViewById(R.id.navView);
 
@@ -71,13 +70,15 @@ public class MainActivity extends AppCompatActivity {
 
         // On initial startup set the title to overview because this is the first screen to be rendered after startup
         if(savedInstanceState == null) {
-            setTitle(R.string.title_frag_overview);
+            getSupportActionBar().setTitle(R.string.title_frag_overview);
             // Check if the loading of the initial data was successful and display the according screens
             if (mAppContext.isOnline()) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.flMainContentContainer, new OverviewFragment()).commit();
             } else {
                 getSupportFragmentManager().beginTransaction().replace(R.id.flMainContentContainer, new OfflineFragment()).commit();
             }
+        } else {
+            getSupportActionBar().setTitle(savedInstanceState.getCharSequence("TOOLBAR_TITLE"));
         }
     }
 
@@ -156,10 +157,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void setTitle(CharSequence title) {
-        mTitle = title;
         if(getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(mTitle);
+            getSupportActionBar().setTitle(title);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if(getSupportActionBar() != null) {
+            outState.putCharSequence("TOOLBAR_TITLE", getSupportActionBar().getTitle());
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override

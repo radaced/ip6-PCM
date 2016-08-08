@@ -60,6 +60,10 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
         mConsumptionDataHelper = new ConsumptionDataHelper(getContext(), consumptionChart);
         mConsumptionDataHelper.setup();
 
+        if(savedInstanceState != null) {
+            mConsumptionDataHelper.setRemovedDataSetIndices(savedInstanceState.getIntegerArrayList("REMOVED_DATASET_INDICES"));
+        }
+
         new GetConsumptionDataAsyncTask(mAppContext, this).execute();
     }
 
@@ -82,6 +86,12 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putIntegerArrayList("REMOVED_DATASET_INDICES", mConsumptionDataHelper.getRemovedDataSetIndices());
+        super.onSaveInstanceState(outState);
+    }
+
     /**
      *  Return point from requests that load the consumption data.
      * @param result Status if the data could be loaded successfully or not.
@@ -100,6 +110,7 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
             if(!mHasUpdated) {
                 // Set up the whole chart data with the helper class and display it
                 mConsumptionDataHelper.setupLineChartData();
+                mConsumptionDataHelper.displayAnimated();
 
                 // Instantiate the update handler
                 mUpdateHandler = new Handler();
@@ -118,8 +129,9 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
                     )
                 );
             } else {
-                // Add the data sets to the chart
+                // Update the chart data and display it
                 mConsumptionDataHelper.updateLineChartData();
+                mConsumptionDataHelper.displayNoneAnimated();
             }
         } else {
             // Display an error message to the user

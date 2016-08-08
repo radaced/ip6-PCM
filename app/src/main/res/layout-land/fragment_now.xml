@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     tools:context=".view.dashboard.CurrentValuesFragment"
-    android:paddingLeft="@dimen/components_container_padding"
-    android:paddingStart="@dimen/components_container_padding"
-    android:paddingRight="@dimen/components_container_padding"
-    android:paddingEnd="@dimen/components_container_padding"
-    android:paddingTop="@dimen/components_container_padding">
+    android:paddingLeft="@dimen/components_container_padding_landscape"
+    android:paddingStart="@dimen/components_container_padding_landscape"
+    android:paddingRight="@dimen/components_container_padding_landscape"
+    android:paddingEnd="@dimen/components_container_padding_landscape"
+    android:paddingTop="@dimen/components_container_padding_landscape">
 
 </LinearLayout>
