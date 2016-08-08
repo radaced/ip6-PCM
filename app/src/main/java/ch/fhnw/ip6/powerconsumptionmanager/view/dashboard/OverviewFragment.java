@@ -21,6 +21,10 @@ import ch.fhnw.ip6.powerconsumptionmanager.util.helper.DashboardHelper;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
+/**
+ * Displays the consumption, autarchy and selfsupply in summary views / wave loading views and has a horizontal scroll view
+ * that either displays the current state of components or the daily statistics to each component.
+ */
 public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     private static final String TAG = "OverviewFragment";
 
@@ -48,10 +52,12 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Set mode and setup helper instance
         mMode = Mode.NOW;
         mDashboardHelper = DashboardHelper.getInstance();
         mDashboardHelper.initOverviewContext(getContext());
 
+        // Add the summary views / wave loading views to the helper instance and modify them
         mDashboardHelper.addSummaryView(
             getString(R.string.text_autarchy),
             (WaveLoadingView) getView().findViewById(R.id.wlvAutarchy),
@@ -77,6 +83,7 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
             mAppContext.getPCMData().getMaxScaleConsumption()
         );
 
+        // Load the correct fragment into the container
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.dynamic_content_fragment, CurrentValuesFragment.newInstance());
         transaction.commit();
@@ -91,6 +98,7 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.overview_menu, menu);
 
+        // Display the correct options menu depending on the mode
         if(mMode == Mode.DAILY) {
             MenuItem now = menu.findItem(R.id.action_now);
             now.setVisible(false);
@@ -106,6 +114,7 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
     public boolean onOptionsItemSelected(MenuItem item) {
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
+        // Load the according fragment when an options menu item is pressed
         switch (item.getItemId()) {
             case R.id.action_daily:
                 mMode = Mode.NOW;
@@ -143,9 +152,15 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
         }
     }
 
+    /**
+     * Return point when the current data of the PCM has finished loading from the webservice
+     * and now can be displayed/rendered.
+     * @param result Status if the data could be loaded successfully or not
+     */
     @Override
     public void asyncTaskFinished(boolean result) {
         if(result) {
+            // Update all UI elements currently displayed on the overview screen
             mDashboardHelper.updateOverview();
             if(mMode == Mode.NOW) {
                 mDashboardHelper.updateCurrentValues();
@@ -153,6 +168,7 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
                 mDashboardHelper.updateDailyValues();
             }
         } else {
+            // Show an error message
             try {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -170,6 +186,9 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
         }
     }
 
+    /**
+     * Update task to execute every few seconds (depending on settings)
+     */
     private final Runnable updateCurrentPCMData = new Runnable() {
         public void run() {
         new GetCurrentPCMDataAsyncTask(

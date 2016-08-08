@@ -21,6 +21,9 @@ import ch.fhnw.ip6.powerconsumptionmanager.model.PCMComponent;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 import ch.fhnw.ip6.powerconsumptionmanager.util.helper.DashboardHelper;
 
+/**
+ * Displays an arc progress view to every component that shows its current state.
+ */
 public class CurrentValuesFragment extends Fragment {
     private DashboardHelper mDashboardHelper;
 
@@ -32,14 +35,19 @@ public class CurrentValuesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_now, container, false);
 
+        // Setup helper instance
         mDashboardHelper = DashboardHelper.getInstance();
         mDashboardHelper.initCurrentValuesContext(getContext());
         mDashboardHelper.setDynamicLayoutContainer((LinearLayout) view.findViewById(R.id.dynamic_components_container));
         mDashboardHelper.getComponentViews().clear();
 
+        /* On first display of current values fragment setup a view tree observer because maximum height
+         * and width of dynamic content container are not available yet
+         */
         if(mDashboardHelper.getDynamicLayoutContainerWidth() == 0 && mDashboardHelper.getDynamicLayoutContainerHeight() == 0) {
             setupViewTreeObserver(view);
         }
+
         return view;
     }
 
@@ -50,6 +58,7 @@ public class CurrentValuesFragment extends Fragment {
         PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
         LinkedHashMap<String, PCMComponent> componentData = appContext.getPCMData().getComponentData();
 
+        // Generate the UI element to show current data for every component that needs to be displayed in the dashboard
         for (String key : componentData.keySet()) {
             if(componentData.get(key).isDisplayedOnDashboard()) {
                 mDashboardHelper.generateComponentUIElement(
@@ -59,6 +68,7 @@ public class CurrentValuesFragment extends Fragment {
             }
         }
 
+        // Display the UI elements
         mDashboardHelper.displayAnimated();
     }
 
@@ -74,6 +84,7 @@ public class CurrentValuesFragment extends Fragment {
                     dynamicContentContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
 
+                // Set the width and height of the dynamic layout container in the dashboard helper instance
                 mDashboardHelper.setDynamicLayoutContainerWidth(dynamicContentContainer.getWidth());
                 mDashboardHelper.setDynamicLayoutContainerHeight(dynamicContentContainer.getWidth());
 
@@ -85,6 +96,7 @@ public class CurrentValuesFragment extends Fragment {
                 int margins = (int) mDashboardHelper.getDensity() * 8;
                 arcsvLayoutParams.setMargins(margins, margins, margins, margins);
 
+                // Update the width and height of the arc progress views to fill out all available space
                 for (ArcProgressStackView arcsv : mDashboardHelper.getComponentViews().values()) {
                     arcsv.setLayoutParams(arcsvLayoutParams);
                 }

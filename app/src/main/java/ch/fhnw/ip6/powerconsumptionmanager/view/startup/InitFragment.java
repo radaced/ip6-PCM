@@ -15,7 +15,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
- * Fragment shows when the application is started for the first time (initial setting of IP)
+ * Fragment shows when the application is started for the first time (initial setting of IP).
  */
 public class InitFragment extends Fragment {
 
@@ -92,9 +92,9 @@ public class InitFragment extends Fragment {
     }
 
     /**
-     * Error detection for IP
-     * @param ip The textfield where the content needs to be checked
-     * @return true when ip number is valid, false otherwise
+     * Error detection for IP.
+     * @param ip The textfield where the content needs to be checked.
+     * @return True when IP number is valid, false otherwise.
      */
     private boolean isValidIPNumber(EditText ip) {
         // IP field can't be empty

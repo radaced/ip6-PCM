@@ -13,7 +13,9 @@ import ch.fhnw.ip6.powerconsumptionmanager.network.GetConnectedComponentsAsyncTa
 import ch.fhnw.ip6.powerconsumptionmanager.network.GetCurrentPCMDataAsyncTask;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
-
+/**
+ * Shows a loading screen while loading initial data on startup.
+ */
 public class SplashFragment extends Fragment {
     public static SplashFragment newInstance() {
         return new SplashFragment();
@@ -37,6 +39,7 @@ public class SplashFragment extends Fragment {
 
         PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
 
+        // Load the initial data
         new GetConnectedComponentsAsyncTask(appContext, (AsyncTaskCallback) getActivity()).execute();
     }
 }
