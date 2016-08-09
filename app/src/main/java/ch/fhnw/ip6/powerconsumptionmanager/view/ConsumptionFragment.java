@@ -95,56 +95,58 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
     }
 
     /**
-     *  Return point from requests that load the consumption data.
+     * Return point from requests that load the consumption data.
      * @param result Status if the data could be loaded successfully or not.
      * @param opType Type of operation that has completed.
      */
     @Override
     public void asyncTaskFinished(boolean result, String opType) {
-        // Hide the loading layout
-        mLoadingLayout.setVisibility(View.GONE);
+        if(ConsumptionFragment.this.isVisible()) {
+            // Hide the loading layout
+            mLoadingLayout.setVisibility(View.GONE);
 
-        if(result) {
-            // Display the line chart with the consumption data
-            mOnErrorConsumptionDataLayout.setVisibility(View.GONE);
-            mConsumptionDataLayout.setVisibility(View.VISIBLE);
+            if(result) {
+                // Display the line chart with the consumption data
+                mOnErrorConsumptionDataLayout.setVisibility(View.GONE);
+                mConsumptionDataLayout.setVisibility(View.VISIBLE);
 
-            if(!mHasUpdated) {
-                // Set up the whole chart data with the helper class and display it
-                mConsumptionDataHelper.setupLineChartData();
-                mConsumptionDataHelper.displayAnimated();
+                if(!mHasUpdated) {
+                    // Set up the whole chart data with the helper class and display it
+                    mConsumptionDataHelper.setupLineChartData();
+                    mConsumptionDataHelper.displayAnimated();
 
-                // Instantiate the update handler
-                mUpdateHandler = new Handler();
+                    // Instantiate the update handler
+                    mUpdateHandler = new Handler();
 
-                // Define device list adapter parameters
-                int layoutResource = R.layout.list_consumption_device;
-                ArrayList<String> listItems = new ArrayList<>(mAppContext.getPCMData().getComponentData().keySet());
+                    // Define device list adapter parameters
+                    int layoutResource = R.layout.list_consumption_device;
+                    ArrayList<String> listItems = new ArrayList<>(mAppContext.getPCMData().getComponentData().keySet());
 
-                // Set up the device list
-                mListViewDevices.setAdapter(
-                    new ConsumptionDeviceListAdapter(
-                        getActivity(),
-                        layoutResource,
-                        listItems,
-                        mConsumptionDataHelper
-                    )
-                );
+                    // Set up the device list
+                    mListViewDevices.setAdapter(
+                            new ConsumptionDeviceListAdapter(
+                                    getActivity(),
+                                    layoutResource,
+                                    listItems,
+                                    mConsumptionDataHelper
+                            )
+                    );
+                } else {
+                    // Update the chart data and display it
+                    mConsumptionDataHelper.updateLineChartData();
+                    mConsumptionDataHelper.displayNoneAnimated();
+                }
             } else {
-                // Update the chart data and display it
-                mConsumptionDataHelper.updateLineChartData();
-                mConsumptionDataHelper.displayNoneAnimated();
+                // Display an error message to the user
+                mConsumptionDataLayout.setVisibility(View.GONE);
+                mOnErrorConsumptionDataLayout.setVisibility(View.VISIBLE);
             }
-        } else {
-            // Display an error message to the user
-            mConsumptionDataLayout.setVisibility(View.GONE);
-            mOnErrorConsumptionDataLayout.setVisibility(View.VISIBLE);
-        }
 
-        // Instantiate the automatic update handler if needed
-        if(mAppContext.isUpdatingAutomatically() && !mHasUpdated) {
-            mUpdateHandler = new Handler();
-            onResume();
+            // Instantiate the automatic update handler if needed
+            if(mAppContext.isUpdatingAutomatically() && !mHasUpdated) {
+                mUpdateHandler = new Handler();
+                onResume();
+            }
         }
     }
 

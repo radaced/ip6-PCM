@@ -228,9 +228,9 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
     }
 
     /**
-     *
-     * @param result
-     * @param opType
+     * Return point from requests that load the route information from the google maps API.
+     * @param result Status if the data could be loaded successfully or not.
+     * @param opType Type of operation that has completed.
      */
     @Override
     public void asyncTaskFinished(boolean result, String opType) {

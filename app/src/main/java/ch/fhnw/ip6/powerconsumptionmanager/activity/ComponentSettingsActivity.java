@@ -84,7 +84,10 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
 
                 // Generate the json or execute the save action for every setting of this component
                 for (PCMSetting setting : mAppContext.getPCMData().getComponentData().get(mComponentName).getSettings()) {
-                    json = json + setting.executeSaveOrGenerateJson(this) + ",";
+                    String settingJson = setting.executeSaveOrGenerateJson(this);
+                    if(!settingJson.equals("")) {
+                        json = json + setting.executeSaveOrGenerateJson(this) + ",";
+                    }
                 }
 
                 json = json.substring(0, json.length()-1);
@@ -100,8 +103,8 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
 
     /**
      * Return point when the settings of the component have finished loading from the webservice
-     * and now can be displayed/rendered on the activity.
-     * @param result Status if the data could be loaded successfully or not.
+     * and now can be displayed/rendered on the activity or when the settings have been saved.
+     * @param result Status if the data could be loaded/sent successfully or not.
      * @param opType Type of operation that has completed.
      */
     @Override

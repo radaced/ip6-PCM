@@ -88,7 +88,7 @@
     <string name="toast_sync_started">Synchronizing…</string>
     <string name="toast_sync_ended_success">Synchronisation finished</string>
     <string name="toast_sync_ended_error_interrupted">Synchronisation interrupted</string>
-    <string name="toast_sync_ended_error_loading">Synchronisation failed (error building data to synchronize)</string>
+    <string name="toast_sync_ended_error">Synchronisation failed</string>
 
     <!--****** Activity splash screen ******-->
     <string name="title_activity_splash">Power Consumption Manager</string>

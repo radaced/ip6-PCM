@@ -48,7 +48,7 @@ public abstract class PCMSetting {
     /**
      * Calls the save action generates a JSON to save the modified setting.
      * @param context Context of the save action.
-     * @return The generated JSON to save the setting or empty string "" when directly executed.
+     * @return The generated JSON to save the setting or empty string ("") when directly executed.
      */
     public abstract String executeSaveOrGenerateJson(Context context);
 

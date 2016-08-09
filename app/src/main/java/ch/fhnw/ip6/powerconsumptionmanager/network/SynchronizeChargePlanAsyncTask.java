@@ -1,6 +1,8 @@
 package ch.fhnw.ip6.powerconsumptionmanager.network;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -233,8 +235,12 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
         } else {
             if(result) {
                 Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_sync_ended_success), Toast.LENGTH_SHORT).show();
+                // Set no sync is pending after a successful sync
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mAppContext).edit();
+                editor.putBoolean("brChargePlanSyncPending", false);
+                editor.apply();
             } else {
-                Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_sync_ended_error_loading), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mAppContext, mAppContext.getString(R.string.toast_sync_ended_error), Toast.LENGTH_SHORT).show();
             }
         }
     }

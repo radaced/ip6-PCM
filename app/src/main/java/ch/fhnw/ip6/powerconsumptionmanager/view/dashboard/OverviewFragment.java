@@ -177,29 +177,31 @@ public class OverviewFragment extends Fragment implements AsyncTaskCallback {
      */
     @Override
     public void asyncTaskFinished(boolean result, String opType) {
-        if(result) {
-            // Update all UI elements currently displayed on the overview screen
-            mDashboardHelper.updateOverview();
-            if(mMode == Mode.NOW) {
-                mDashboardHelper.updateCurrentValues();
+        if(OverviewFragment.this.isVisible()) {
+            if(result) {
+                // Update all UI elements currently displayed on the overview screen
+                mDashboardHelper.updateOverview();
+                if(mMode == Mode.NOW) {
+                    mDashboardHelper.updateCurrentValues();
+                } else {
+                    mDashboardHelper.updateDailyValues();
+                }
             } else {
-                mDashboardHelper.updateDailyValues();
-            }
-        } else {
-            // Show an error message
-            try {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(
-                            getActivity(),
-                            mAppContext.getString(R.string.toast_dashboard_update_error),
-                            Toast.LENGTH_SHORT
-                        ).show();
-                    }
-                });
-            } catch (NullPointerException e) {
-                Log.e(TAG, "Activity/Fragment destroyed or changed while updating.");
+                // Show an error message
+                try {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(
+                                    getActivity(),
+                                    mAppContext.getString(R.string.toast_dashboard_update_error),
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    });
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "Activity/Fragment destroyed or changed while updating.");
+                }
             }
         }
     }

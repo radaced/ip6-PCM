@@ -87,25 +87,27 @@ public class CostStatisticsFragment extends Fragment implements AsyncTaskCallbac
     }
 
     /**
-     *  Return point from requests that load the cost statistics data.
+     * Return point from requests that load the cost statistics data.
      * @param result Status if the data could be loaded successfully or not.
      * @param opType Type of operation that has completed.
      */
     @Override
     public void asyncTaskFinished(boolean result, String opType) {
-        // Hide the loading layout
-        mLoadingLayout.setVisibility(View.GONE);
+        if(CostStatisticsFragment.this.isVisible()) {
+            // Hide the loading layout
+            mLoadingLayout.setVisibility(View.GONE);
 
-        if(result) {
-            // Display the stacked bar charts with the loaded data
-            mOnErrorCostStatisticsLayout.setVisibility(View.GONE);
-            mCostStatisticsLayout.setVisibility(View.VISIBLE);
+            if (result) {
+                // Display the stacked bar charts with the loaded data
+                mOnErrorCostStatisticsLayout.setVisibility(View.GONE);
+                mCostStatisticsLayout.setVisibility(View.VISIBLE);
 
-            mCostStatisticsHelper.setupStackedBarChartData();
-        } else {
-            // Display an error message to the user
-            mCostStatisticsLayout.setVisibility(View.GONE);
-            mOnErrorCostStatisticsLayout.setVisibility(View.VISIBLE);
+                mCostStatisticsHelper.setupStackedBarChartData();
+            } else {
+                // Display an error message to the user
+                mCostStatisticsLayout.setVisibility(View.GONE);
+                mOnErrorCostStatisticsLayout.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

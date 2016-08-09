@@ -88,7 +88,7 @@
     <string name="toast_sync_started">Synchronisiere…</string>
     <string name="toast_sync_ended_success">Synchronisation beendet</string>
     <string name="toast_sync_ended_error_interrupted">Synchronisation unterbrochen</string>
-    <string name="toast_sync_ended_error_loading">Synchronisation fehlgeschlagen</string>
+    <string name="toast_sync_ended_error">Synchronisation fehlgeschlagen</string>
 
     <!--****** Activity splash screen ******-->
     <string name="title_activity_splash">Eigenverbrauchsmanager</string>
