@@ -78,7 +78,7 @@ public class CalendarInstanceReader {
             String title = cursor.getString(INSTANCE_TITLE);
 
             // Check if tesla trip or not
-            if(!title.equals(mContext.getString(R.string.instance_title))) {
+            if(title == null || !title.equals(mContext.getString(R.string.instance_title))) {
                 continue;
             }
 

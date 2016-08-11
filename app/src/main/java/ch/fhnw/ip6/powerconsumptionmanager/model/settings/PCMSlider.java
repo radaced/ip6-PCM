@@ -93,7 +93,7 @@ public class PCMSlider extends PCMSetting {
             mRangebar.setSeekPinByValue(mPCMValueToRangeBarValue.get(mMinValue));
         }
         // Set the radius of the pin where the selected value is being shown
-        mRangebar.setPinRadius(75);
+        mRangebar.setPinRadius(55);
         // Format the value accordingly
         mRangebar.setFormatter(new IRangeBarFormatter() {
             @Override

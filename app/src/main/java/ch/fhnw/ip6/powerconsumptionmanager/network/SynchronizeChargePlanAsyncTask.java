@@ -63,24 +63,23 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
         mCallbackContext = callbackContext;
     }
 
-    /**
-     * Task is executed in background (necessary because no network activity can be run on the UI- or
-     * main thread) and generates the string for the synchronization.
-     * @param params No params needed.
-     * @return String for the PUT-request.
-     */
     @Override
     protected Boolean doInBackground(Void... params) {
         boolean success = true;
 
         if(mChargePlanData == null) {
-            Calendar calendar = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance(Locale.GERMANY);
+            // Determine from which day on the sync starts
+            int syncStartDay = calendar.get(Calendar.DAY_OF_WEEK) - 2;
+            if(syncStartDay < 0) {
+                syncStartDay += 7;
+            }
+
             CalendarInstanceReader cir = new CalendarInstanceReader(calendar, mAppContext);
 
             // Calculate the lower and upper range to request tesla trips to sync (one week range)
             calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
             calendar.set(Calendar.MILLISECOND, 0);
-            int syncStartDay = calendar.get(Calendar.DAY_OF_WEEK_IN_MONTH) - 1;
             long lowerRangeEnd = calendar.getTimeInMillis();
 
             /* Get all the days that are being synchronized (needed because the keys in the hash map are the
@@ -199,8 +198,8 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
             mJsonString.append("]");
         }
 
-
-        if(!mJsonString.toString().equals("")) {
+        // Only save when the building of the JSON was successful
+        if(!mJsonString.toString().equals("") && success) {
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             RequestBody requestBody = RequestBody.create(JSON, mJsonString.toString());
 
