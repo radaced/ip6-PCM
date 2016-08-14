@@ -243,7 +243,7 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
                     RouteInformation rim = mAppContext.getRouteInformation();
 
                     // Check if a route existed
-                    if (rim.getDistanceText().equals("")) {
+                    if (rim == null || rim.getDistanceText().equals("")) {
                         displayRouteInformation(mInfoRouteInformation, mContext.getString(R.string.text_route_information_no_route), "");
                     } else {
                         displayRouteInformation(

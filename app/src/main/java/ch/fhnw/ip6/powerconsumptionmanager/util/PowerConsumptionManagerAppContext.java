@@ -32,8 +32,8 @@ public class PowerConsumptionManagerAppContext extends Application {
     private String mIPAdress;
 
     // Data
-    private PCMData mPCMData;
-    private RouteInformation mRouteInformation;
+    private volatile PCMData mPCMData;
+    private volatile RouteInformation mRouteInformation;
 
     /***********************
      * GETTERS AND SETTERS *
