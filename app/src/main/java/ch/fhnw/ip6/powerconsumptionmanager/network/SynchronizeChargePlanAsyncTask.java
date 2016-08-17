@@ -110,24 +110,26 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
                 // Check if a calendar instance exists to a day that needs to be synced
                 if (instances.containsKey(dayKeys[i])) {
                     CalendarEntry pem = instances.get(dayKeys[i]);
-                    String[] locations = pem.getEventLocation().split("/");
-                    // Check if an event location has been specified
-                    if (locations.length == 2 && !"".equals(locations[0]) && !"".equals(locations[1])) {
-                        Request request = new Request.Builder()
-                                .url(mAppContext.getString(R.string.googleMaps_Api1) +
-                                        "origin=" + locations[0] +
-                                        "&destination=" + locations[1] +
-                                        mAppContext.getString(R.string.googleMaps_Api2))
-                                .build();
+                    if(pem.getEventLocation() != null) {
+                        String[] locations = pem.getEventLocation().split("/");
+                        // Check if an event location has been specified
+                        if (locations.length == 2 && !"".equals(locations[0]) && !"".equals(locations[1])) {
+                            Request request = new Request.Builder()
+                                    .url(mAppContext.getString(R.string.googleMaps_Api1) +
+                                            "origin=" + locations[0] +
+                                            "&destination=" + locations[1] +
+                                            mAppContext.getString(R.string.googleMaps_Api2))
+                                    .build();
 
-                        try {
-                            Response response = mAppContext.getOkHTTPClient().newCall(request).execute();
-                            if (!RouteProcessor.processRoutes(response, mAppContext)) {
+                            try {
+                                Response response = mAppContext.getOkHTTPClient().newCall(request).execute();
+                                if (!RouteProcessor.processRoutes(response, mAppContext)) {
+                                    success = false;
+                                }
+                            } catch (IOException e) {
+                                Log.e(TAG, "Exception while loading routes data for synchronisation.");
                                 success = false;
                             }
-                        } catch (IOException e) {
-                            Log.e(TAG, "Exception while loading routes data for synchronisation.");
-                            success = false;
                         }
                     }
 
@@ -143,9 +145,14 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
                     if (rim != null) {
                         if (!rim.getDistanceText().equals("")) {
                             String[] withMeasurement = rim.getDistanceText().split(" ");
-                            kilometer = (int) Double.parseDouble(withMeasurement[0]);
+                            // Google API returns distances longer than 999 km as 1,000 km => ignore comma
+                            String fullNumber = withMeasurement[0].replace(",", "");
+                            kilometer = (int) Double.parseDouble(fullNumber);
                         }
                     }
+
+                    // Reset route information
+                    mAppContext.setRouteInformation(null);
 
                     // Build string for one day
                     day = "{" +
@@ -171,6 +178,9 @@ public class SynchronizeChargePlanAsyncTask extends AsyncTask<Void, Void, Boolea
 
                     mWeekToSync[getWeekdayNumber(weekday)] = day;
                 }
+
+                // Reset kilometers
+                kilometer = 0;
             }
 
             for(int i = 0; i < mWeekToSync.length; i++) {

@@ -253,9 +253,6 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                             settingList.add(new PCMTextInfo(dataJsonEntry.getString("Signal"), descTextPairs));
                             break;
 
-                        case "numeric":
-                        /* TODO: Receiving faulty data from the webservice, should also generate a PCMSlider (Zogge Energy Control) */
-                            break;
                         default:
                             break;
                     }

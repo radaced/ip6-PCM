@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.activity.SplashScreenActivity;
+import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
  * This fragment is shown when no connection to the PCM could be established and no initial data could be loaded.
@@ -41,6 +42,10 @@ public class OfflineFragment extends Fragment {
         switch (item.getItemId()) {
             // Try and restart the application
             case R.id.action_retry:
+                // Reset online status
+                PowerConsumptionManagerAppContext appContext = (PowerConsumptionManagerAppContext) getActivity().getApplicationContext();
+                appContext.setOnline(true);
+
                 Intent intent = new Intent(getActivity(), SplashScreenActivity.class);
                 intent.putExtra("status_info", getString(R.string.text_splash_retry_connecting));
                 getActivity().startActivity(intent);

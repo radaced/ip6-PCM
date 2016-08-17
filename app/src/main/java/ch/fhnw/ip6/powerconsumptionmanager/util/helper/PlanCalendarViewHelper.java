@@ -173,7 +173,7 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
 
                     // Fill layout with stored values
                     // Description
-                    if (!pem.getDescription().equals("")) {
+                    if (pem.getDescription() != null && !pem.getDescription().equals("")) {
                         mInfoDescription.setText(pem.getDescription());
                     } else {
                         mInfoDescription.setText(mContext.getString(R.string.text_information_no_description));
@@ -186,19 +186,24 @@ public class PlanCalendarViewHelper implements AsyncTaskCallback {
                     /* Display route and load distance and duration to reach destination between two given
                      * locations from the instance
                      */
-                    String[] locations = pem.getEventLocation().split("/");
-                    String route = "-";
-                    if (locations.length == 2 && !"".equals(locations[0]) && !"".equals(locations[1])) {
-                        route = locations[0].trim() +
-                                " " +
-                                mContext.getString(R.string.text_route_information_route_to) +
-                                " " +
-                                locations[1].trim();
-                        calculateDistance(locations[0].trim(), locations[1].trim());
+                    if(pem.getEventLocation() != null) {
+                        String[] locations = pem.getEventLocation().split("/");
+                        String route = "-";
+                        if (locations.length == 2 && !"".equals(locations[0]) && !"".equals(locations[1])) {
+                            route = locations[0].trim() +
+                                    " " +
+                                    mContext.getString(R.string.text_route_information_route_to) +
+                                    " " +
+                                    locations[1].trim();
+                            calculateDistance(locations[0].trim(), locations[1].trim());
+                        } else {
+                            displayRouteInformation(mInfoRouteInformation, mContext.getString(R.string.text_route_information_no_data), "");
+                        }
+                        mInfoRoute.setText(route);
                     } else {
                         displayRouteInformation(mInfoRouteInformation, mContext.getString(R.string.text_route_information_no_data), "");
                     }
-                    mInfoRoute.setText(route);
+
 
                     builder.setPositiveButton(mContext.getString(R.string.dialog_button_close), new DialogInterface.OnClickListener() {
                         @Override

@@ -113,8 +113,6 @@ public class PCMSlider extends PCMSetting {
 
     @Override
     public String executeSaveOrGenerateJson(Context context) {
-        // String builder to build JSON
-        StringBuilder jsonStringBuilder = new StringBuilder(1000);
         String minValue, maxValue;
         String isRangeThenMax = "";
 
@@ -129,7 +127,7 @@ public class PCMSlider extends PCMSetting {
                 minValue = mRangebar.getLeftPinValue();
                 maxValue = mRangebar.getRightPinValue();
             }
-            isRangeThenMax = ", \"Max\": \"" + maxValue  + "\"";
+            isRangeThenMax = ", \"Max\": " + maxValue;
         } else {
             if (mStartsNegative) {
                 Float minFloat = mRangeBarValueToPCMValue.get(Float.parseFloat(mRangebar.getRightPinValue()));
@@ -142,10 +140,10 @@ public class PCMSlider extends PCMSetting {
         // Build JSON with the new values
         String sliderData = "{" +
                             "\"Signal\": \"" + super.getName() + "\"," +
-                            "\"Min\": \"" + minValue + "\"" +
+                            "\"Min\": " + minValue  +
                             isRangeThenMax +
                             "}";
 
-        return jsonStringBuilder.append(sliderData).toString();
+        return sliderData;
     }
 }

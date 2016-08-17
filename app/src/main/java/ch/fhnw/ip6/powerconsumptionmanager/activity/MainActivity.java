@@ -199,8 +199,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Reset the flags for when settings have changed or if the app has connection to the PCM
+        // Reset the flag for when settings have changed
         SETTINGS_UPDATED = false;
-        mAppContext.setOnline(true);
     }
 }

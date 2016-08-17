@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 public class PCMData {
     // Difference in seconds from lab view timestamp (01.01.1904) to unix timestamp (01.01.1970)
-    public static final long TIMESTAMP_DIFFERENCE = 2082844800;
+    private static final long TIMESTAMP_DIFFERENCE = 2082844800;
 
     private double mAutarchy;
     private double mSelfsupply;

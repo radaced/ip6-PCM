@@ -68,9 +68,10 @@ public class GetConnectedComponentsAsyncTask extends AsyncTask<Void, Void, Boole
         super.onPostExecute(result);
         // Populate the new PCM data object onto the application context to fill it further with data from the PCM later on
         mAppContext.setPCMData(mPCMData);
-        mCallbackContext.asyncTaskFinished(result, mAppContext.OP_TYPES[0]);
         // Directly load the current data of all connected components after this task (initial data)
         new GetCurrentPCMDataAsyncTask(mAppContext, mCallbackContext).execute();
+
+        mCallbackContext.asyncTaskFinished(result, mAppContext.OP_TYPES[0]);
     }
 
     /**

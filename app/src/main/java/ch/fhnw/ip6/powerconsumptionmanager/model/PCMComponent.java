@@ -1,5 +1,8 @@
 package ch.fhnw.ip6.powerconsumptionmanager.model;
 
+import android.content.Context;
+import android.widget.LinearLayout;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +40,17 @@ public class PCMComponent {
         mCost = 0;
         mScaleMinArc = 0;
         mScaleMaxArc = 0;
+    }
+
+    /**
+     * Renders all settings of this component into a linear layout as container.
+     * @param context Context where the settings need to be rendered.
+     * @param layoutContainer The layout container for the settings layouts.
+     */
+    public void renderSettings(Context context, LinearLayout layoutContainer) {
+        for(PCMSetting setting : mSettings) {
+            setting.inflateLayout(context, layoutContainer);
+        }
     }
 
     /**
