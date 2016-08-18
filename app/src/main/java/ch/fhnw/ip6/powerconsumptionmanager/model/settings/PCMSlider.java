@@ -92,8 +92,16 @@ public class PCMSlider extends PCMSetting {
         } else {
             mRangebar.setSeekPinByValue(mPCMValueToRangeBarValue.get(mMinValue));
         }
+
         // Set the radius of the pin where the selected value is being shown
-        mRangebar.setPinRadius(55);
+        if(density > 2) { //xxhdpi and xxxhdpi
+            mRangebar.setPinRadius(55);
+        } else if(density > 1) { //xhdpi and hdpi
+            mRangebar.setPinRadius(30);
+        } else { //mdpi and ldpi
+            mRangebar.setPinRadius(15);
+        }
+
         // Format the value accordingly
         mRangebar.setFormatter(new IRangeBarFormatter() {
             @Override
