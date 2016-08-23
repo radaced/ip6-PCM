@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--****** PowerConsumptionManager Software ******-->
-    <string name="webservice_getConsumptionData">8001/EM/App/getData</string>
-    <string name="webservice_getComponents">8001/EM/App/getComponents</string>
-    <string name="webservice_getComponentsAndTypes">8001/EM/App/getComponentsAndTypes</string>
-    <string name="webservice_getChargePlan">8001/EM/App/getLadeplan</string>
-    <string name="webservice_putChargePlan">8001/EM/App/putLadePlan</string>
-    <string name="webservice_getCurrentStatistics">8001/EM/App/getCurrentStatistics</string>
-    <string name="webservice_getCurrentData">8001/EM/App/getCurrentData</string>
-    <string name="webservice_getCostStatisticsGeneral">8001/EM/App/getCostStatisticsGeneral</string>
-    <string name="webservice_getCostStatisticsComponents">8001/EM/App/getCostStatisticsComponents</string>
-    <string name="webservice_getComfortSettings">8001/EM/App/getComfortSettings?Name=</string>
-    <string name="webservice_putComfortSettings">8001/EM/App/putComfortSettings?Name=</string>
-    <string name="webservice_getProgramSettings">8001/EM/App/getProgramSettings?Name=</string>
-    <string name="webservice_putProgramSettings">8001/EM/App/putProgramSettings?Name=</string>
-    <string name="webservice_putProgrammEnde">8001/EM/App/putProgrammEnde?Name=</string>
-    <string name="webservice_putNiedertarif">8001/EM/App/putNiedertarif?Name=</string>
-    <string name="webservice_getStatusEmobil">8001/EM/App/getStatusEmobil</string>
+    <string name="webservice_getConsumptionData">8002/EM/App/getData</string>
+    <string name="webservice_getComponents">8002/EM/App/getComponents</string>
+    <string name="webservice_getComponentsAndTypes">8002/EM/App/getComponentsAndTypes</string>
+    <string name="webservice_getChargePlan">8002/EM/App/getLadeplan</string>
+    <string name="webservice_putChargePlan">8002/EM/App/putLadePlan</string>
+    <string name="webservice_getCurrentStatistics">8002/EM/App/getCurrentStatistics</string>
+    <string name="webservice_getCurrentData">8002/EM/App/getCurrentData</string>
+    <string name="webservice_getCostStatisticsGeneral">8002/EM/App/getCostStatisticsGeneral</string>
+    <string name="webservice_getCostStatisticsComponents">8002/EM/App/getCostStatisticsComponents</string>
+    <string name="webservice_getComfortSettings">8002/EM/App/getComfortSettings?Name=</string>
+    <string name="webservice_putComfortSettings">8002/EM/App/putComfortSettings?Name=</string>
+    <string name="webservice_getProgramSettings">8002/EM/App/getProgramSettings?Name=</string>
+    <string name="webservice_putProgramSettings">8002/EM/App/putProgramSettings?Name=</string>
+    <string name="webservice_putProgrammEnde">8002/EM/App/putProgrammEnde?Name=</string>
+    <string name="webservice_putNiedertarif">8002/EM/App/putNiedertarif?Name=</string>
+    <string name="webservice_getStatusEmobil">8002/EM/App/getStatusEmobil</string>
 
     <!--****** Google ******-->
     <string name="googleMaps_Api1">http://maps.googleapis.com/maps/api/directions/json?</string>
