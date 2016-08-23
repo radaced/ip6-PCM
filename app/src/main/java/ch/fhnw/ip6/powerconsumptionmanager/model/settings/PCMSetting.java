@@ -52,19 +52,21 @@ public abstract class PCMSetting {
         tvSettingDescription.setTextColor(ContextCompat.getColor(context, R.color.colorTextPrimary));
         tvSettingDescription.setLayoutParams(tvLayoutParams);
 
-        // Add the label to the main layout
-        llSettingDescriptionContainer.addView(tvSettingDescription);
-
         if(mName.equals("Komfort")) {
             TextView tvSettingDescription2 = new TextView(context);
             tvSettingDescription2.setText(context.getString(R.string.text_eco));
             tvSettingDescription2.setTextSize(18);
-            tvSettingDescription2.setGravity(Gravity.END);
+            tvSettingDescription2.setGravity(Gravity.START);
             tvSettingDescription2.setTextColor(ContextCompat.getColor(context, R.color.colorTextPrimary));
             tvSettingDescription2.setLayoutParams(tvLayoutParams);
 
+            tvSettingDescription.setGravity(Gravity.END);
+
             llSettingDescriptionContainer.addView(tvSettingDescription2);
         }
+
+        // Add the label to the main layout
+        llSettingDescriptionContainer.addView(tvSettingDescription);
 
         container.addView(llSettingDescriptionContainer);
     }
