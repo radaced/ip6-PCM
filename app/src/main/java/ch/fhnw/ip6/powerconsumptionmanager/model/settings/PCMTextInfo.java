@@ -30,7 +30,7 @@ public class PCMTextInfo extends PCMSetting {
     }
 
     @Override
-    public void inflateLayout(Context context, LinearLayout container) {
+    public void inflateLayout(Context context, LinearLayout container) throws IllegalArgumentException {
         super.inflateLayout(context, container);
 
         float density = context.getResources().getDisplayMetrics().density;

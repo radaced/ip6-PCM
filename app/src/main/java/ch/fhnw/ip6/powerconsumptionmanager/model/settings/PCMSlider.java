@@ -52,8 +52,13 @@ public class PCMSlider extends PCMSetting {
     }
 
     @Override
-    public void inflateLayout(Context context, LinearLayout container) {
+    public void inflateLayout(Context context, LinearLayout container) throws IllegalArgumentException {
         super.inflateLayout(context, container);
+
+        if(mMinValue > mMaxValue)
+            throw new IllegalArgumentException("Max value higher than min value.");
+        if(mMinScale > mMaxScale || mMinValue < mMinScale || mMaxValue > mMaxScale)
+            throw new IllegalArgumentException("Scale is not compatible with value(s).");
 
         // Defines that the number displayed in the pin of the range bar has minimum one digit after the comma
         final NumberFormat numberFormat = NumberFormat.getInstance();

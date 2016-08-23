@@ -125,8 +125,11 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
         if(opType.equals(mAppContext.OP_TYPES[0])) {
             // Inflate all the layouts of the loaded settings for the component or display an error message
             if(result) {
-                mAppContext.getPCMData().getComponentData().get(mComponentName).renderSettings(this, mSettingsContainer);
-                mComponentSettingsLayout.setVisibility(View.VISIBLE);
+                if(mAppContext.getPCMData().getComponentData().get(mComponentName).renderSettings(this, mSettingsContainer)) {
+                    mComponentSettingsLayout.setVisibility(View.VISIBLE);
+                } else {
+                    mOnErrorComponentSettingsLayout.setVisibility(View.VISIBLE);
+                }
             } else {
                 mOnErrorComponentSettingsLayout.setVisibility(View.VISIBLE);
             }

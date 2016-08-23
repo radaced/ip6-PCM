@@ -32,14 +32,14 @@ public class PCMSwitch extends PCMSetting {
     }
 
     @Override
-    public void inflateLayout(Context context, LinearLayout container) {
+    public void inflateLayout(Context context, LinearLayout container) throws IllegalArgumentException {
         float density = context.getResources().getDisplayMetrics().density;
 
         LinearLayout.LayoutParams llLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        llLayoutParams.setMargins(0, 0, 0, (int) (15 * density));
+        llLayoutParams.setMargins(0, 0, 0, (int) (MARGIN_BOTTOM * density));
 
         // Horizontal container to display setting name and switch next to each other (1)
         LinearLayout llHorizontal = new LinearLayout(context);

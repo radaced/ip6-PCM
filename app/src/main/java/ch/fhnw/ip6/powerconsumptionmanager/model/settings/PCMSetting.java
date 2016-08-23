@@ -12,7 +12,7 @@ import ch.fhnw.ip6.powerconsumptionmanager.R;
  * Abstract class for all the different PCM settings.
  */
 public abstract class PCMSetting {
-    protected static final int MARGIN_BOTTOM = 15;
+    protected static final int MARGIN_BOTTOM = 30;
 
     private String mName;
 
@@ -29,7 +29,7 @@ public abstract class PCMSetting {
      * @param context Context of the to be generated widget.
      * @param container The main layout container where the generated UI elements per setting are added.
      */
-    public void inflateLayout(Context context, LinearLayout container) {
+    public void inflateLayout(Context context, LinearLayout container) throws IllegalArgumentException {
         LinearLayout.LayoutParams llSettingDescriptionContainerLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT

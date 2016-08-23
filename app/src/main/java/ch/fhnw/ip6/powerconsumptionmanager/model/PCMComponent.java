@@ -1,6 +1,7 @@
 package ch.fhnw.ip6.powerconsumptionmanager.model;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.LinearLayout;
 
 import org.json.JSONArray;
@@ -15,6 +16,8 @@ import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSetting;
  * Represents a component that is connected to the PCM.
  */
 public class PCMComponent {
+    private static final String TAG = "PCMComponent";
+
     private String mName;
     private double mPower;
     private double mEnergy;
@@ -49,10 +52,19 @@ public class PCMComponent {
      * @param context Context where the settings need to be rendered.
      * @param layoutContainer The layout container for the settings layouts.
      */
-    public void renderSettings(Context context, LinearLayout layoutContainer) {
-        for(PCMSetting setting : mSettings) {
-            setting.inflateLayout(context, layoutContainer);
+    public boolean renderSettings(Context context, LinearLayout layoutContainer) {
+        boolean success = true;
+
+        try {
+            for(PCMSetting setting : mSettings) {
+                setting.inflateLayout(context, layoutContainer);
+            }
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, e.getMessage());
+            success = false;
         }
+
+        return success;
     }
 
     /**

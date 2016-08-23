@@ -2,7 +2,6 @@ package ch.fhnw.ip6.powerconsumptionmanager.model.settings;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -34,7 +33,7 @@ public class PCMTimer extends PCMSetting {
     }
 
     @Override
-    public void inflateLayout(Context context, LinearLayout container) {
+    public void inflateLayout(Context context, LinearLayout container) throws IllegalArgumentException {
         super.inflateLayout(context, container);
 
         float density = context.getResources().getDisplayMetrics().density;
