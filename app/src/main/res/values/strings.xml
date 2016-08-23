@@ -12,8 +12,8 @@
     <!--****** Activity main activity ******-->
     <string name="drawer_header">Power Consumption Manager</string>
     <string name="drawer_menu1">Overview</string>
-    <string name="drawer_menu2">Connected devices</string>
-    <string name="drawer_menu3">Consumption data</string>
+    <string name="drawer_menu2">Automatic</string>
+    <string name="drawer_menu3">Power chart</string>
     <string name="drawer_menu4">Cost statistics</string>
     <string name="drawer_menu5">Settings</string>
     <string name="drawer_open">Opened navigation drawer</string>
@@ -114,6 +114,9 @@
     <string name="toast_error_save_component_settings_status">Error while saving component settings</string>
     <string name="dialog_button_close">Close</string>
 
+    <!--****** Setting PCMSetting ****** -->
+    <string name="text_eco">Eco</string>
+    
     <!--****** Setting PCMPlan ****** -->
     <array name="weekdays">
         <item>Mo</item>
@@ -132,6 +135,14 @@
     <string name="text_plugged_true">Yes</string>
     <string name="text_plugged_false">No</string>
     <string name="text_charge_state_emobil">Charge state of Emobil</string>
+
+    <!--****** Setting PCMPlan ****** -->
+    <string name="text_automatic">Automatic</string>
+
+    <!--****** Setting PCMSlider ****** -->
+    <string name="text_value">Value:</string>
+    <string name="text_min">Min:</string>
+    <string name="text_max">Max:</string>
 
     <!--****** Calendar broadcast receiver ******-->
     <string name="toast_br_sync_success">Synchronisation with PCM finished</string>

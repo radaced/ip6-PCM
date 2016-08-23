@@ -22,6 +22,8 @@ public class PutComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
     private PowerConsumptionManagerAppContext mAppContext;
     private AsyncTaskCallback mCallbackContext;
     private String mJsonString;
+    private String mNiedertarifJson;
+    private String mProgrammEndeJson;
     private String mComponentName;
 
     /**
@@ -31,35 +33,73 @@ public class PutComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
      * @param json The JSON to send via PUT-request.
      * @param component The component of which the settings are being saved.
      */
-    public PutComponentSettingsAsyncTask(PowerConsumptionManagerAppContext appContext, AsyncTaskCallback callbackContext, String json, String component) {
+    public PutComponentSettingsAsyncTask(PowerConsumptionManagerAppContext appContext,
+                                         AsyncTaskCallback callbackContext,
+                                         String json,
+                                         String niedertarifJson,
+                                         String programmEndeJson,
+                                         String component)
+    {
         mAppContext = appContext;
         mCallbackContext = callbackContext;
         mJsonString = json;
+        mNiedertarifJson = niedertarifJson;
+        mProgrammEndeJson = programmEndeJson;
         mComponentName = component;
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        boolean success;
-
-        /* TODO: Saving settings only works for putProgramSettings yet (Zogg Energy Control)*/
-        String[] jsonParts = mJsonString.split("\\[\\[ProgramSettings\\]\\]");
+        boolean success = true;
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        RequestBody requestBody = RequestBody.create(JSON, jsonParts[1].substring(0, jsonParts[1].length()-1));
 
-        // Create the PUT-request
-        Request request = new Request.Builder()
-                .url("http://" + mAppContext.getIPAdress() + ":" + mAppContext.getString(R.string.webservice_putProgramSettings) + mComponentName)
-                .put(requestBody)
-                .build();
+        Request requestComfortSettings = null, requestProgrammEnde = null, requestNiedertarif = null;
+
+        if(!mJsonString.equals("]")) {
+            RequestBody requestBody = RequestBody.create(JSON, mJsonString);
+
+            requestComfortSettings = new Request.Builder()
+                    .url("http://" + mAppContext.getIPAdress() + ":" + mAppContext.getString(R.string.webservice_putComfortSettings) + mComponentName)
+                    .put(requestBody)
+                    .build();
+        }
+
+        if(!mNiedertarifJson.equals("")) {
+            RequestBody requestBodyNiedertarif = RequestBody.create(JSON, mNiedertarifJson);
+
+            requestNiedertarif = new Request.Builder()
+                    .url("http://" + mAppContext.getIPAdress() + ":" + mAppContext.getString(R.string.webservice_putNiedertarif) + mComponentName)
+                    .put(requestBodyNiedertarif)
+                    .build();
+        }
+
+        if(!mProgrammEndeJson.equals("")) {
+            RequestBody requestBodyProgrammEnde = RequestBody.create(JSON, mProgrammEndeJson);
+
+            requestProgrammEnde = new Request.Builder()
+                    .url("http://" + mAppContext.getIPAdress() + ":" + mAppContext.getString(R.string.webservice_putProgrammEnde) + mComponentName)
+                    .put(requestBodyProgrammEnde)
+                    .build();
+        }
 
         try {
             // Execute request
-            Response response = mAppContext.getOkHTTPClient().newCall(request).execute();
-            success = response.isSuccessful();
+            Response response;
+            if(requestComfortSettings != null) {
+                response = mAppContext.getOkHTTPClient().newCall(requestComfortSettings).execute();
+                success = response.isSuccessful();
+            }
+            if(success && requestNiedertarif != null) {
+                response = mAppContext.getOkHTTPClient().newCall(requestNiedertarif).execute();
+                success = response.isSuccessful();
+            }
+            if(success && requestProgrammEnde != null) {
+                response = mAppContext.getOkHTTPClient().newCall(requestProgrammEnde).execute();
+                success = response.isSuccessful();
+            }
         } catch (IOException e) {
-            Log.e(TAG, "Exception while saving program settings data with PUT-request.");
+            Log.e(TAG, "Exception while saving settings data with PUT-request.");
             success = false;
         }
 

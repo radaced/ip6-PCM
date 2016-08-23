@@ -10,10 +10,6 @@
             android:title="@string/drawer_menu1"
             android:checked="true" />
         <item
-            android:id="@+id/nav_connected_devices"
-            android:icon="@mipmap/ic_connected_device"
-            android:title="@string/drawer_menu2" />
-        <item
             android:id="@+id/nav_consumption_data"
             android:icon="@mipmap/ic_chart"
             android:title="@string/drawer_menu3" />
@@ -21,6 +17,10 @@
             android:id="@+id/nav_cost_statistic"
             android:icon="@mipmap/ic_cost_statistic"
             android:title="@string/drawer_menu4" />
+        <item
+            android:id="@+id/nav_connected_devices"
+            android:icon="@mipmap/ic_connected_device"
+            android:title="@string/drawer_menu2" />
     </group>
     <group
         android:id="@+id/group_advanced_menu"

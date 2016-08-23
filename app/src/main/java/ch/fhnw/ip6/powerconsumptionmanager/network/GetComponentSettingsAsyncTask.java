@@ -61,7 +61,6 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
     protected Boolean doInBackground(Void... params) {
         // Flags that determine if the data could be loaded successfully or not
         boolean successComfortSettings;
-        boolean successProgramSettings;
 
         /* Build two requests (one for getting the comfortSettings and one for the programSettings.
          * TODO: Get all settings from one request (Zogg Energy Control)
@@ -92,21 +91,8 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
             successComfortSettings = false;
         }
 
-        try {
-            // Make the second request for the programSettings and process the response
-            response = mAppContext.getOkHTTPClient().newCall(programSettings).execute();
-            if(!response.isSuccessful()) {
-                Log.e(TAG, "Response for program settings of " + mComponentName + " not successful.");
-                return false;
-            }
-            successProgramSettings = handleProgramSettingsResponse(response, settingList);
-        } catch (IOException e) {
-            Log.e(TAG, "Exception while loading program settings of " + mComponentName + ".");
-            successProgramSettings = false;
-        }
-
         // Request the charge plan data if necessary
-        if(mRequestChargePlanData && successComfortSettings && successProgramSettings) {
+        if(mRequestChargePlanData && successComfortSettings) {
             Request chargePlanData = new Request.Builder()
                 .url(mURL + mAppContext.getString(R.string.webservice_getChargePlan))
                 .build();
@@ -125,7 +111,7 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
         }
 
         // Request the status of the emobil if necessary
-        if(mRequestStatusEmobil && successComfortSettings && successProgramSettings) {
+        if(mRequestStatusEmobil && successComfortSettings) {
             Request emobilStatus = new Request.Builder()
                     .url(mURL + mAppContext.getString(R.string.webservice_getStatusEmobil))
                     .build();
@@ -143,7 +129,7 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
             }
         }
 
-        return successComfortSettings && successProgramSettings;
+        return successComfortSettings;
     }
 
     @Override
@@ -217,10 +203,17 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                         case "uhrzeit":
                             // TODO: Currently no data (only type) delivered over the webservice (Zogg Energy Control)
                             int hour = 10; int minute = 25;
+                            boolean automatic = false;
+                            if(dataJsonEntry.has("Max")) {
+                                int fullTime = dataJsonEntry.getInt("Max");
+                                hour = fullTime / 3600;
+                                minute = (fullTime % 3600) / 60;
+                            }
+                            if(dataJsonEntry.has("isRange")) { automatic = dataJsonEntry.getBoolean("isRange"); }
                             if(dataJsonEntry.has("hour")) { hour = dataJsonEntry.getInt("hour"); }
                             if(dataJsonEntry.has("minute")) { minute = dataJsonEntry.getInt("minute"); }
                             // Add a new timer setting to the settings list
-                            settingList.add(new PCMTimer(dataJsonEntry.getString("Signal"), hour, minute));
+                            settingList.add(new PCMTimer(dataJsonEntry.getString("Signal"), hour, minute, automatic));
                             break;
 
                         /* TODO: Not dynamically implemented yet (Zogg Energy Control)
@@ -233,6 +226,7 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
                             String textOn = "", textOff = ""; boolean isOn = true;
                             if(dataJsonEntry.has("textOn")) { textOn = dataJsonEntry.getString("textOn"); }
                             if(dataJsonEntry.has("textOff")) { textOff = dataJsonEntry.getString("textOff"); }
+                            if(dataJsonEntry.has("Min")) { isOn = dataJsonEntry.getInt("Min") != 0; }
                             if(dataJsonEntry.has("isOn")) { isOn = dataJsonEntry.getBoolean("isOn"); }
                             // Add a new switch setting to the settings list
                             settingList.add(new PCMSwitch(dataJsonEntry.getString("Signal"), textOn, textOff, isOn));
@@ -260,29 +254,6 @@ public class GetComponentSettingsAsyncTask extends AsyncTask<Void, Void, Boolean
             }
         } catch (JSONException e) {
             Log.e(TAG, "JSON exception while processing comfort settings.");
-            success = false;
-        }
-
-        return success;
-    }
-
-    /**
-     * Processes the response of the program settings request.
-     * @param response Response of the program settings request.
-     * @param settingList The list of settings for the selected component.
-     * @return State if the response could be processed successfully.
-     * @throws IOException
-     */
-    public boolean handleProgramSettingsResponse(Response response, List<PCMSetting> settingList) throws IOException {
-        boolean success = true;
-
-        try {
-            JSONObject dataJson = new JSONObject(response.body().string());
-            boolean lowerRate = dataJson.getBoolean("Niedertarif");
-            // Add a Niedertarif switch to every setting (currently implemented like this by Zogg Energy Control)
-            settingList.add(new PCMSwitch("Niedertarif", "", "", lowerRate));
-        } catch (JSONException e) {
-            Log.e(TAG, "JSON exception while processing program settings.");
             success = false;
         }
 

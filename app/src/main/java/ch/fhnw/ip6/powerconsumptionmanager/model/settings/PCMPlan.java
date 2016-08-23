@@ -141,10 +141,18 @@ public class PCMPlan extends PCMSetting {
         );
         npLayoutParams.gravity = Gravity.CENTER;
 
+        Calendar cal = Calendar.getInstance();
+        int tomorrow = cal.get(Calendar.DAY_OF_WEEK) - 1;
+        if(tomorrow < 0) {
+            tomorrow += 7;
+        }
+        mDayIndex = tomorrow;
+
         NumberPicker npWeekdays = new NumberPicker(context);
         npWeekdays.setMinValue(0);
         npWeekdays.setMaxValue(6);
         npWeekdays.setDisplayedValues(context.getResources().getStringArray(R.array.weekdays));
+        npWeekdays.setValue(mDayIndex);
         npWeekdays.setLayoutParams(npLayoutParams);
 
         // Add to horizontal container (1)

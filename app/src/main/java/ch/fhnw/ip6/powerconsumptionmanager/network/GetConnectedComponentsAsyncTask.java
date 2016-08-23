@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -34,7 +35,7 @@ public class GetConnectedComponentsAsyncTask extends AsyncTask<Void, Void, Boole
     public GetConnectedComponentsAsyncTask(PowerConsumptionManagerAppContext appContext, AsyncTaskCallback callbackContext) {
         mAppContext = appContext;
         mCallbackContext = callbackContext;
-        mURL = "http://" + mAppContext.getIPAdress() + ":" + mAppContext.getString(R.string.webservice_getComponents);
+        mURL = "http://" + mAppContext.getIPAdress() + ":" + mAppContext.getString(R.string.webservice_getComponentsAndTypes);
         // Create new PCM data object (base structure for PCM data)
         mPCMData = new PCMData();
     }
@@ -88,8 +89,10 @@ public class GetConnectedComponentsAsyncTask extends AsyncTask<Void, Void, Boole
 
             // Get all component names from the response and save them as PCMComponent objects in the PCMData base structure
             for(int i = 0; i < componentsJson.length(); i++) {
-                String component = componentsJson.getString(i);
-                mPCMData.getComponentData().put(component, new PCMComponent(component));
+                JSONObject componentEntry = componentsJson.getJSONObject(i);
+                String componentName = componentEntry.getString("Name");
+                Boolean componentHasSettings = componentEntry.getBoolean("Schalten");
+                mPCMData.getComponentData().put(componentName, new PCMComponent(componentName, componentHasSettings));
             }
         } catch (JSONException e) {
             Log.e(TAG, "JSON exception while processing component data.");

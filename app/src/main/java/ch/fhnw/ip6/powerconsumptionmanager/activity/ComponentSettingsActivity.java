@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSetting;
+import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMSwitch;
+import ch.fhnw.ip6.powerconsumptionmanager.model.settings.PCMTimer;
 import ch.fhnw.ip6.powerconsumptionmanager.network.AsyncTaskCallback;
 import ch.fhnw.ip6.powerconsumptionmanager.network.GetComponentSettingsAsyncTask;
 import ch.fhnw.ip6.powerconsumptionmanager.network.PutComponentSettingsAsyncTask;
@@ -79,13 +81,20 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
                 break;
             // Save the settings
             case R.id.action_save_settings:
+                String niedertarifJson = "";
+                String programmEndeJson = "";
                 String json = "[";
                 Toast.makeText(this, getString(R.string.toast_save_component_settings_info), Toast.LENGTH_SHORT).show();
 
                 // Generate the json or execute the save action for every setting of this component
                 for (PCMSetting setting : mAppContext.getPCMData().getComponentData().get(mComponentName).getSettings()) {
                     String settingJson = setting.executeSaveOrGenerateJson(this);
-                    if(!settingJson.equals("")) {
+
+                    if(setting instanceof PCMTimer) {
+                        programmEndeJson = programmEndeJson + settingJson;
+                    } else if (setting instanceof PCMSwitch) {
+                        niedertarifJson = niedertarifJson + settingJson;
+                    } else if (!settingJson.equals("")) {
                         json = json + setting.executeSaveOrGenerateJson(this) + ",";
                     }
                 }
@@ -94,7 +103,7 @@ public class ComponentSettingsActivity extends AppCompatActivity implements Asyn
                 json = json + "]";
 
                 // Save the settings
-                new PutComponentSettingsAsyncTask(mAppContext, this, json, mComponentName).execute();
+                new PutComponentSettingsAsyncTask(mAppContext, this, json, niedertarifJson, programmEndeJson, mComponentName).execute();
                 break;
         }
 

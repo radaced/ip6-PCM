@@ -10,10 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import ch.fhnw.ip6.powerconsumptionmanager.R;
 import ch.fhnw.ip6.powerconsumptionmanager.activity.ComponentSettingsActivity;
 import ch.fhnw.ip6.powerconsumptionmanager.adapter.ConnectedDeviceListAdapter;
+import ch.fhnw.ip6.powerconsumptionmanager.model.PCMComponent;
 import ch.fhnw.ip6.powerconsumptionmanager.util.PowerConsumptionManagerAppContext;
 
 /**
@@ -41,7 +43,12 @@ public class ConnectedDevicesFragment extends ListFragment {
 
         layoutResource = R.layout.list_connected_device;
         // Create a list of all connected devices with their name
-        mComponentNamesList = new ArrayList<>(appContext.getPCMData().getComponentData().keySet());
+        mComponentNamesList = new ArrayList<>();
+        for (PCMComponent component : appContext.getPCMData().getComponentData().values()) {
+            if(component.hasSettings()) {
+                mComponentNamesList.add(component.getName());
+            }
+        }
 
         // Setup the list
         lvConnectedDevices.setAdapter(

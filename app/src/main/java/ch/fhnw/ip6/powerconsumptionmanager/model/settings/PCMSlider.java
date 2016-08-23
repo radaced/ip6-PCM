@@ -1,13 +1,18 @@
 package ch.fhnw.ip6.powerconsumptionmanager.model.settings;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.appyvet.rangebar.IRangeBarFormatter;
 import com.appyvet.rangebar.RangeBar;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
+
+import ch.fhnw.ip6.powerconsumptionmanager.R;
 
 /**
  * Represents a slider with one or to thumbs as a setting from the PCM.
@@ -21,6 +26,7 @@ public class PCMSlider extends PCMSetting {
     private HashMap<Float, Float> mPCMValueToRangeBarValue = new HashMap<>();
     private HashMap<Float, Float> mRangeBarValueToPCMValue = new HashMap<>();
     private RangeBar mRangebar;
+    private TextView tvValue1, tvValue2;
 
     /**
      * Constructor to create a new slider setting.
@@ -59,7 +65,6 @@ public class PCMSlider extends PCMSetting {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 (int) (80 * density)
         );
-        rbLayoutParams.setMargins(0, 0, 0, (int) (MARGIN_BOTTOM * density));
 
         /* Use this constructor new Rangebar(context, attributeset) specifically, otherwise an essential map from the library
          * gets not instantiated (mTickMap)!
@@ -115,14 +120,104 @@ public class PCMSlider extends PCMSetting {
         });
         mRangebar.setLayoutParams(rbLayoutParams);
 
+        LinearLayout.LayoutParams llValueDisplayLayoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        llValueDisplayLayoutParams.setMargins(0, 0, 0, (int) (MARGIN_BOTTOM * density));
+
+        LinearLayout llValueDisplay = new LinearLayout(context);
+        llValueDisplay.setOrientation(LinearLayout.HORIZONTAL);
+        llValueDisplay.setLayoutParams(llValueDisplayLayoutParams);
+
+        LinearLayout.LayoutParams tvLayoutParams = new LinearLayout.LayoutParams(
+                50 * (int) density,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        LinearLayout.LayoutParams llValueLayoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1
+        );
+
+        LinearLayout llValue1 = new LinearLayout(context);
+        llValue1.setOrientation(LinearLayout.HORIZONTAL);
+        llValue1.setGravity(Gravity.CENTER_HORIZONTAL);
+        llValue1.setLayoutParams(llValueLayoutParams);
+
+        final TextView tvLabelValue1 = new TextView(context);
+        tvLabelValue1.setText(context.getString(R.string.text_value));
+        tvLabelValue1.setTextSize(15);
+        tvLabelValue1.setTextColor(ContextCompat.getColor(context, R.color.colorTextPrimary));
+        tvLabelValue1.setLayoutParams(tvLayoutParams);
+
+        tvValue1 = new TextView(context);
+        tvValue1.setText(mMinValue + "");
+        tvValue1.setTextSize(15);
+        tvValue1.setTextColor(ContextCompat.getColor(context, R.color.colorTextPrimary));
+        tvValue1.setLayoutParams(tvLayoutParams);
+
+        llValue1.addView(tvLabelValue1);
+        llValue1.addView(tvValue1);
+
+        llValueDisplay.addView(llValue1);
+
+        if(mIsRange) {
+            tvLabelValue1.setText(context.getString(R.string.text_min));
+
+            LinearLayout llValue2 = new LinearLayout(context);
+            llValue2.setOrientation(LinearLayout.HORIZONTAL);
+            llValue2.setGravity(Gravity.CENTER_HORIZONTAL);
+            llValue2.setLayoutParams(llValueLayoutParams);
+
+            TextView tvLabelValue2 = new TextView(context);
+            tvLabelValue2.setText(context.getString(R.string.text_max));
+            tvLabelValue2.setTextSize(15);
+            tvLabelValue2.setTextColor(ContextCompat.getColor(context, R.color.colorTextPrimary));
+            tvLabelValue2.setLayoutParams(tvLayoutParams);
+
+            tvValue2 = new TextView(context);
+            tvValue2.setText(mMaxValue + "");
+            tvValue2.setTextSize(15);
+            tvValue2.setTextColor(ContextCompat.getColor(context, R.color.colorTextPrimary));
+            tvValue2.setLayoutParams(tvLayoutParams);
+
+            llValue2.addView(tvLabelValue2);
+            llValue2.addView(tvValue2);
+
+            llValueDisplay.addView(llValue2);
+        }
+
+        mRangebar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
+            @Override
+            public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
+                if(mIsRange) {
+                    if(mStartsNegative) {
+                        tvValue1.setText(mRangeBarValueToPCMValue.get(Float.parseFloat(mRangebar.getLeftPinValue())).toString());
+                        tvValue2.setText(mRangeBarValueToPCMValue.get(Float.parseFloat(mRangebar.getRightPinValue())).toString());
+                    } else {
+                        tvValue1.setText(mRangebar.getLeftPinValue());
+                        tvValue2.setText(mRangebar.getRightPinValue());
+                    }
+                } else {
+                    if(mStartsNegative) {
+                        tvValue1.setText(mRangeBarValueToPCMValue.get(Float.parseFloat(mRangebar.getRightPinValue())).toString());
+                    } else {
+                        tvValue1.setText(mRangebar.getRightPinValue());
+                    }
+                }
+            }
+        });
+
         // Add the generated slider layout to the main layout container
         container.addView(mRangebar);
+        container.addView(llValueDisplay);
     }
 
     @Override
     public String executeSaveOrGenerateJson(Context context) {
         String minValue, maxValue;
-        String isRangeThenMax = "";
 
         // Get the correct values from the range bar
         if(mIsRange) {
@@ -135,22 +230,23 @@ public class PCMSlider extends PCMSetting {
                 minValue = mRangebar.getLeftPinValue();
                 maxValue = mRangebar.getRightPinValue();
             }
-            isRangeThenMax = ", \"Max\": " + maxValue;
         } else {
-            if (mStartsNegative) {
+            if(mStartsNegative) {
                 Float minFloat = mRangeBarValueToPCMValue.get(Float.parseFloat(mRangebar.getRightPinValue()));
                 minValue = minFloat.toString();
+                maxValue = minFloat.toString();
             } else {
                 minValue = mRangebar.getRightPinValue();
+                maxValue = mRangebar.getRightPinValue();
             }
         }
 
         // Build JSON with the new values
         String sliderData = "{" +
-                            "\"Signal\": \"" + super.getName() + "\"," +
-                            "\"Min\": " + minValue  +
-                            isRangeThenMax +
-                            "}";
+                "\"Signal\": \"" + super.getName() + "\"," +
+                "\"Min\": " + minValue + "," +
+                "\"Max\": " + maxValue + "" +
+                "}";
 
         return sliderData;
     }

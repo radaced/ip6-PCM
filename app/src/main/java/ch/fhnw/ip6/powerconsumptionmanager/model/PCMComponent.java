@@ -21,6 +21,7 @@ public class PCMComponent {
     private double mCost;
     private int mScaleMinArc, mScaleMaxArc;
     private boolean mIsDisplayedOnDashboard = false;
+    private boolean mHasSettings;
 
     // List for settings
     private LinkedList<PCMSetting> mSettings = new LinkedList<>();
@@ -33,8 +34,9 @@ public class PCMComponent {
      * Standard constructor on initial read of all connected components.
      * @param name Name of the component.
      */
-    public PCMComponent(String name) {
+    public PCMComponent(String name, boolean hasSettings) {
         mName = name;
+        mHasSettings = hasSettings;
         mPower = 0;
         mEnergy = 0;
         mCost = 0;
@@ -110,6 +112,10 @@ public class PCMComponent {
 
     public boolean isDisplayedOnDashboard() {
         return mIsDisplayedOnDashboard;
+    }
+
+    public boolean hasSettings() {
+        return mHasSettings;
     }
 
     public LinkedList<PCMSetting> getSettings() {

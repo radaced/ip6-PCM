@@ -53,7 +53,7 @@
 
             <LinearLayout
                 android:id="@+id/llSettingsContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/double_space_vertical_margin"
                 android:layout_marginStart="@dimen/double_space_horizontal_margin"
