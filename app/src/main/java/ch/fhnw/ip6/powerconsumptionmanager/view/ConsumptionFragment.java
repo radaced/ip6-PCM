@@ -83,7 +83,7 @@ public class ConsumptionFragment extends Fragment implements AsyncTaskCallback {
         // Start data updater if instantiated
         if(mUpdateHandler != null) {
             mHasUpdated = true;
-            mUpdateHandler.postDelayed(updateConsumptionData, 10000);
+            mUpdateHandler.postDelayed(updateConsumptionData, mAppContext.getUpdateInterval() * 1000);
         }
     }
 
